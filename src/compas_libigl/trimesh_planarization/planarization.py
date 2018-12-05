@@ -27,7 +27,8 @@ def planarize_quadmesh(vertices, faces, kmax=100, deviation=0.005):
     kmax : int, optional
         Maximum number of iterations.
         Default is `100`.
-    
+    deviation : float, optional
+        
 
     """
 
@@ -66,10 +67,10 @@ if __name__ == "__main__":
     import compas
     import compas_libigl
 
-    # from compas_libigl.plotters import MeshCompare
+    from compas_libigl.plotters import MeshCompare
 
     from compas.datastructures import Mesh
-    from compas.plotters import MeshPlotter
+    # from compas.plotters import MeshPlotter
 
     from compas.utilities import i_to_rgb
     from compas.geometry import mesh_flatness
