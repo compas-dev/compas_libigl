@@ -8,7 +8,8 @@ from compas.datastructures import Mesh
 
 import geodistance as g
 
-mesh = Mesh.from_off('../../../data/libigl-tutorial-data/bunny.off')
+# mesh = Mesh.from_off('../../../data/libigl-tutorial-data/bunny.off')
+mesh = Mesh.from_obj('../../../data/libigl-tutorial-data/armadillo.obj')
 
 key_index = mesh.key_index()
 
