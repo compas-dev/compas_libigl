@@ -15,8 +15,6 @@ v1, faces = m1.to_vertices_and_faces()
 
 v2 = planarize.planarize(numpy.array(v1), numpy.array(faces))
 
-print(type(v2))
-
 m2 = Mesh.from_vertices_and_faces(v2, faces)
 
 d1 = mesh_flatness(m1, maxdev=0.02)
