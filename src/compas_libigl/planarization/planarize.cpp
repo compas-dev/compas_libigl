@@ -4,9 +4,13 @@
 #include <pybind11/eigen.h>
 
 
-Eigen::MatrixXd planarize(Eigen::MatrixXd V, Eigen::MatrixXi F)
+using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+
+
+RowMatrixXd planarize(RowMatrixXd V, RowMatrixXi F)
 {
-    Eigen::MatrixXd Vplanar;
+    RowMatrixXd Vplanar;
 
     igl::planarize_quad_mesh(V, F, 100, 0.005, Vplanar);
 
