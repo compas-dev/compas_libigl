@@ -14,6 +14,7 @@ using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::Ro
 
 struct Result {
 	RowMatrixXd vertices;
+	RowMatrixXi edges;
 };
 
 
@@ -27,6 +28,7 @@ Result isolines(RowMatrixXd V, RowMatrixXi F, Eigen::VectorXd z, int n)
 	Result result;
 
 	result.vertices = Vi;
+	result.edges = Ei;
 
 	return result;
 }
@@ -36,4 +38,8 @@ using namespace pybind11::literals;
 
 PYBIND11_MODULE(iso, m) {
     m.def("isolines", &isolines, "V"_a.noconvert(), "F"_a.noconvert(), "z"_a, "n"_a);
+
+    py::class_<Result>(m, "Result")
+    	.def_readonly("vertices", &Result::vertices)
+    	.def_readonly("edges", &Result::edges);
 }
