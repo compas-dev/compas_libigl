@@ -17,8 +17,8 @@ RowMatrixXd planarize(RowMatrixXd V, RowMatrixXi F)
     return Vplanar;
 }
 
+using namespace pybind11::literals;
+
 PYBIND11_MODULE(planarize, m) {
-
-    m.def("planarize", &planarize, "Planarize a quad mesh.");
-
+    m.def("planarize", &planarize, "V"_a.noconvert(), "F"_a.noconvert());
 }

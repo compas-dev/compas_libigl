@@ -11,11 +11,14 @@ import planarize
 
 m1 = Mesh.from_json(compas.get('tubemesh.json'))
 
-v1, faces = m1.to_vertices_and_faces()
+v1, f = m1.to_vertices_and_faces()
 
-v2 = planarize.planarize(numpy.array(v1), numpy.array(faces))
+V1 = numpy.array(v1, dtype=numpy.float64)
+F = numpy.array(f, dtype=numpy.int32)
 
-m2 = Mesh.from_vertices_and_faces(v2, faces)
+V2 = planarize.planarize(V1, F)
+
+m2 = Mesh.from_vertices_and_faces(V2, f)
 
 d1 = mesh_flatness(m1, maxdev=0.02)
 d2 = mesh_flatness(m2, maxdev=0.02)
