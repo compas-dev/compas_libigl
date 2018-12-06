@@ -63,49 +63,5 @@ int main(int argc, char * argv[])
     Eigen::SimplicialLDLT<SparseMat> hessSolver(ah*QH + (1.-ah)*M);
     Eigen::VectorXd zh = hessSolver.solve(ah*M*znoisy);
 
-    //Viewer that shows all functions: zexact, znoisy, zl, zh
-    igl::opengl::glfw::Viewer viewer;
-    viewer.data().set_mesh(V,F);
-    viewer.data().show_lines = false;
-    viewer.callback_key_down =
-      [&](igl::opengl::glfw::Viewer & viewer, unsigned char key, int mod)->bool
-      {
-        //Graduate result to show isolines, then compute color matrix
-        const Eigen::VectorXd* z;
-        switch(key) {
-            case '1':
-                z = &zexact;
-                break;
-            case '2':
-                z = &znoisy;
-                break;
-            case '3':
-                z = &zl;
-                break;
-            case '4':
-                z = &zh;
-                break;
-            default:
-                return false;
-        }
-        Eigen::MatrixXd isoV;
-        Eigen::MatrixXi isoE;
-        if(key!='2')
-            igl::isolines(V, F, *z, 30, isoV, isoE);
-        viewer.data().set_edges(isoV,isoE,Eigen::RowVector3d(0,0,0));
-        Eigen::MatrixXd colors;
-        igl::jet(*z, true, colors);
-        viewer.data().set_colors(colors);
-        return true;
-    };
-    std::cout << R"(Usage:
-1  Show original function
-2  Show noisy function
-3  Biharmonic smoothing (zero Neumann boundary)
-4  Biharmonic smoothing (natural Hessian boundary)
-
-)";
-    viewer.launch();
-
     return 0;
 }
