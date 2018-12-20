@@ -118,5 +118,7 @@ temp/**
 
 src/.build/**
 
+libigl/**
+
 .DS_Store
 
