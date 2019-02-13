@@ -4,9 +4,9 @@ import compas
 import compas_libigl
 
 from compas.datastructures import Mesh
-from compas.plotters import MeshPlotter
+from compas.datastructures import mesh_quads_to_triangles
 
-from compas.topology import mesh_quads_to_triangles
+from compas.plotters import MeshPlotter
 
 import geodistance as g
 
