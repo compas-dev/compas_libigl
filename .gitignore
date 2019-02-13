@@ -116,6 +116,9 @@ thirdparty/**
 temp/**
 !temp/PLACEHOLDER
 
+include/**
+!include/PLACEHOLDER
+
 src/.build/**
 
 libigl/**
