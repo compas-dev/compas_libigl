@@ -29,4 +29,4 @@ plotter = MeshPlotter(m2)
 
 plotter.draw_faces(facecolor={fkey: i_to_rgb(d2[fkey]) for fkey in m2.faces()})
 
-plotter.show()
+plotter.save('tubemesh.png')
