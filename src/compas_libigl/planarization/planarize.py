@@ -1,10 +1,12 @@
 import numpy
 
 import compas
+
 from compas.datastructures import Mesh
+from compas.datastructures import mesh_flatness
+
 from compas.plotters import MeshPlotter
 from compas.utilities import i_to_rgb
-from compas.geometry import mesh_flatness
 
 import planarize
 
