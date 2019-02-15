@@ -11,22 +11,22 @@ from compas.utilities import i_to_rgb
 import planarize
 
 
-m1 = Mesh.from_json(compas.get('tubemesh.json'))
+mesh1 = Mesh.from_json(compas.get('tubemesh.json'))
 
-v1, f = m1.to_vertices_and_faces()
+vertices, faces = mesh1.to_vertices_and_faces()
 
-V1 = numpy.array(v1, dtype=numpy.float64)
-F = numpy.array(f, dtype=numpy.int32)
+V1 = numpy.array(vertices, dtype=numpy.float64)
+F1 = numpy.array(faces, dtype=numpy.int32)
 
-V2 = planarize.planarize(V1, F)
+V2 = planarize.planarize(V1, F1)
 
-m2 = Mesh.from_vertices_and_faces(V2, f)
+mesh2 = Mesh.from_vertices_and_faces(V2, faces)
 
-d1 = mesh_flatness(m1, maxdev=0.02)
-d2 = mesh_flatness(m2, maxdev=0.02)
+dev1 = mesh_flatness(mesh1, maxdev=0.02)
+dev2 = mesh_flatness(mesh2, maxdev=0.02)
 
-plotter = MeshPlotter(m2)
+plotter = MeshPlotter(mesh2)
 
-plotter.draw_faces(facecolor={fkey: i_to_rgb(d2[fkey]) for fkey in m2.faces()})
+plotter.draw_faces(facecolor={fkey: i_to_rgb(dev2[fkey]) for fkey in mesh2.faces()})
 
-plotter.save('tubemesh.png')
+plotter.show()

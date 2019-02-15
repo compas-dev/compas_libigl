@@ -8,10 +8,6 @@ namespace py = pybind11;
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
-// using RefRowMatrixXd = Eigen::Ref<RowMatrixXd>;
-// using RefRowMatrixXi = Eigen::Ref<RowMatrixXi>;
-
-
 struct Result {
 	RowMatrixXd vertices;
 	RowMatrixXi edges;
