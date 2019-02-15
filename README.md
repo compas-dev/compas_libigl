@@ -208,9 +208,7 @@ from compas.utilities import i_to_rgb
 
 import iso
 
-
 mesh = Mesh.from_json(compas.get('tubemesh.json'))
-
 mesh_quads_to_triangles(mesh)
 
 key_index = mesh.key_index()
@@ -226,27 +224,21 @@ N = 30
 
 result = iso.isolines(V, F, Z, N)
 
-vertices = result.vertices.tolist()
-edges = result.edges.tolist()
-
-zmin = min(vertices, key=lambda v: v[2])[2]
-zmax = max(vertices, key=lambda v: v[2])[2]
+vertices = sorted(result.vertices, key=lambda v: v[2])
+zmin = vertices[0][2]
+zmax = vertices[-1][2]
 zspn = zmax - zmin
 
-edges = sorted(edges, key=lambda e: vertices[e[0]][2])
-edges = groupby(edges, key=lambda e: vertices[e[0]][2])
+edges = sorted(result.edges, key=lambda e: result.vertices[e[0]][2])
+edges = groupby(result.edges, key=lambda e: result.vertices[e[0]][2])
 
 lines = []
 for z, group in edges:
+    color = i_to_rgb((z - zmin) / zspn)
     for i, j in group:
-        a = vertices[i]
-        b = vertices[j]
-
-        color = i_to_rgb((z - zmin) / zspn)
-
         lines.append({
-            'start' : a,
-            'end'   : b,
+            'start' : result.vertices[i],
+            'end'   : result.vertices[j],
             'color' : color
         })
 
