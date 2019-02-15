@@ -27,12 +27,10 @@ N = 30
 
 result = iso.isolines(V, F, Z, N)
 
-vertices = sorted(result.vertices, key=lambda v: v[2])
-zmin = vertices[0][2]
-zmax = vertices[-1][2]
+zmin = min(z)
+zmax = max(z)
 zspn = zmax - zmin
 
-edges = sorted(result.edges, key=lambda e: result.vertices[e[0]][2])
 edges = groupby(result.edges, key=lambda e: result.vertices[e[0]][2])
 
 lines = []
