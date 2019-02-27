@@ -15,7 +15,6 @@ RowMatrixXd planarize(RowMatrixXd V, RowMatrixXi F)
     return Vplanar;
 }
 
-
 using namespace pybind11::literals;
 
 PYBIND11_MODULE(planarize, m) {
