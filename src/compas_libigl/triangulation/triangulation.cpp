@@ -6,7 +6,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
-
+#include <iostream>
 #include <igl/triangle/triangulate.h>
 
 
@@ -32,8 +32,11 @@ Result polygon(RowMatrixXd V, RowMatrixXi E)
 	igl::triangle::triangulate(V, E, H, "a0.005q", V2, F2);
 
 	Result result;
-
-	result.vertices = V2;
+    
+    RowMatrixXd V2_3D = RowMatrixXd::Zero(V2.rows(), V2.cols() + 1);
+    V2_3D.leftCols(V2.cols()) = V2;
+	
+    result.vertices = V2_3D;
 	result.faces = F2;
 
 	return result;
