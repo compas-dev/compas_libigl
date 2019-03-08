@@ -16,3 +16,4 @@ find_package(LIBIGL REQUIRED QUIET)
 pybind11_add_module(planarize main.cpp)
 target_link_libraries(planarize PUBLIC Eigen3::Eigen)
 target_link_libraries(planarize PUBLIC igl::core)
+
