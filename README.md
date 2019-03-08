@@ -269,3 +269,4 @@ if you have error when use `make`, please do `cmake -DCMAKE_BUILD_TYPE=Release .
 
 ### Run
 since every thing will copy to `lib/triangulation`, just go to `lib/triangulation` and type `python triangulation.py` in terminal. We should have the following image to come out.
+![triangulate](src/compas_libigl/triangulation/triangulation.png)
