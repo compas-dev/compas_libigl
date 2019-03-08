@@ -15,6 +15,8 @@ find_path(LIBIGL_INCLUDE_DIR igl/readOBJ.h
         ENV LIBIGL_DIR
         PATHS
         ${CMAKE_SOURCE_DIR}/../../ext/libigl
+	${CMAKE_SOURCE_DIR}/../ext/libigl
+	${CMAKE_SOURCE_DIR}/ext/libigl
         PATH_SUFFIXES include
         )
 include(FindPackageHandleStandardArgs)
