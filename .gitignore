@@ -123,5 +123,9 @@ src/.build/**
 
 libigl/**
 
+examples/Example1/cmake-build-debug
+examples/Example1/cmake-build-release
+
+
 .DS_Store
 
