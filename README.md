@@ -254,7 +254,7 @@ plotter.show()
 Before using cmake to compile the file, make sure followings are correct
 
 * cmake version >= 3.12
-* confirm you anaconda python location by typing 'which python' in terminal
+* confirm you anaconda python location by typing `which python` in terminal
 * change the `PYTHON_EXECUTABLE` as well as `PYBIND11_PYTHON_VERSION` in `CMakeLists.txt` if it does not match your system settings.
 
 ### Compile
