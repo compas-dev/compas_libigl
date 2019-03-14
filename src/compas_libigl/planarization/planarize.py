@@ -1,5 +1,5 @@
 import numpy
-
+import os
 import compas
 
 from compas.datastructures import Mesh
@@ -7,11 +7,10 @@ from compas.datastructures import mesh_flatness
 
 from compas.plotters import MeshPlotter
 from compas.utilities import i_to_rgb
-
 import planarize
 
-
-mesh1 = Mesh.from_json(compas.get('tubemesh.json'))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+mesh1 = Mesh.from_json(dir_path + '/tubemesh.json')
 
 vertices, faces = mesh1.to_vertices_and_faces()
 
