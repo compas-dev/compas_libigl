@@ -1,8 +1,6 @@
 import numpy
-
 import compas
-import compas_libigl
-
+import os
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 
@@ -12,8 +10,8 @@ import geodistance as g
 
 # mesh = Mesh.from_off('../../../data/libigl-tutorial-data/bunny.off')
 # mesh = Mesh.from_obj('../../../data/libigl-tutorial-data/armadillo.obj')
-
-mesh = Mesh.from_json(compas.get('tubemesh.json'))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+mesh = Mesh.from_json(dir_path + '/tubemesh.json')
 
 mesh_quads_to_triangles(mesh)
 
