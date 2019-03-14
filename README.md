@@ -64,24 +64,21 @@ Anaconda 3 can be obtained from the official website. With `conda` installing CO
 
 
 ### Compile
-#### Notice
 Before using cmake to compile the file, make sure followings are correct
 
 * cmake version >= 3.12
-* confirm you anaconda python location by typing `which python` in terminal
-* change the `PYTHON_EXECUTABLE` as well as `PYBIND11_PYTHON_VERSION` in `CMakeLists.txt` if it does not match your system settings.
+* confirm your anaconda python location by typing `which python` in terminal
+* change the `PYTHON_EXECUTABLE` as well as `PYBIND11_PYTHON_VERSION` in `compas_libigl/CMakeLists.txt` if it does not match your system settings.
 
-in terminal
+In terminal
 
 * `mkdir build`
 * `cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release ..`
 * `make -j 4`
 
-if you have error when use `make`, please do `cmake -DCMAKE_BUILD_TYPE=Release ..` again. It is because the first `cmake` time libigl has to download external library. Then in the second `cmake` time, libigl is able to find them.
-
 ### Run
-since every thing will copy to `lib/*`, just go to `lib/triangulation` for example and type `python triangulation.py` in terminal. The program should run without throwing error into the screen.
+To find the compiled library, please go to `compas_libigl/lib`. Taking `igl::triangulation` as an example, to run it just type `python lib/triangualtion/triangulation.py` in terminal. The program should run correctly without throwing error.
 
 ## Example Gallery
 ### Example 1: `igl::planarize_quad_mesh`
