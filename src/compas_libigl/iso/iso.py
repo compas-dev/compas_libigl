@@ -1,7 +1,7 @@
 from itertools import groupby
 
 import numpy
-
+import os
 import compas
 
 from compas.datastructures import Mesh
@@ -11,7 +11,8 @@ from compas.utilities import i_to_rgb
 
 import iso
 
-mesh = Mesh.from_json(compas.get('tubemesh.json'))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+mesh = Mesh.from_json(dir_path + '/tubemesh.json')
 mesh_quads_to_triangles(mesh)
 
 key_index = mesh.key_index()
