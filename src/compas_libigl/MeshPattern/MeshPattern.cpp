@@ -14,7 +14,11 @@ PYBIND11_MODULE(MeshPattern, m)
     py::class_<iglMesh>(m, "iglMesh")
             .def(py::init())
             .def("loadMesh", &iglMesh::loadMesh)
-            .def("make_flat", &iglMesh::make_flat)
+            .def("paramertization_simple", &iglMesh::paramertization_simple)
+            .def("paramertization_lscm", &iglMesh::paramertization_lscm)
+            .def("mapMesh3D_simple", &iglMesh::mapMesh3D_simple)
+            .def("mapMesh3D_AABB", &iglMesh::mapMesh3D_AABB)
+            .def("getUVs", &iglMesh::getUVs)
             .def("getVertices",  &iglMesh::getVertices)
             .def("getFaces",  &iglMesh::getFaces);
 

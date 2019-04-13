@@ -21,6 +21,7 @@ public:
     vector<vector<int>> faces_; //polygonal Mesh
     MatrixXi F_; //triangle Mesh
 
+    MatrixXd UV_; //uv
 public:
 
     iglMesh(){};
@@ -29,11 +30,27 @@ public:
 
     vector<vector<double>> getVertices();
 
+    vector<vector<double>> getUVs();
+
     vector<vector<int>> getFaces();
 
 public:
 
-    void make_flat();
+    void paramertization_simple();
+
+    void paramertization_lscm();
+
+    void mapMesh3D_simple(iglMesh &baseMesh);
+
+    bool mapPoint3D_simple(Eigen::Vector3d pt, Eigen::Vector3d &l, int &faceID);
+
+    void mapMesh3D_AABB(iglMesh &baseMesh);
+
+private:
+
+    void cleanMesh();
+
+    void getTriFace(int faceID, Eigen::MatrixXd &V, Eigen::MatrixXd &A, Eigen::MatrixXd &B, Eigen::MatrixXd &C);
 };
 
 
