@@ -127,5 +127,9 @@ examples/Example1/cmake-build-debug
 examples/Example1/cmake-build-release
 
 
+cmake-build-debug/*
+cmake-build-release/*
+.idea/*
+
 .DS_Store
 
