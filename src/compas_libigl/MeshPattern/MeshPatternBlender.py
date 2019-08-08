@@ -4,7 +4,7 @@ import sys
 import compas
 from compas.datastructures import Mesh
 from compas.plotters import MeshPlotter
-from compas_blender.utilities import xdraw_mesh
+from compas_blender.utilities import draw_mesh
 from compas.geometry import *
 
 file_dir = os.path.dirname(os.path.realpath(__file__))
@@ -19,10 +19,10 @@ from tessagon.types.hex_tessagon import HexTessagon
 from tessagon.adaptors.list_adaptor import ListAdaptor
 
 def drawMeshVF(v, f):
-	xdraw_mesh(v, None, f)
+	draw_mesh(v, None, f)
 
 def drawMeshVEF(v, e, f):
-	xdraw_mesh(v, e, f)
+	draw_mesh(v, e, f)
 
 def create2DPattern():
 	#Create 2D pattern in [-1, 1]x[-1,1]
@@ -75,4 +75,4 @@ if __name__ == "__main__":
 	vertices = pattern2D.getVertices()
 	faces = pattern2D.getFaces()
 	compasMesh = Mesh.from_vertices_and_faces(vertices, faces)
-	#xdraw_mesh(vertices, list(compasMesh.edges()), faces)
+	#draw_mesh(vertices, list(compasMesh.edges()), faces)
