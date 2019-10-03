@@ -133,3 +133,4 @@ cmake-build-release/*
 
 .DS_Store
 
+settings.json
