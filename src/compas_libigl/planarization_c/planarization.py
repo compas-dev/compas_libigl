@@ -70,7 +70,7 @@ if __name__ == "__main__":
     from compas_libigl.plotters import MeshCompare
 
     from compas.datastructures import Mesh
-    # from compas.plotters import MeshPlotter
+    # from compas_plotters import MeshPlotter
 
     from compas.utilities import i_to_rgb
     from compas.geometry import mesh_flatness

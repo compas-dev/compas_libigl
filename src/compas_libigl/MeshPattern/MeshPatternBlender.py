@@ -3,7 +3,7 @@ import os
 import sys
 import compas
 from compas.datastructures import Mesh
-from compas.plotters import MeshPlotter
+from compas_plotters import MeshPlotter
 from compas_blender.utilities import draw_mesh
 from compas.geometry import *
 
