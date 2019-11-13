@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.12)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/planarize)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/isolines)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/triangulation)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/geodistance)

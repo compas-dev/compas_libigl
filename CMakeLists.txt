@@ -12,8 +12,8 @@ set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
-option(LIBIGL_WITH_TRIANGLE  "Use Triangle" ON)
-option(LIBIGL_WITH_CGAL  "Use CGAL" ON)
+option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
+option(LIBIGL_WITH_CGAL "Use CGAL" ON)
 find_package(LIBIGL REQUIRED)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules)
