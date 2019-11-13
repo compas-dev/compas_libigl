@@ -1,6 +1,5 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
-#include <iostream>
 #include <igl/triangle/triangulate.h>
 
 
