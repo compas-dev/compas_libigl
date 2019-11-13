@@ -110,27 +110,15 @@ docs/api/generated/
 *.3dmbak
 *.rhl
 
-thirdparty/**
-!thirdparty/PLACEHOLDER
-
 temp/**
 !temp/PLACEHOLDER
 
-include/**
-!include/PLACEHOLDER
+lib/**
+ext/**
 
-src/.build/**
-
+build/**
 libigl/**
-
-examples/Example1/cmake-build-debug
-examples/Example1/cmake-build-release
-
-
-cmake-build-debug/*
-cmake-build-release/*
-.idea/*
 
 .DS_Store
 
-settings.json
+.vscode/**

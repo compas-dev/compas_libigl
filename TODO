@@ -1,5 +1,0 @@
-- make different types of Rhino interfaces
-- build toolbar with rpc
-- make plugin with RhinoCommon
-- wrap native libraries (Eigen, igl)
-- make available to IronPython

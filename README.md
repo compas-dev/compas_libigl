@@ -38,18 +38,19 @@ can be exposed through RhinoCommon.
 
 * [PyBind: building with cmake](https://pybind11.readthedocs.io/en/stable/compiling.html#building-with-cmake)
 * [PyBind: building manually](https://pybind11.readthedocs.io/en/stable/compiling.html#building-manually)
-* https://github.com/pybind/pybind11/issues/134
-* https://github.com/pybind/pybind11/issues/1200
-* https://pybind11.readthedocs.io/en/stable/advanced/cast/stl.html
+* <https://github.com/pybind/pybind11/issues/134>
+* <https://github.com/pybind/pybind11/issues/1200>
+* <https://pybind11.readthedocs.io/en/stable/advanced/cast/stl.html>
 
 ### SO
 
-* https://stackoverflow.com/questions/16439654/how-can-i-compile-triangle-using-makefiles-on-a-windows-machine
-* https://stackoverflow.com/questions/1099981/why-cant-python-find-shared-objects-that-are-in-directories-in-sys-path
+* <https://stackoverflow.com/questions/16439654/how-can-i-compile-triangle-using-makefiles-on-a-windows-machine>
+* <https://stackoverflow.com/questions/1099981/why-cant-python-find-shared-objects-that-are-in-directories-in-sys-path>
 
 ## Installation
 
 ### Library
+
 **Prerequisite Library**
 
 * Anaconda(3)
@@ -57,13 +58,13 @@ can be exposed through RhinoCommon.
 
 **Git Submodule Library**
 
-* libigl 
+* libigl
 * PyBind11
 
 Anaconda 3 can be obtained from the official website. With `conda` installing COMPAS is as simple as `$ conda install COMPAS`. (Make sure your compas version is 0.4.10, which you can get by typing `python -c “import compas; print(compas.__version__)` in terminal)
 
-
 ### Compile
+
 Before using cmake to compile the file, make sure followings are correct
 
 * cmake version >= 3.12
@@ -78,9 +79,11 @@ In terminal
 * `make -j 4`
 
 ### Run
+
 To find the compiled library, please go to `compas_libigl/lib`. Taking `igl::triangulation` as an example, to run it just type `python lib/triangualtion/triangulation.py` in terminal. The program should run correctly without throwing error.
 
 ## Example Gallery
+
 ### Example 1: `igl::planarize_quad_mesh`
 
 **planarize.cpp**
@@ -271,29 +274,29 @@ namespace py = pybind11;
 
 
 struct Result {
-	RowMatrixXd vertices;
-	RowMatrixXi faces;
+    RowMatrixXd vertices;
+    RowMatrixXi faces;
 };
 
 
 Result polygon(RowMatrixXd V, RowMatrixXi E)
 {
-	RowMatrixXd H;
+    RowMatrixXd H;
 
-	RowMatrixXd V2;
-	RowMatrixXi F2;
+    RowMatrixXd V2;
+    RowMatrixXi F2;
 
-	igl::triangle::triangulate(V, E, H, "a0.005q", V2, F2);
+    igl::triangle::triangulate(V, E, H, "a0.005q", V2, F2);
 
-	Result result;
-    
+    Result result;
+
     RowMatrixXd V2_3D = RowMatrixXd::Zero(V2.rows(), V2.cols() + 1);
     V2_3D.leftCols(V2.cols()) = V2;
-	
-    result.vertices = V2_3D;
-	result.faces = F2;
 
-	return result;
+    result.vertices = V2_3D;
+    result.faces = F2;
+
+    return result;
 }
 
 
@@ -301,12 +304,13 @@ PYBIND11_MODULE(triangulation, m) {
     m.def("polygon", &polygon, py::arg("V").noconvert(), py::arg("E").noconvert());
 
     py::class_<Result>(m, "Result")
-    	.def_readonly("vertices", &Result::vertices)
-    	.def_readonly("faces", &Result::faces);
+        .def_readonly("vertices", &Result::vertices)
+        .def_readonly("faces", &Result::faces);
 }
 ```
 
 **triangulation.py**
+
 ```python
 import numpy
 
