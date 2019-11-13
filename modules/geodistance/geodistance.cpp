@@ -30,11 +30,9 @@ Eigen::VectorXd trimesh_geodistance_heat(RowMatrixXd V, RowMatrixXi F, int vid)
     gamma.resize(1);
     gamma << vid;
 
-    //(Eigen::VectorXi(1,1)<<vid).finished()
-
     igl::HeatGeodesicsData<double> data;
     double t = std::pow(igl::avg_edge_length(V, F), 2);
-    igl::heat_geodesics_precompute(V, F, t, data)
+    igl::heat_geodesics_precompute(V, F, t, data);
 
     Eigen::VectorXd D = Eigen::VectorXd::Zero(data.Grad.cols());
     D(vid) = 1;
