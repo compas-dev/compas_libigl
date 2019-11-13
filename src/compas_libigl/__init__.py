@@ -10,5 +10,7 @@ from .triangulation import triangulate_polygon
 from .geodistance import trimesh_geodistance_exact
 from .geodistance import trimesh_geodistance_heat
 
+from .booleans import mesh_union
+
 
 __all__ = [name for name in dir() if not name.startswith('__')]
