@@ -4,6 +4,7 @@ import os
 
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
+from compas.utilities import Colormap
 from compas_plotters import MeshPlotter
 
 import compas_libigl as igl
@@ -24,9 +25,11 @@ faces = [[key_index[key] for key in mesh.face_vertices(fkey)] for fkey in mesh.f
 
 V = numpy.array(vertices, dtype=numpy.float64)
 F = numpy.array(faces, dtype=numpy.int32)
-d = igl.trimesh_geodistance_exact(V, F, 0)
+D = igl.trimesh_geodistance_exact(V, F, 0)
+
+cmap = Colormap(D, 'red')
 
 plotter = MeshPlotter(mesh, figsize=(10, 7))
 plotter.draw_faces()
-plotter.draw_vertices(text={key: "{:.0f}".format(d[key_index[key]]) for key in mesh.vertices()})
+plotter.draw_vertices(radius=0.2, facecolor={key: cmap(d) for key, d in zip(mesh.vertices(), D)})
 plotter.show()

@@ -1,7 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include <igl/copyleft/cgal/mesh_boolean.h>
-#include <igl/MeshBooleanType.h>
 
 namespace py = pybind11;
 
@@ -19,7 +18,9 @@ Mesh mesh_union(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, RowMatrixXi FB)
 	RowMatrixXd VC;
 	RowMatrixXi FC;
 
-    igl::copyleft::cgal::mesh_boolean(VA, FA, VB, FB, igl::MESH_BOOLEAN_TYPE_UNION, VC, FC);
+    Eigen::VectorXi J;
+
+    igl::copyleft::cgal::mesh_boolean(VA, FA, VB, FB, igl::MESH_BOOLEAN_TYPE_UNION, VC, FC, J);
 
     Mesh mesh;
 
