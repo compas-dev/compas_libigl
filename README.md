@@ -14,24 +14,102 @@ Anaconda 3 can be obtained from the official website. With `conda` installing CO
 * libigl
 * PyBind11
 
+These are configured in the `.gitmodules` file and will be cloned into the `ext` folder.
+
+<https://git-scm.com/book/en/v2/Git-Tools-Submodules>
+<https://git-scm.com/docs/git-submodule>
+<https://git-scm.com/docs/gitmodules>
+
+## Modules
+
+The folder `modules` contains the wrapper code per *module* that should be added to `compas_libigl`.
+Each module is in a separate folder with its own `CMakeLists.txt` and a `.cpp` file with the wrapper code.
+
+## Environment
+
+As with all things COMPAS, it is recommended to make a separate environment for experimenting with this package.
+
+```bash
+conda create -n igl python=3.7 COMPAS --yes
+conda activate igl
+```
+
+> On Mac, don't forget to add `python.app`
+
+To make sure that you can build the modules that require `CGAL`, you should also install `Boost` into this environment.
+
+```bash
+conda install boost
+```
+
+> Note that a conda install of Boost into an environment with Python 3.x will install Boost 1.70 and this is only supported since CMake 3.14.
+
+## Cmake
+
+The project has three levels of `CMakeLists.txt` files.
+
+### /CMakeLists.txt
+
+The top level file is located at the root of the project. There are a few variables that you may want to update.
+
+```make
+#Boost
+set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+
+#Pybind11
+set(PYBIND11_PYTHON_VERSION 3.7)
+set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+```
+
+The Python version and executable should obviously match the Python in your environment. Also the `BOOST_ROOT` should be pointed to the include folder of the environment you created for the installation of this package.
+
+### /modules/CMakeLists.txt
+
+The second level file is in the `modules` folder. If you add a new wrapper module, make sure to register it in this file as well.
+
+```make
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/xxx)
+```
+
+### /modules/xxx/CMakeLists.txt
+
+Finally there is a `CMakeLists` file per wrapper module. There the most relevant part is to link the correct libraries. For example, the module that wraps `libigl`'s boolean operations requires `CGAL` and this should thus be reflected in the file.
+
+```make
+target_link_libraries(booleans PRIVATE igl::cgal)
+```
+
 ## Compile
-
-Before using cmake to compile the file, make sure followings are correct
-
-* cmake version >= 3.12
-* confirm your anaconda python location by typing `which python` in terminal
-* change the `PYTHON_EXECUTABLE` as well as `PYBIND11_PYTHON_VERSION` in `compas_libigl/CMakeLists.txt` if it does not match your system settings.
 
 In terminal
 
+* `rm -rf build`
 * `mkdir build`
 * `cd build`
-* `cmake -DCMAKE_BUILD_TYPE=Release ..`
+* `cmake -DCMAKE_BUILD_TYPE=Release -DLIBIGL_WITH_CGAL=ON ..`
 * `make -j 4`
+
+## Installation
+
+To make the wrappers available via `compas_libigl` in your `igl` environment, install `compas_libigl` from source as you would do with any other COMPAS package.
+
+```bash
+pip install -e .
+```
+
+To verify, start an interactive python session and import the package. This should not throw any errors.
+
+```python
+>>> import compas
+>>> import compas_libigl
+```
 
 ## Usage
 
-To find the compiled library, please go to `compas_libigl/lib`. Taking `igl::triangulation` as an example, to run it just type `python lib/triangualtion/triangulation.py` in terminal. The program should run correctly without throwing error.
+The compiled libraries are added directly into the `compas_libigl` package.
+If you add a new wrapper, make sure to add a corresponding entry in the `__init__.py` file of the package.
+
+Example scripts for simple use cases are located in the `scripts` folder.
 
 ## Notes
 
