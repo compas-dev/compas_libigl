@@ -1,19 +1,22 @@
 import numpy
 import compas
+from compas.geometry import Box
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
+from compas.datastructures import mesh_subdivide_quad
+from compas_plotters import MeshPlotter
 
 import compas_libigl as igl
 
-a = Mesh.from_polyhedron(6)
+box = Box.from_width_height_depth(5.0, 3.0, 1.0)
+a = Mesh.from_vertices_and_faces(box.vertices, box.faces)
+a = mesh_subdivide_quad(a, k=3)
 mesh_quads_to_triangles(a)
 
-b = a.copy()
-
-for key, attr in b.vertices(True):
-    attr['x'] += 0.1 * attr['x']
-    attr['y'] += 0.1 * attr['y']
-    attr['z'] += 0.1 * attr['z']
+box = Box.from_width_height_depth(1.0, 5.0, 3.0)
+b = Mesh.from_vertices_and_faces(box.vertices, box.faces)
+b = mesh_subdivide_quad(b, k=3)
+mesh_quads_to_triangles(b)
 
 VA = numpy.array(a.get_vertices_attributes('xyz'), dtype=numpy.float64)
 FA = numpy.array([a.face_vertices(face) for face in a.faces()], dtype=numpy.int32)
@@ -21,7 +24,11 @@ FA = numpy.array([a.face_vertices(face) for face in a.faces()], dtype=numpy.int3
 VB = numpy.array(b.get_vertices_attributes('xyz'), dtype=numpy.float64)
 FB = numpy.array([b.face_vertices(face) for face in b.faces()], dtype=numpy.int32)
 
-c = igl.mesh_union(VA, FA, VB, FB)
+result = igl.mesh_union(VA, FA, VB, FB)
 
-print(c.vertices)
-print(c.faces)
+c = Mesh.from_vertices_and_faces(result.vertices, result.faces)
+
+plotter= MeshPlotter(c, figsize=(10, 7))
+plotter.draw_vertices(radius=0.01)
+plotter.draw_edges()
+plotter.show()

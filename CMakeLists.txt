@@ -1,9 +1,17 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
+
+project(compas_libigl)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+set(CPLUS_INCLUDE_PATH "/Users/vanmelet/anaconda3/envs/igl/include")
+
 #Eigen
 find_package (Eigen3 3.3 REQUIRED)
+
+#Boost
+set(BOOST_ROOT "/Users/vanmelet/anaconda3/envs/igl/include")
 
 #Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
