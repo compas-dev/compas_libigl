@@ -1,3 +1,5 @@
+# https://libigl.github.io/tutorial/#boolean-operations-on-meshes
+
 import numpy
 
 import compas
@@ -6,7 +8,7 @@ from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas.datastructures import mesh_subdivide_quad
 
-from compas_viewers import MeshViewer
+from compas_viewers import Viewer
 
 import compas_libigl as igl
 
@@ -30,6 +32,6 @@ result = igl.mesh_union(VA, FA, VB, FB)
 
 c = Mesh.from_vertices_and_faces(result.vertices, result.faces)
 
-viewer = MeshViewer()
+viewer = Viewer()
 viewer.mesh = c
 viewer.show()
