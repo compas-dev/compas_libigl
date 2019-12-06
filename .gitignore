@@ -119,3 +119,11 @@ build/**
 .DS_Store
 
 .vscode/**
+
+src/compas_libigl/*.pyd
+src/compas_libigl/*.so
+
+src/compas_libigl/Release
+src/compas_libigl/Debug
+
+src/compas_libigl/__pycache__

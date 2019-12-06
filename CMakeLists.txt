@@ -8,15 +8,25 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CPLUS_INCLUDE_PATH "$ENV{HOME}/anaconda3/envs/igl/include")
 
 #Eigen
-find_package (Eigen3 3.3 REQUIRED)
+# add as submodule
+# find_package (Eigen3 3.3 REQUIRED)
+set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen)
 
 #Boost
-set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+if (WIN32)
+	set(BOOST_ROOT "$ENV{USERPROFILE}/anaconda3/envs/igl/Library/include")
+else ()
+	set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+endif()
 
 #Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
 set(PYBIND11_PYTHON_VERSION 3.7)
-set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+if (WIN32)
+	set(PYTHON_EXECUTABLE "$ENV{USERPROFILE}/anaconda3/envs/igl/python.exe")
+else ()
+	set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
