@@ -1,32 +1,33 @@
 import os
 import compas
-
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_flatness
 from compas.utilities import i_to_rgb
-
 from compas_rhino.artists import MeshArtist
-
 from compas.rpc import Proxy
 
-igl = Proxy('compas_libigl')
-# igl.stop_server()
-# igl.start_server()
+maxdev = 0.005
+kmax = 500
 
-planaryze_quads = igl.planarize_quads_proxy
+igl = Proxy('compas_libigl')
+igl.stop_server()
+igl.start_server()
 
 HERE = os.path.dirname(__file__)
 FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
 
-mesh1 = Mesh.from_json(FILE)
+mesh = Mesh.from_json(FILE)
 
-V1, F1 = mesh1.to_vertices_and_faces()
-V2 = planaryze_quads(V1, F1, 500, 0.005)
+V1, F = mesh.to_vertices_and_faces()
+V2 = igl.planarize_quads_proxy(V1, F, kmax, maxdev)
 
-mesh2 = Mesh.from_vertices_and_faces(V2, F1)
-dev2 = mesh_flatness(mesh2, maxdev=0.005)
+for key, attr in mesh.vertices(True):
+    attr['x'] = V2[key][0]
+    attr['y'] = V2[key][1]
+    attr['z'] = V2[key][2]
 
-artist = MeshArtist(mesh2, layer="IGL::PlanarizeQuads")
+dev = mesh_flatness(mesh, maxdev=maxdev)
+
+artist = MeshArtist(mesh, layer="IGL::PlanarizeQuads")
 artist.clear_layer()
-
-artist.draw_faces(color={fkey: i_to_rgb(dev2[fkey]) for fkey in mesh2.faces()})
+artist.draw_faces(color={fkey: i_to_rgb(dev[fkey]) for fkey in mesh.faces()})

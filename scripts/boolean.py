@@ -8,7 +8,7 @@ from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas.datastructures import mesh_subdivide_quad
 
-from compas_viewers import Viewer
+from compas_viewers.meshviewer import MeshViewer
 
 import compas_libigl as igl
 
@@ -32,6 +32,6 @@ result = igl.mesh_union(VA, FA, VB, FB)
 
 c = Mesh.from_vertices_and_faces(result.vertices, result.faces)
 
-viewer = Viewer()
+viewer = MeshViewer()
 viewer.mesh = c
 viewer.show()

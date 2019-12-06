@@ -22,6 +22,7 @@ vertices, faces = mesh1.to_vertices_and_faces()
 
 V1 = numpy.array(vertices, dtype=numpy.float64)
 F1 = numpy.array(faces, dtype=numpy.int32)
+
 V2 = planarize_quads(V1, F1, 500, 0.005)
 
 mesh2 = Mesh.from_vertices_and_faces(V2, faces)
