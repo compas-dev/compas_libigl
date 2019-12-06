@@ -9,17 +9,15 @@ Opinionated COMPAS compatible bindings for top-level algorithms of libigl.
 * Anaconda(3)
 * COMPAS
 * CMake
-* Eigen3
 * Boost
 
 Anaconda 3 can be obtained from the official website. With `conda` installing COMPAS is as simple as `$ conda install COMPAS`. Make sure you have the latest version of COMPAS. You can check the version by typing `python -c “import compas; print(compas.__version__)` in terminal.
 
 ## Git Submodules
 
-> Note: add Eigen3 as submodule.
-
 * libigl
 * PyBind11
+* Eigen
 
 These are configured in the `.gitmodules` file and will be cloned into the `ext` folder.
 
@@ -63,17 +61,22 @@ The project has three levels of `CMakeLists.txt` files.
 
 ### /CMakeLists.txt
 
-> Note: update to reflect Windows variants
-
 The top level file is located at the root of the project. There are a few variables that you may want to update.
 
 ```make
 #Boost
-set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+if (WIN32)
+	set(BOOST_ROOT "$ENV{USERPROFILE}/anaconda3/envs/igl/Library/include")
+else ()
+	set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+endif()
 
 #Pybind11
-set(PYBIND11_PYTHON_VERSION 3.7)
-set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+if (WIN32)
+	set(PYTHON_EXECUTABLE "$ENV{USERPROFILE}/anaconda3/envs/igl/python.exe")
+else ()
+	set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+endif()
 ```
 
 The Python version and executable should obviously match the Python in your environment. Also the `BOOST_ROOT` should be pointed to the include folder of the environment you created for the installation of this package.
