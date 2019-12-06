@@ -26,7 +26,7 @@ V = numpy.array(vertices, dtype=numpy.float64)
 F = numpy.array(faces, dtype=numpy.int32)
 d = igl.trimesh_geodistance_heat(V, F, 0)
 
-plotter = MeshPlotter(mesh, figsize=(10, 7))
+plotter = MeshPlotter(mesh, figsize=(8, 5))
 plotter.draw_faces()
 plotter.draw_vertices(text={key: "{:.0f}".format(d[key_index[key]]) for key in mesh.vertices()})
 plotter.show()
