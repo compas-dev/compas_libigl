@@ -6,10 +6,15 @@ Opinionated COMPAS compatible bindings for top-level algorithms of libigl.
 
 * Anaconda(3)
 * COMPAS
+* CMake
+* Eigen3
+* Boost
 
 Anaconda 3 can be obtained from the official website. With `conda` installing COMPAS is as simple as `$ conda install COMPAS`. Make sure you have the latest version of COMPAS. You can check the version by typing `python -c “import compas; print(compas.__version__)` in terminal.
 
 ## Git Submodules
+
+> Note: add Eigen3 as submodule.
 
 * libigl
 * PyBind11
@@ -44,11 +49,19 @@ conda install boost
 
 > Note that a conda install of Boost into an environment with Python 3.x will install Boost 1.70 and this is only supported since CMake 3.14.
 
+If you don't have `cmake` installed on your system, you can install it using `conda`:
+
+```bash
+conda install cmake
+```
+
 ## Cmake
 
 The project has three levels of `CMakeLists.txt` files.
 
 ### /CMakeLists.txt
+
+> Note: update to reflect Windows variants
 
 The top level file is located at the root of the project. There are a few variables that you may want to update.
 
@@ -81,13 +94,21 @@ target_link_libraries(booleans PRIVATE igl::cgal)
 
 ## Compile
 
-In terminal
+On Mac
 
 * `rm -rf build`
 * `mkdir build`
 * `cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release -DLIBIGL_WITH_CGAL=ON ..`
 * `make -j 4`
+
+On Windows
+
+* `rmdir build /s`
+* `mkdir build`
+* `cd build`
+* `cmake -DCMAKE_BUILD_TYPE=Release -DLIBIGL_WITH_CGAL=ON ..`
+* `cmake --build . --config Release`
 
 ## Installation
 
