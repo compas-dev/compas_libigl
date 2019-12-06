@@ -2,6 +2,8 @@
 
 Opinionated COMPAS compatible bindings for top-level algorithms of libigl.
 
+> Note: add instructions for using viewers
+
 ## Requirements
 
 * Anaconda(3)
