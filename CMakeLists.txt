@@ -8,8 +8,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CPLUS_INCLUDE_PATH "$ENV{HOME}/anaconda3/envs/igl/include")
 
 #Eigen
-# find_package (Eigen3 3.3 REQUIRED)
-set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen)
+set(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen")
 
 #Boost
 if (WIN32)
