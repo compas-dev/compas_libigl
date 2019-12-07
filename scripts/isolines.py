@@ -22,7 +22,7 @@ s = mesh.get_vertices_attribute('z')
 V = numpy.array(v, dtype=numpy.float64)
 F = numpy.array(f, dtype=numpy.int32)
 S = numpy.array(s, dtype=numpy.float64)
-N = 30
+N = 50
 
 iso = igl.trimesh_isolines(V, F, S, N)
 

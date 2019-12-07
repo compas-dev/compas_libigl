@@ -17,17 +17,9 @@ HERE = os.path.dirname(__file__)
 FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
 
 mesh = Mesh.from_json(FILE)
-
-V1, F = mesh.to_vertices_and_faces()
-V2 = igl.planarize_quads_proxy(V1, F, kmax, maxdev)
-
-for key, attr in mesh.vertices(True):
-    attr['x'] = V2[key][0]
-    attr['y'] = V2[key][1]
-    attr['z'] = V2[key][2]
-
+mesh.data = igl.planarize_mesh_proxy(mesh.data)
 dev = mesh_flatness(mesh, maxdev=maxdev)
 
-artist = MeshArtist(mesh, layer="IGL::PlanarizeQuads")
+artist = MeshArtist(mesh, layer="IGL::PlanarizeMesh")
 artist.clear_layer()
 artist.draw_faces(color={fkey: i_to_rgb(dev[fkey]) for fkey in mesh.faces()})

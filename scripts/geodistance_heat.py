@@ -1,12 +1,13 @@
+import os
 import numpy
 import compas
-import os
 
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas_plotters import MeshPlotter
 
 import compas_libigl as igl
+
 
 # mesh = Mesh.from_off('../../../data/libigl-tutorial-data/bunny.off')
 # mesh = Mesh.from_obj('../../../data/libigl-tutorial-data/armadillo.obj')

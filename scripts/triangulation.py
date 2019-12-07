@@ -16,6 +16,6 @@ F2 = tri.faces
 
 mesh = Mesh.from_vertices_and_faces(V2, F2)
 
-plotter = MeshPlotter(mesh, figsize=(10, 7))
+plotter = MeshPlotter(mesh, figsize=(8, 5))
 plotter.draw_faces()
 plotter.show()
