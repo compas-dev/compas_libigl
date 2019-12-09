@@ -109,6 +109,9 @@ docs/api/generated/
 
 *.3dmbak
 *.rhl
+*.so
+*.dll
+*.pyd
 
 temp/**
 !temp/PLACEHOLDER

@@ -10,7 +10,7 @@ target_link_libraries(csgtree PRIVATE igl::cgal)
 set_target_properties(csgtree PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/src/compas_libigl/csgtree")
 
-set_target_properties(booleans PROPERTIES
+set_target_properties(csgtree PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/src/compas_libigl/csgtree")
 
 configure_file(__init__.py "${CMAKE_SOURCE_DIR}/src/compas_libigl/csgtree/__init__.py" COPYONLY)
