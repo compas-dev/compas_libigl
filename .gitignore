@@ -127,3 +127,5 @@ src/compas_libigl/Release
 src/compas_libigl/Debug
 
 src/compas_libigl/__pycache__
+
+.vscode
