@@ -9,6 +9,7 @@ from compas.datastructures import mesh_subdivide_quad
 from compas_viewers.meshviewer import MeshViewer
 import compas_libigl as igl
 
+# note: provide interface to other boolean operations
 
 # create a box mesh around the center of the world
 # -2.5 =< x =< +2.5
