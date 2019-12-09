@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include <igl/copyleft/cgal/mesh_boolean.h>
+// #include <compas/interop.h>
 
 namespace py = pybind11;
 

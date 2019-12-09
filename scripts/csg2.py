@@ -13,7 +13,6 @@ from compas.geometry import Vector
 from compas.geometry import Point
 from compas.geometry import Circle
 from compas.geometry import Plane
-
 from compas.geometry import centroid_points
 
 from compas.datastructures import Mesh
@@ -24,6 +23,7 @@ from compas_viewers.multimeshviewer import MultiMeshViewer
 from compas_viewers.multimeshviewer.model import MeshObject
 
 import compas_libigl as igl
+
 
 origin = Point(0.0, 0.0, 0.0)
 
