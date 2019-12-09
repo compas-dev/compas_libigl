@@ -23,8 +23,8 @@ from .triangulation import triangulate_polygon
 from .geodistance import trimesh_geodistance_exact
 from .geodistance import trimesh_geodistance_heat
 
-# from .booleans import mesh_union
-# from .csgtree import mesh_csgtree
+from .booleans import mesh_union
+from .csgtree import mesh_csgtree
 
 
 __all__ = [name for name in dir() if not name.startswith('__')]
