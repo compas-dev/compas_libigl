@@ -9,17 +9,18 @@ from compas_libigl import planarize_quads
 
 MAXDEV = 0.005
 KMAX = 500
-
 HERE = os.path.dirname(__file__)
 
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
-mesh1 = Mesh.from_json(FILE)
+# note: other planarization options
 
-# FILE = os.path.join(HERE, '../data/libigl-tutorial-data/inspired_mesh_quads_Conjugate.off')
-# mesh1 = Mesh.from_off(FILE)
+# FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
+# mesh1 = Mesh.from_json(FILE)
 
-# print(mesh1.number_of_vertices())
-# print(mesh1.number_of_faces())
+FILE = os.path.join(HERE, '../data/libigl-tutorial-data/inspired_mesh_quads_Conjugate.off')
+mesh1 = Mesh.from_off(FILE)
+
+print(mesh1.number_of_vertices())
+print(mesh1.number_of_faces())
 
 vertices, faces = mesh1.to_vertices_and_faces()
 
