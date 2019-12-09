@@ -66,16 +66,16 @@ The top level file is located at the root of the project. There are a few variab
 ```make
 #Boost
 if (WIN32)
-	set(BOOST_ROOT "$ENV{USERPROFILE}/anaconda3/envs/igl/Library/include")
+    set(BOOST_ROOT "$ENV{USERPROFILE}/anaconda3/envs/igl/Library/include")
 else ()
-	set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
+    set(BOOST_ROOT "$ENV{HOME}/anaconda3/envs/igl/include")
 endif()
 
 #Pybind11
 if (WIN32)
-	set(PYTHON_EXECUTABLE "$ENV{USERPROFILE}/anaconda3/envs/igl/python.exe")
+    set(PYTHON_EXECUTABLE "$ENV{USERPROFILE}/anaconda3/envs/igl/python.exe")
 else ()
-	set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
+    set(PYTHON_EXECUTABLE "$ENV{HOME}/anaconda3/envs/igl/bin/python3.7")
 endif()
 ```
 
@@ -138,28 +138,6 @@ If you add a new wrapper, make sure to add a corresponding entry in the `__init_
 Example scripts for simple use cases are located in the `scripts` folder.
 
 ## Notes
-
-### Goals
-
-* Create bindings that can be used in Blender (CPython) and in Rhino (IronPython).
-* Provide solutions based on cmake, pybind, Rhino SDK.
-
-### Challenges
-
-* Callbacks
-* Live updating
-* Dynamic visualisation
-
-**Blender**
-
-Bindings have to be generated for specific versions of Python, corresponding to
-the embedded Python of different Blender releases. For example, Blender 2.78 expects
-Python version 3.5.2.
-
-**Rhino**
-
-Bindings have to be generated using the Rhino SDK such that .NET compatible code
-can be exposed through RhinoCommon.
 
 ### Related projects
 
