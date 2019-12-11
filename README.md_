@@ -84,19 +84,31 @@ Finally there is a `CMakeLists` file per wrapper module. There the most relevant
 target_link_libraries(booleans PRIVATE igl::cgal)
 ```
 
-## Compile & Install
+## Compile
 
 On Mac
 
 * `rm -rf build`
-* `pip install -e .`
+* `mkdir build`
+* `cd build`
+* `cmake -DCMAKE_BUILD_TYPE=Release -DLIBIGL_WITH_CGAL=ON ..`
+* `make -j 4`
 
 On Windows
 
 * `rmdir build /s`
-* `pip install -e .`
+* `mkdir build`
+* `cd build`
+* `cmake -DCMAKE_BUILD_TYPE=Release -DLIBIGL_WITH_CGAL=ON ..`
+* `cmake --build . --config Release`
 
-## check Installation
+## Installation
+
+To make the wrappers available via `compas_libigl` in your `igl` environment, install `compas_libigl` from source as you would do with any other COMPAS package.
+
+```bash
+pip install -e .
+```
 
 To verify, start an interactive python session and import the package. This should not throw any errors.
 
