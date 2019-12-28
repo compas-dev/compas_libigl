@@ -45,7 +45,7 @@ FB = numpy.array([b.face_vertices(face) for face in b.faces()], dtype=numpy.int3
 
 # create the union of a and b
 
-result = igl.mesh_union(VA, FA, VB, FB)
+result = igl.mesh_difference(VA, FA, VB, FB)
 
 # construct a new COMPAS mesh
 
