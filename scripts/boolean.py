@@ -3,10 +3,13 @@
 import numpy
 import compas
 from compas.geometry import Box
+from compas.geometry import Translation
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas.datastructures import mesh_subdivide_quad
-from compas_viewers.meshviewer import MeshViewer
+from compas.datastructures import mesh_transform
+from compas_viewers.multimeshviewer import MultiMeshViewer
+from compas_viewers.multimeshviewer import MeshObject
 import compas_libigl as igl
 
 # note: provide interface to other boolean operations
@@ -43,16 +46,23 @@ FA = numpy.array([a.face_vertices(face) for face in a.faces()], dtype=numpy.int3
 VB = numpy.array(b.get_vertices_attributes('xyz'), dtype=numpy.float64)
 FB = numpy.array([b.face_vertices(face) for face in b.faces()], dtype=numpy.int32)
 
-# create the union of a and b
+# create the booleans between A and B
+booleans = [igl.mesh_union, igl.mesh_difference, igl.mesh_intersection]
+results = [boolean(VA, FA, VB, FB) for boolean in booleans]
 
-result = igl.mesh_difference(VA, FA, VB, FB)
-
-# construct a new COMPAS mesh
-
-c = Mesh.from_vertices_and_faces(result.vertices, result.faces)
+# create meshes
+meshes = [Mesh.from_vertices_and_faces(r.vertices, r.faces) for r in results]
 
 # visualize the result
+viewer = MultiMeshViewer()
 
-viewer = MeshViewer()
-viewer.mesh = c
+# translate meshes 5.0 each on the Y-axis
+pos = 0.0
+spacing = 5.0
+for m in meshes:
+	mesh_transform(m, Translation([0.0, pos, 0.0]))
+	pos += spacing
+
+# create mesh objects for visualization
+viewer.meshes = [MeshObject(m) for m in meshes]
 viewer.show()

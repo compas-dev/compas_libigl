@@ -47,12 +47,47 @@ Mesh mesh_difference(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, RowMatrixXi
     return mesh;
 }
 
+Mesh mesh_intersection(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, RowMatrixXi FB)
+{
+    RowMatrixXd VC;
+    RowMatrixXi FC;
+
+    Eigen::VectorXi J;
+
+    igl::copyleft::cgal::mesh_boolean(VA, FA, VB, FB, igl::MESH_BOOLEAN_TYPE_INTERSECT, VC, FC, J);
+
+    Mesh mesh;
+
+    mesh.vertices = VC;
+    mesh.faces = FC;
+
+    return mesh;
+}
+
+Mesh mesh_symmetric_difference(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, RowMatrixXi FB)
+{
+    RowMatrixXd VC;
+    RowMatrixXi FC;
+
+    Eigen::VectorXi J;
+
+    igl::copyleft::cgal::mesh_boolean(VA, FA, VB, FB, igl::MESH_BOOLEAN_TYPE_XOR, VC, FC, J);
+
+    Mesh mesh; 
+
+    mesh.vertices = VC;
+    mesh.faces = FC;
+
+    return mesh;
+}
 
 using namespace pybind11::literals;
 
 PYBIND11_MODULE(booleans, m) {
     m.def("mesh_union", &mesh_union, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
     m.def("mesh_difference", &mesh_difference, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
+    m.def("mesh_intersection", &mesh_intersection, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
+    m.def("mesh_symmetric_difference", &mesh_symmetric_difference, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
 
     py::class_<Mesh>(m, "Mesh")
     	.def_readonly("vertices", &Mesh::vertices)
