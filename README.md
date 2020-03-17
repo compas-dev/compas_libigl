@@ -1,6 +1,6 @@
 # compas_libigl
 
-Opinionated COMPAS compatible bindings for top-level algorithms of libigl.
+Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
 
 > Note: add instructions for using viewers
 
@@ -24,6 +24,12 @@ These are configured in the `.gitmodules` file and will be cloned into the `ext`
 <https://git-scm.com/book/en/v2/Git-Tools-Submodules>
 <https://git-scm.com/docs/git-submodule>
 <https://git-scm.com/docs/gitmodules>
+
+**Make sure to clone the submodules together with the main repo.**
+
+```bash
+git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
+```
 
 ## Modules
 
@@ -111,6 +117,15 @@ The compiled libraries are added directly into the `compas_libigl` package.
 If you add a new wrapper, make sure to add a corresponding entry in the `__init__.py` file of the package.
 
 Example scripts for simple use cases are located in the `scripts` folder.
+
+## Known Issues
+
+On Windows, the installation of CGAL is problematic.
+If this procedure fails, the boolean operations will not be available and consequently importing `compas_libigl` will produce an error.
+To build `compas_libigl` without support for boolean operations, modify the following files:
+
+* `modules/CMakeLists.txt`: comment line 6 (`add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/booleans)`)
+* `src/compas_libigl/__init__.py`: comment line 5 (`from .booleans import *`)
 
 ## Notes
 
