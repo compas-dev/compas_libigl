@@ -118,6 +118,8 @@ If you add a new wrapper, make sure to add a corresponding entry in the `__init_
 
 Example scripts for simple use cases are located in the `scripts` folder.
 
+**If you make changes to the C++ part of `compas_libigl` you have to rebuild the package before these changes have an effect.**
+
 ## Known Issues
 
 On Windows, the installation of CGAL is problematic.
