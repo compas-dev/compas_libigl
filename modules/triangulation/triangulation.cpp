@@ -15,14 +15,14 @@ struct Triangulation {
 };
 
 
-Triangulation triangulate_polygon(RowMatrixXd V, RowMatrixXi E)
+Triangulation triangulate_polygon(RowMatrixXd V, RowMatrixXi E, const char* opts="a0.005q")
 {
 	RowMatrixXd H;
 
 	RowMatrixXd V2;
 	RowMatrixXi F2;
 
-	igl::triangle::triangulate(V, E, H, "a0.005q", V2, F2);
+	igl::triangle::triangulate(V, E, H, opts, V2, F2);
 
 	Triangulation tri;
 
