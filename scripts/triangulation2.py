@@ -7,7 +7,12 @@ from compas.geometry import centroid_points_xy
 from compas_plotters import MeshPlotter
 from compas.utilities import geometric_key
 from compas.utilities import pairwise
-import compas_libigl as igl
+from compas.rpc import Proxy
+# import compas_libigl as igl
+
+
+igl = Proxy('compas_libigl')
+
 
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, '../data')
@@ -33,12 +38,9 @@ V = numpy.array(xyz, dtype=numpy.float64)
 E = numpy.array(edges, dtype=numpy.int32)
 H = numpy.array(holes, dtype=numpy.float64)
 
-# tri = igl.delaunay_triangulation(V)
-# tri = igl.constrained_delaunay_triangulation(V, E)
-tri = igl.conforming_delaunay_triangulation(V, E, H, area=0.05)
-
-V2 = tri.vertices
-F2 = tri.faces
+# V2, F2 = igl.delaunay_triangulation(V)
+# V2, F2 = igl.constrained_delaunay_triangulation(V, E)
+V2, F2 = igl.conforming_delaunay_triangulation(V, E, H, area=0.05)
 
 mesh = Mesh.from_vertices_and_faces(V2, F2)
 
