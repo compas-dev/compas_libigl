@@ -4,55 +4,56 @@ from __future__ import print_function
 
 
 import compas
-from compas.utilities import pairwise
+import numpy
 
-
-if not compas.IPY:
-    from .triangulation import triangulate_points
-
-# else:
-#     def triangulate_polygon(polygon):
-#         import numpy as np
-#         V = np.array(polygon, dtype=np.float64)
-#         E = np.array(list(pairwise(polygon + polygon[:1])), dtype=np.int32)
-#         tri = triangulate_polygon(V, E)
-#         V2 = tri.vertices
-#         F2 = tri.faces
-#         mesh = Mesh.from_vertices_and_faces(V2, F2)
+from .triangulation import triangulate_points
 
 
 def delaunay_triangulation(V):
-    import numpy
+    V = numpy.asarray(V, dtype=numpy.float64)
     E = numpy.array([], dtype=numpy.int32)
     H = numpy.array([], dtype=numpy.float64)
-    return triangulate_points(V[:,:2], E, H, 'c')
+
+    tri = triangulate_points(V[:,:2], E, H, 'c')
+    return tri.vertices, tri.faces
 
 
 def constrained_delaunay_triangulation(V, E, H=None, area=None):
-    import numpy
+    V = numpy.asarray(V, dtype=numpy.float64)
+    E = numpy.asarray(E, dtype=numpy.int32)
+
     if H is None:
         H = numpy.array([], dtype=numpy.float64)
     else:
+        H = numpy.asarray(H, dtype=numpy.float64)
         H = H[:,:2]
+
     if area:
         opts = 'pa{}q'.format(area)
     else:
         opts = 'pq'
-    return triangulate_points(V[:,:2], E, H, opts)
+
+    tri = triangulate_points(V[:,:2], E, H, opts)
+    return tri.vertices, tri.faces
 
 
 def conforming_delaunay_triangulation(V, E, H=None, area=None):
-    import numpy
+    V = numpy.asarray(V, dtype=numpy.float64)
+    E = numpy.asarray(E, dtype=numpy.int32)
+
     if H is None:
         H = numpy.array([], dtype=numpy.float64)
     else:
+        H = numpy.asarray(H, dtype=numpy.float64)
         H = H[:,:2]
+
     if area:
         opts = 'pa{}q0D'.format(area)
     else:
         opts = 'pq0D'
-    return triangulate_points(V[:,:2], E, H, opts)
 
+    tri = triangulate_points(V[:,:2], E, H, opts)
+    return tri.vertices, tri.faces
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]
