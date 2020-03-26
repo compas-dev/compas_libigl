@@ -5,7 +5,7 @@ from compas.geometry import centroid_points_xy
 from compas_plotters import MeshPlotter
 import compas_libigl as igl
 
-V = numpy.array([[0, 0], [10, 0], [10, 10], [0, 10], [3, 3], [7, 3], [7, 7], [3, 7]], dtype=numpy.float64)
+V = numpy.array([[0, 0, 0], [10, 0, 0], [10, 10, 0], [0, 10, 0], [3, 3, 0], [7, 3, 0], [7, 7, 0], [3, 7, 0]], dtype=numpy.float64)
 E = numpy.array([[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [6, 2]], dtype=numpy.int32)
 H = numpy.array([centroid_points_xy(V[4:])], dtype=numpy.float64)
 

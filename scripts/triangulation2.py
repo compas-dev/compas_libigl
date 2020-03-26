@@ -29,8 +29,6 @@ edges += [[gkey_index[geometric_key(a)], gkey_index[geometric_key(b)]] for a, b 
 holes = []
 holes += [centroid_points_xy([xyz[gkey_index[geometric_key(point)]] for point in data['hole'][:-1]])]
 
-xyz[:] = [point[:2] for point in xyz]
-
 V = numpy.array(xyz, dtype=numpy.float64)
 E = numpy.array(edges, dtype=numpy.int32)
 H = numpy.array(holes, dtype=numpy.float64)
