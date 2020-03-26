@@ -15,10 +15,8 @@ struct Triangulation {
 };
 
 
-Triangulation triangulate_polygon(RowMatrixXd V, RowMatrixXi E, const char* opts="a0.005q")
+Triangulation triangulate_points(RowMatrixXd V, RowMatrixXi E, RowMatrixXd H, const char* opts)
 {
-	RowMatrixXd H;
-
 	RowMatrixXd V2;
 	RowMatrixXi F2;
 
@@ -37,7 +35,7 @@ Triangulation triangulate_polygon(RowMatrixXd V, RowMatrixXi E, const char* opts
 
 
 PYBIND11_MODULE(triangulation, m) {
-    m.def("triangulate_polygon", &triangulate_polygon, py::arg("V").noconvert(), py::arg("E").noconvert());
+    m.def("triangulate_points", &triangulate_points, py::arg("V").noconvert(), py::arg("E").noconvert(), py::arg("H").noconvert(), py::arg("opts"));
 
     py::class_<Triangulation>(m, "Triangulation")
     	.def_readonly("vertices", &Triangulation::vertices)
