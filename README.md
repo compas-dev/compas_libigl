@@ -116,25 +116,42 @@ To verify, start an interactive python session and import the package. This shou
 The compiled libraries are added directly into the `compas_libigl` package.
 If you add a new wrapper, make sure to add a corresponding entry in the `__init__.py` file of the package.
 
+Currently the following functions are available:
+
+* `compas_libigl.trimesh_geodistance_exact`
+* `compas_libigl.trimesh_geodistance_heat`
+* `compas_libigl.trimesh_isolines`
+* `compas_libigl.planarize_quads`
+* `compas_libigl.delaunay_triangulation`
+* `compas_libigl.constrained_delaunay_triangulation`
+* `compas_libigl.conforming_delaunay_triangulation`
+
 Example scripts for simple use cases are located in the `scripts` folder.
 
 **If you make changes to the C++ part of `compas_libigl` you have to rebuild the package before these changes have an effect.**
 
 ## Known Issues
 
+Boolean operations and their CSGtree variations depend on CGAL.
 On Windows, the installation of CGAL is problematic.
-If this procedure fails, the boolean operations will not be available and consequently importing `compas_libigl` will produce an error.
-To build `compas_libigl` without support for boolean operations, modify the following files:
+Therefore, support for blooean operations is not enabled by default.
+To build `compas_libigl` with support for boolean operations, modify the following files:
 
-* `modules/CMakeLists.txt`: comment line 6 (`add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/booleans)`)
-* `src/compas_libigl/__init__.py`: comment line 5 (`from .booleans import *`)
+* `modules/CMakeLists.txt`:
+
+  * uncomment line 6 (`# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/csgtree)`)
+  * uncomment line 7 (`# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/booleans)`)
+
+* `src/compas_libigl/__init__.py`:
+
+  * uncomment line 5 (`# from .booleans import *`)
+  * uncomment line 6 (`# from .csgtree import *`)
 
 ## Notes
 
 ### Related projects
 
 * [PyMesh](https://github.com/PyMesh/PyMesh)
-* [rhino3dm.py](https://github.com/mcneel/rhino3dm/blob/master/RHINO3DM.PY.md)
 * [PyTriangle](https://github.com/pletzer/pytriangle)
 * [Triangle](https://github.com/drufat/triangle)
 * [CMake Triangle](https://github.com/wo80/Triangle)
