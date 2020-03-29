@@ -10,13 +10,16 @@ maxdev = 0.005
 kmax = 500
 
 igl = Proxy('compas_libigl')
-# igl.stop_server()
-# igl.start_server()
 
 HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
+FILE1 = os.path.join(HERE, '..', 'data', 'tubemesh.json')
+FILE2 = os.path.join(HERE, '..', 'data', 'tubemesh.off')
 
-mesh = Mesh.from_json(FILE)
+mesh = Mesh.from_json(FILE1)
+mesh.to_off(FILE2)
+
+mesh = Mesh.from_off(FILE2)
+
 mesh.data = igl.planarize_mesh_proxy(mesh.data)
 dev = mesh_flatness(mesh, maxdev=maxdev)
 
