@@ -122,6 +122,7 @@ Currently the following functions are available:
 * `compas_libigl.trimesh_geodistance_heat`
 * `compas_libigl.trimesh_isolines`
 * `compas_libigl.planarize_quads`
+* `compas_libigl.planarize_mesh_proxy`
 * `compas_libigl.delaunay_triangulation`
 * `compas_libigl.constrained_delaunay_triangulation`
 * `compas_libigl.conforming_delaunay_triangulation`
