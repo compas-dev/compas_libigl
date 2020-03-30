@@ -2,8 +2,6 @@
 
 Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
 
-> Note: add instructions for using viewers
-
 ## Requirements
 
 * Anaconda(3)
@@ -55,10 +53,11 @@ conda install boost
 
 > Note that a conda install of Boost into an environment with Python 3.x will install Boost 1.70 and this is only supported since CMake 3.14.
 
-If you don't have `cmake` installed on your system, you can install it using `conda`:
+To use the viewers, install `compas_viewers` and its dependencies.
 
 ```bash
-conda install cmake
+conda install PySide2 PyOpenGL
+pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
 ```
 
 ## Cmake
@@ -67,12 +66,7 @@ The project has three levels of `CMakeLists.txt` files.
 
 ### /CMakeLists.txt
 
-The top level file is located at the root of the project. There are a few variables that you may want to update.
-
-```make
-```
-
-The Python version and executable should obviously match the Python in your environment. Also the `BOOST_ROOT` should be pointed to the include folder of the environment you created for the installation of this package.
+The top level file is located at the root of the project.
 
 ### /modules/CMakeLists.txt
 
@@ -115,17 +109,6 @@ To verify, start an interactive python session and import the package. This shou
 
 The compiled libraries are added directly into the `compas_libigl` package.
 If you add a new wrapper, make sure to add a corresponding entry in the `__init__.py` file of the package.
-
-Currently the following functions are available:
-
-* `compas_libigl.trimesh_geodistance_exact`
-* `compas_libigl.trimesh_geodistance_heat`
-* `compas_libigl.trimesh_isolines`
-* `compas_libigl.planarize_quads`
-* `compas_libigl.planarize_mesh_proxy`
-* `compas_libigl.delaunay_triangulation`
-* `compas_libigl.constrained_delaunay_triangulation`
-* `compas_libigl.conforming_delaunay_triangulation`
 
 Example scripts for simple use cases are located in the `scripts` folder.
 

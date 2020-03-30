@@ -1,68 +1,66 @@
-# https://libigl.github.io/tutorial/#boolean-operations-on-meshes
-
-import numpy
 import compas
 from compas.geometry import Box
 from compas.geometry import Translation
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas.datastructures import mesh_subdivide_quad
-from compas.datastructures import mesh_transform
 from compas_viewers.multimeshviewer import MultiMeshViewer
 from compas_viewers.multimeshviewer import MeshObject
 import compas_libigl as igl
 
-# note: provide interface to other boolean operations
+# ==============================================================================
+# Input Geometry
+# ==============================================================================
 
 # create a box mesh around the center of the world
-# -2.5 =< x =< +2.5
-# -1.5 =< y =< +1.5
-# -0.5 =< z =< +0.5
 
 box = Box.from_width_height_depth(5.0, 3.0, 1.0)
 a = Mesh.from_shape(box)
-# a = mesh_subdivide_quad(a, k=2)
 mesh_quads_to_triangles(a)
 
 # create a box mesh around the center of the world
-# -0.5 =< x =< +0.5
-# -2.5 =< y =< +2.5
-# -1.5 =< z =< +1.5
 
 box = Box.from_width_height_depth(1.0, 5.0, 3.0)
 b = Mesh.from_shape(box)
-# b = mesh_subdivide_quad(b, k=2)
 mesh_quads_to_triangles(b)
 
-# convert mesh `a` to numpy arrays with vertices and faces
-# note: replace this by functionality of `compas.interop`
+# ==============================================================================
+# Booleans
+# ==============================================================================
 
-VA = numpy.array(a.get_vertices_attributes('xyz'), dtype=numpy.float64)
-FA = numpy.array([a.face_vertices(face) for face in a.faces()], dtype=numpy.int32)
+# convert meshes to data
 
-# convert mesh `b` to numpy arrays with vertices and faces
-# note: replace this by functionality of `compas.interop`
+VA, FA = a.to_vertices_and_faces()
+VB, FB = b.to_vertices_and_faces()
 
-VB = numpy.array(b.get_vertices_attributes('xyz'), dtype=numpy.float64)
-FB = numpy.array([b.face_vertices(face) for face in b.faces()], dtype=numpy.int32)
+# boolean operations
 
-# create the booleans between A and B
-booleans = [igl.mesh_union, igl.mesh_difference, igl.mesh_intersection]
-results = [boolean(VA, FA, VB, FB) for boolean in booleans]
+VC, FC = igl.mesh_union(VA, FA, VB, FB)
+c_union = Mesh.from_vertices_and_faces(VC, FC)
 
-# create meshes
-meshes = [Mesh.from_vertices_and_faces(r.vertices, r.faces) for r in results]
+VC, FC = igl.mesh_intersection(VA, FA, VB, FB)
+c_intersection = Mesh.from_vertices_and_faces(VC, FC)
 
-# visualize the result
+VC, FC = igl.mesh_difference(VA, FA, VB, FB)
+c_diff = Mesh.from_vertices_and_faces(VC, FC)
+
+# ==============================================================================
+# Visualization
+# ==============================================================================
+
+c_union.transform(Translation([7.5, 0, 0]))
+c_intersection.transform(Translation([15, 0, 0]))
+c_diff.transform(Translation([22.5, 0, 0]))
+
 viewer = MultiMeshViewer()
 
-# translate meshes 5.0 each on the Y-axis
-pos = 0.0
-spacing = 5.0
-for m in meshes:
-	mesh_transform(m, Translation([0.0, pos, 0.0]))
-	pos += spacing
+meshes = [
+    MeshObject(a, color='#ff0000'),
+    MeshObject(b, color='#0000ff'),
+    MeshObject(c_union, color='#ff00ff'),
+    MeshObject(c_intersection, color='#00ff00'),
+    MeshObject(c_diff, color='#00ff00'),
+]
 
-# create mesh objects for visualization
-viewer.meshes = [MeshObject(m) for m in meshes]
+viewer.meshes = meshes
 viewer.show()

@@ -1,11 +1,13 @@
 import os
-from itertools import groupby
-import numpy
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas_plotters import MeshPlotter
 from compas.utilities import i_to_rgb
 import compas_libigl as igl
+
+# ==============================================================================
+# Input geometry
+# ==============================================================================
 
 HERE = os.path.dirname(__file__)
 FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
@@ -13,35 +15,34 @@ FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
 mesh = Mesh.from_json(FILE)
 mesh_quads_to_triangles(mesh)
 
+# ==============================================================================
+# Isolines
+# ==============================================================================
+
 key_index = mesh.key_index()
 
-v = mesh.get_vertices_attributes('xyz')
-f = [[key_index[key] for key in mesh.face_vertices(fkey)] for fkey in mesh.faces()]
-s = mesh.get_vertices_attribute('z')
-
-V = numpy.array(v, dtype=numpy.float64)
-F = numpy.array(f, dtype=numpy.int32)
-S = numpy.array(s, dtype=numpy.float64)
+V = mesh.vertices_attributes('xyz')
+F = [[key_index[key] for key in mesh.face_vertices(fkey)] for fkey in mesh.faces()]
+S = mesh.vertices_attribute('z')
 N = 50
 
-iso = igl.trimesh_isolines(V, F, S, N)
+vertices, levels = igl.trimesh_isolines(V, F, S, N)
 
-smin = min(s)
-smax = max(s)
-sspn = smax - smin
+# ==============================================================================
+# Visualisation
+# ==============================================================================
 
-levels = groupby(iso.edges, key=lambda e: iso.vertices[e[0]][2])
+smin = min(S)
+smax = max(S)
 
 lines = []
-for s, edges in levels:
-    color = i_to_rgb((s - smin) / sspn)
+for scalar, edges in levels:
     for i, j in edges:
         lines.append({
-            'start' : iso.vertices[i],
-            'end'   : iso.vertices[j],
-            'color' : color
+            'start' : vertices[i],
+            'end'   : vertices[j],
+            'color' : i_to_rgb((scalar - smin) / (smax - smin))
         })
-
 
 plotter = MeshPlotter(mesh, figsize=(8, 5))
 plotter.draw_faces()

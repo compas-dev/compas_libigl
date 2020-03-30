@@ -1,10 +1,15 @@
 import compas
 from compas.geometry import Box
+from compas.geometry import Translation
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
 from compas.datastructures import mesh_subdivide_quad
-from compas.rpc import Proxy
 from compas_rhino.artists import MeshArtist
+from compas.rpc import Proxy
+
+# ==============================================================================
+# RPC
+# ==============================================================================
 
 # make a proxy object for RP calls
 # (this will reconnect to an existing proxy server or start a new server)
@@ -16,40 +21,73 @@ igl = Proxy('compas_libigl')
 # for example any of the libraries loaded by the server have changed
 # or, if the existing server was started from a different environment
 
-# note: this should be replaced by `restart_server`
 # igl.stop_server()
 # igl.start_server()
 
-# assign a proxy for the original function to `mesh_union`
-
-mesh_union = igl.mesh_union_proxy
+# ==============================================================================
+# Input Geometry
+# ==============================================================================
 
 # create a box mesh around the center of the world
-# -2.5 =< x =< +2.5
-# -1.5 =< y =< +1.5
-# -0.5 =< z =< +0.5
 
 box = Box.from_width_height_depth(5.0, 3.0, 1.0)
 a = Mesh.from_shape(box)
-# a = mesh_subdivide_quad(a, k=2)
 mesh_quads_to_triangles(a)
 
 # create a box mesh around the center of the world
-# -0.5 =< x =< +0.5
-# -2.5 =< y =< +2.5
-# -1.5 =< z =< +1.5
 
 box = Box.from_width_height_depth(1.0, 5.0, 3.0)
 b = Mesh.from_shape(box)
-# b = mesh_subdivide_quad(b, k=2)
 mesh_quads_to_triangles(b)
 
-# create the union of a and b
+# ==============================================================================
+# Booleans
+# ==============================================================================
 
-c = mesh_union(a, b)
+# convert meshes to data
 
-# draw the result
+VA, FA = a.to_vertices_and_faces()
+VB, FB = b.to_vertices_and_faces()
 
-artist = MeshArtist(c, layer="IGL::MeshUnion")
+# boolean operations
+
+VC, FC = igl.mesh_union(VA, FA, VB, FB)
+c_union = Mesh.from_vertices_and_faces(VC, FC)
+
+VC, FC = igl.mesh_intersection(VA, FA, VB, FB)
+c_intersection = Mesh.from_vertices_and_faces(VC, FC)
+
+VC, FC = igl.mesh_difference(VA, FA, VB, FB)
+c_diff = Mesh.from_vertices_and_faces(VC, FC)
+
+# ==============================================================================
+# Visualization
+# ==============================================================================
+
+# the original meshes
+
+artist = MeshArtist(a, layer="IGL::A")
 artist.clear_layer()
-artist.draw_mesh()
+artist.draw_mesh(color=[255, 0, 0])
+
+artist = MeshArtist(b, layer="IGL::B")
+artist.clear_layer()
+artist.draw_mesh(color=[0, 0, 255])
+
+# the boolean meshes
+
+c_union.transform(Translation([7.5, 0, 0]))
+c_intersection.transform(Translation([15, 0, 0]))
+c_diff.transform(Translation([22.5, 0, 0]))
+
+artist = MeshArtist(c_union, layer="IGL::Union")
+artist.clear_layer()
+artist.draw_mesh(color=[225, 0, 255])
+
+artist = MeshArtist(c_intersection, layer="IGL::Intersection")
+artist.clear_layer()
+artist.draw_mesh(color=[0, 255, 0])
+
+artist = MeshArtist(c_diff, layer="IGL::Diff")
+artist.clear_layer()
+artist.draw_mesh(color=[0, 255, 0])

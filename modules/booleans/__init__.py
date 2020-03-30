@@ -2,22 +2,48 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import compas
+import numpy as np
 
-if not compas.IPY:
-    from .booleans import *
+from .booleans import mesh_union as _mesh_union
+from .booleans import mesh_difference as _mesh_difference
+from .booleans import mesh_symmetric_difference as _mesh_symmetric_difference
+from .booleans import mesh_intersection as _mesh_intersection
 
 
-def mesh_union_proxy(a, b):
-    import numpy as np
-    cls = type(a)
-    VA = np.array(a.get_vertices_attributes('xyz'), dtype=np.float64)
-    FA = np.array([a.face_vertices(face) for face in a.faces()], dtype=np.int32)
-    VB = np.array(b.get_vertices_attributes('xyz'), dtype=np.float64)
-    FB = np.array([b.face_vertices(face) for face in b.faces()], dtype=np.int32)
-    result = mesh_union(VA, FA, VB, FB)
-    c = cls.from_vertices_and_faces(result.vertices, result.faces)
-    return c
+def mesh_union(VA, FA, VB, FB):
+    VA = np.asarray(VA, dtype=np.float64)
+    FA = np.asarray(FA, dtype=np.int32)
+    VB = np.asarray(VB, dtype=np.float64)
+    FB = np.asarray(FB, dtype=np.int32)
+    result = _mesh_union(VA, FA, VB, FB)
+    return result.vertices, result.faces
+
+
+def mesh_difference(VA, FA, VB, FB):
+    VA = np.asarray(VA, dtype=np.float64)
+    FA = np.asarray(FA, dtype=np.int32)
+    VB = np.asarray(VB, dtype=np.float64)
+    FB = np.asarray(FB, dtype=np.int32)
+    result = _mesh_difference(VA, FA, VB, FB)
+    return result.vertices, result.faces
+
+
+def mesh_symmetric_difference(VA, FA, VB, FB):
+    VA = np.asarray(VA, dtype=np.float64)
+    FA = np.asarray(FA, dtype=np.int32)
+    VB = np.asarray(VB, dtype=np.float64)
+    FB = np.asarray(FB, dtype=np.int32)
+    result = _mesh_symmetric_difference(VA, FA, VB, FB)
+    return result.vertices, result.faces
+
+
+def mesh_intersection(VA, FA, VB, FB):
+    VA = np.asarray(VA, dtype=np.float64)
+    FA = np.asarray(FA, dtype=np.int32)
+    VB = np.asarray(VB, dtype=np.float64)
+    FB = np.asarray(FB, dtype=np.int32)
+    result = _mesh_intersection(VA, FA, VB, FB)
+    return result.vertices, result.faces
 
 
 __all__ = [name for name in dir() if not name.startswith('_')]
