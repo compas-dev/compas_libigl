@@ -1,6 +1,8 @@
 import os
+from itertools import groupby
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_quads_to_triangles
+from compas.utilities import Colormap
 from compas_plotters import MeshPlotter
 from compas.utilities import i_to_rgb
 import compas_libigl as igl
@@ -13,35 +15,34 @@ HERE = os.path.dirname(__file__)
 FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
 
 mesh = Mesh.from_json(FILE)
-mesh_quads_to_triangles(mesh)
+
+tri = mesh.copy()
+mesh_quads_to_triangles(tri)
 
 # ==============================================================================
 # Isolines
 # ==============================================================================
 
-key_index = mesh.key_index()
+M = tri.to_vertices_and_faces()
+S = tri.vertices_attribute('z')
 
-V = mesh.vertices_attributes('xyz')
-F = [[key_index[key] for key in mesh.face_vertices(fkey)] for fkey in mesh.faces()]
-S = mesh.vertices_attribute('z')
-N = 50
+vertices, edges = igl.trimesh_isolines(M, S, 50)
 
-vertices, levels = igl.trimesh_isolines(V, F, S, N)
+levels = groupby(sorted(edges, key=lambda edge: vertices[edge[0]][2]), key=lambda edge: vertices[edge[0]][2])
 
 # ==============================================================================
 # Visualisation
 # ==============================================================================
 
-smin = min(S)
-smax = max(S)
+cmap = Colormap(S, 'rgb')
 
 lines = []
-for scalar, edges in levels:
+for value, edges in levels:
     for i, j in edges:
         lines.append({
             'start' : vertices[i],
             'end'   : vertices[j],
-            'color' : i_to_rgb((scalar - smin) / (smax - smin))
+            'color' : cmap(value)
         })
 
 plotter = MeshPlotter(mesh, figsize=(8, 5))

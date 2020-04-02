@@ -28,66 +28,55 @@ igl = Proxy('compas_libigl')
 # Input Geometry
 # ==============================================================================
 
-# create a box mesh around the center of the world
+a = Box.from_width_height_depth(5.0, 3.0, 1.0)
+b = Box.from_width_height_depth(1.0, 5.0, 3.0)
 
-box = Box.from_width_height_depth(5.0, 3.0, 1.0)
-a = Mesh.from_shape(box)
+a = Mesh.from_shape(a)
+b = Mesh.from_shape(b)
+
 mesh_quads_to_triangles(a)
-
-# create a box mesh around the center of the world
-
-box = Box.from_width_height_depth(1.0, 5.0, 3.0)
-b = Mesh.from_shape(box)
 mesh_quads_to_triangles(b)
+
+A = a.to_vertices_and_faces()
+B = b.to_vertices_and_faces()
 
 # ==============================================================================
 # Booleans
 # ==============================================================================
 
-# convert meshes to data
+C = igl.mesh_union(A, B)
+c_union = Mesh.from_vertices_and_faces(*C)
 
-VA, FA = a.to_vertices_and_faces()
-VB, FB = b.to_vertices_and_faces()
+C = igl.mesh_intersection(A, B)
+c_intersection = Mesh.from_vertices_and_faces(*C)
 
-# boolean operations
-
-VC, FC = igl.mesh_union(VA, FA, VB, FB)
-c_union = Mesh.from_vertices_and_faces(VC, FC)
-
-VC, FC = igl.mesh_intersection(VA, FA, VB, FB)
-c_intersection = Mesh.from_vertices_and_faces(VC, FC)
-
-VC, FC = igl.mesh_difference(VA, FA, VB, FB)
-c_diff = Mesh.from_vertices_and_faces(VC, FC)
+C = igl.mesh_difference(A, B)
+c_diff = Mesh.from_vertices_and_faces(*C)
 
 # ==============================================================================
 # Visualization
 # ==============================================================================
 
-# the original meshes
-
-artist = MeshArtist(a, layer="IGL::A")
-artist.clear_layer()
-artist.draw_mesh(color=[255, 0, 0])
-
-artist = MeshArtist(b, layer="IGL::B")
-artist.clear_layer()
-artist.draw_mesh(color=[0, 0, 255])
-
-# the boolean meshes
-
 c_union.transform(Translation([7.5, 0, 0]))
 c_intersection.transform(Translation([15, 0, 0]))
 c_diff.transform(Translation([22.5, 0, 0]))
 
-artist = MeshArtist(c_union, layer="IGL::Union")
+artist = MeshArtist(a, layer="IGL::Boolean::A")
+artist.clear_layer()
+artist.draw_mesh(color=[255, 0, 0])
+
+artist = MeshArtist(b, layer="IGL::Boolean::B")
+artist.clear_layer()
+artist.draw_mesh(color=[0, 0, 255])
+
+artist = MeshArtist(c_union, layer="IGL::Boolean::Union")
 artist.clear_layer()
 artist.draw_mesh(color=[225, 0, 255])
 
-artist = MeshArtist(c_intersection, layer="IGL::Intersection")
+artist = MeshArtist(c_intersection, layer="IGL::Boolean::Intersection")
 artist.clear_layer()
 artist.draw_mesh(color=[0, 255, 0])
 
-artist = MeshArtist(c_diff, layer="IGL::Diff")
+artist = MeshArtist(c_diff, layer="IGL::Boolean::Diff")
 artist.clear_layer()
 artist.draw_mesh(color=[0, 255, 0])

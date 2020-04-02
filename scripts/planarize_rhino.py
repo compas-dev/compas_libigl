@@ -6,24 +6,25 @@ from compas.utilities import i_to_rgb
 from compas_rhino.artists import MeshArtist
 from compas.rpc import Proxy
 
-maxdev = 0.005
-kmax = 500
+TOL = 0.02
+MAXDEV = 0.005
+KMAX = 500
 
 igl = Proxy('compas_libigl')
 # igl.stop_server()
 # igl.start_server()
 
 HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
+FILE = os.path.join(HERE, '..', 'data', 'tubemesh.off')
 
-mesh = Mesh.from_json(FILE)
+mesh = Mesh.from_off(FILE)
 
-vertices, faces = mesh.to_vertices_and_faces()
-vertices = igl.planarize_quads(vertices, faces, kmax, maxdev)
+V, F = mesh.to_vertices_and_faces()
+V2 = igl.planarize_quads((V, F), KMAX, MAXDEV)
 
-mesh = Mesh.from_vertices_and_faces(vertices, faces)
+mesh = Mesh.from_vertices_and_faces(V2, F)
 
-dev = mesh_flatness(mesh, maxdev=maxdev)
+dev = mesh_flatness(mesh, maxdev=TOL)
 
 artist = MeshArtist(mesh, layer="IGL::PlanarizeQuads")
 artist.clear_layer()

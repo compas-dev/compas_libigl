@@ -1,22 +1,23 @@
 import os
-import compas
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_flatness
 from compas_plotters import MeshPlotter
 from compas.utilities import i_to_rgb
 import compas_libigl as igl
 
+HERE = os.path.dirname(__file__)
+FILE = os.path.join(HERE, '..', 'data', 'tubemesh.off')
+
 TOL = 0.02
 MAXDEV = 0.005
 KMAX = 500
-HERE = os.path.dirname(__file__)
 
-mesh = Mesh.from_off(compas.get('tubemesh.off'))
+mesh = Mesh.from_off(FILE)
 
-vertices, faces = mesh.to_vertices_and_faces()
-vertices = igl.planarize_quads(vertices, faces, KMAX, MAXDEV)
+V, F = mesh.to_vertices_and_faces()
+V2 = igl.planarize_quads((V, F), KMAX, MAXDEV)
 
-mesh = Mesh.from_vertices_and_faces(vertices, faces)
+mesh = Mesh.from_vertices_and_faces(V2, F)
 dev = mesh_flatness(mesh, maxdev=TOL)
 
 plotter = MeshPlotter(mesh, figsize=(8, 5))

@@ -1,5 +1,3 @@
-import os
-import json
 import compas_rhino
 from compas.geometry import centroid_points_xy
 from compas.utilities import geometric_key
@@ -7,9 +5,9 @@ from compas.utilities import pairwise
 from compas.datastructures import Mesh
 from compas_rhino.geometry import RhinoCurve
 from compas_rhino.artists import MeshArtist
+
 from compas.rpc import Proxy
 
-# from compas.external import igl
 igl = Proxy("compas_libigl")
 
 # ==============================================================================
