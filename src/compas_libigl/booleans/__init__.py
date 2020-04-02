@@ -10,7 +10,25 @@ from .booleans import mesh_symmetric_difference as _mesh_symmetric_difference
 from .booleans import mesh_intersection as _mesh_intersection
 
 
-def mesh_union(VA, FA, VB, FB):
+def mesh_union(A, B):
+    """Compute the union of two meshes.
+
+    Parameters
+    ----------
+    A : tuple
+        The first mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+    B : tuple
+        The second mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+
+    Returns
+    -------
+    C : tuple
+        A list of vertices, and a list of faces, representing the union.
+    """
+    VA, FA = A
+    VB, FB = B
     VA = np.asarray(VA, dtype=np.float64)
     FA = np.asarray(FA, dtype=np.int32)
     VB = np.asarray(VB, dtype=np.float64)
@@ -19,7 +37,25 @@ def mesh_union(VA, FA, VB, FB):
     return result.vertices, result.faces
 
 
-def mesh_difference(VA, FA, VB, FB):
+def mesh_difference(A, B):
+    """Compute the difference of two meshes.
+
+    Parameters
+    ----------
+    A : tuple
+        The first mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+    B : tuple
+        The second mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+
+    Returns
+    -------
+    C : tuple
+        A list of vertices, and a list of faces, representing the difference.
+    """
+    VA, FA = A
+    VB, FB = B
     VA = np.asarray(VA, dtype=np.float64)
     FA = np.asarray(FA, dtype=np.int32)
     VB = np.asarray(VB, dtype=np.float64)
@@ -28,7 +64,25 @@ def mesh_difference(VA, FA, VB, FB):
     return result.vertices, result.faces
 
 
-def mesh_symmetric_difference(VA, FA, VB, FB):
+def mesh_symmetric_difference(A, B):
+    """Compute the symmetric difference of two meshes.
+
+    Parameters
+    ----------
+    A : tuple
+        The first mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+    B : tuple
+        The second mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+
+    Returns
+    -------
+    C : tuple
+        A list of vertices, and a list of faces, representing the symmetric difference.
+    """
+    VA, FA = A
+    VB, FB = B
     VA = np.asarray(VA, dtype=np.float64)
     FA = np.asarray(FA, dtype=np.int32)
     VB = np.asarray(VB, dtype=np.float64)
@@ -37,7 +91,25 @@ def mesh_symmetric_difference(VA, FA, VB, FB):
     return result.vertices, result.faces
 
 
-def mesh_intersection(VA, FA, VB, FB):
+def mesh_intersection(A, B):
+    """Compute the intersection of two meshes.
+
+    Parameters
+    ----------
+    A : tuple
+        The first mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+    B : tuple
+        The second mesh, represented by a tuple of a list of vertices,
+        and a list of faces.
+
+    Returns
+    -------
+    C : tuple
+        A list of vertices, and a list of faces, representing the intersection.
+    """
+    VA, FA = A
+    VB, FB = B
     VA = np.asarray(VA, dtype=np.float64)
     FA = np.asarray(FA, dtype=np.int32)
     VB = np.asarray(VB, dtype=np.float64)
