@@ -60,30 +60,6 @@ conda install PySide2 PyOpenGL
 pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
 ```
 
-## Cmake
-
-The project has three levels of `CMakeLists.txt` files.
-
-### /CMakeLists.txt
-
-The top level file is located at the root of the project.
-
-### /modules/CMakeLists.txt
-
-The second level file is in the `modules` folder. If you add a new wrapper module, make sure to register it in this file as well.
-
-```make
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/xxx)
-```
-
-### /modules/xxx/CMakeLists.txt
-
-Finally there is a `CMakeLists` file per wrapper module. There the most relevant part is to link the correct libraries. For example, the module that wraps `libigl`'s boolean operations requires `CGAL` and this should thus be reflected in the file.
-
-```make
-target_link_libraries(booleans PRIVATE igl::cgal)
-```
-
 ## Compile & Install
 
 On Mac
@@ -96,7 +72,7 @@ On Windows
 * `rmdir build /s`
 * `pip install -e .`
 
-## check Installation
+## Check Installation
 
 To verify, start an interactive python session and import the package. This should not throw any errors.
 
@@ -130,6 +106,30 @@ To build `compas_libigl` with support for boolean operations, modify the followi
 
   * uncomment line 5 (`# from .booleans import *`)
   * uncomment line 6 (`# from .csgtree import *`)
+
+## Cmake
+
+The project has three levels of `CMakeLists.txt` files.
+
+### /CMakeLists.txt
+
+The top level file is located at the root of the project.
+
+### /modules/CMakeLists.txt
+
+The second level file is in the `modules` folder. If you add a new wrapper module, make sure to register it in this file as well.
+
+```make
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/xxx)
+```
+
+### /modules/xxx/CMakeLists.txt
+
+Finally there is a `CMakeLists` file per wrapper module. There the most relevant part is to link the correct libraries. For example, the module that wraps `libigl`'s boolean operations requires `CGAL` and this should thus be reflected in the file.
+
+```make
+target_link_libraries(booleans PRIVATE igl::cgal)
+```
 
 ## Notes
 
