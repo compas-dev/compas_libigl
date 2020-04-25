@@ -1,0 +1,40 @@
+{% set name = "compas_libigl" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: $RECIPE_DIR/../../
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vvv
+
+requirements:
+  build:
+    - boost
+    - cmake
+    - git
+  host:
+    - python
+    - pip
+  run:
+    - COMPAS >=0.15.5
+
+test:
+  imports:
+    - compas_libigl
+
+about:
+  home: https://github.com/blockresearchgroup/compas_libigl
+  license: MIT
+  summary: 'COMPAS friendly wrappers for libigl functions.'
+  dev_url: https://github.com/blockresearchgroup/compas_libigl
+  doc_url: https://blockresearchgroup.github.io/compas_libigl
+  doc_source_url: https://github.com/blockresearchgroup/compas_libigl/blob/master/README.rst
+
+extra:
+  recipe-maintainers:
+    - brgcode

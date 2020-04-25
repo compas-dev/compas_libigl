@@ -24,6 +24,7 @@ def read(*names, **kwargs):
         encoding=kwargs.get('encoding', 'utf8')
     ).read()
 
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -31,6 +32,7 @@ class CMakeExtension(Extension):
 
 
 class CMakeBuild(build_ext):
+
     def run(self):
         try:
             out = subprocess.check_output(['cmake', '--version'])
@@ -83,6 +85,7 @@ long_description = read('README.md')
 requirements = read('requirements.txt').split('\n')
 optional_requirements = {}
 
+
 setup(
     name='compas_libigl',
     version='0.1.0',
@@ -102,12 +105,9 @@ setup(
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     keywords=[],
@@ -119,7 +119,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=requirements,
-    python_requires='>=2.7',
+    python_requires='>=3.6',
     extras_require=optional_requirements,
     entry_points={
         'console_scripts': [],
