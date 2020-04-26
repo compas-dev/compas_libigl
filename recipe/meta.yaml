@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  # git_url: https://github.com/BlockResearchGroup/compas_libigl.git
-  # git_depth: 1
+  git_url: https://github.com/BlockResearchGroup/compas_libigl.git
+  git_depth: 1
   # url: https://github.com/blockresearchgroup/compas_libigl/archive/alpha-{{ version }}.tar.gz
   # sha256: f90b39d88ea003bc2ca7925146babb20320cedebe096e4c276835490be8e10a0
   path: $RECIPE_DIR/../../
