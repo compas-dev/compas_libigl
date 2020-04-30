@@ -73,7 +73,7 @@ Mesh mesh_symmetric_difference(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, R
 
     igl::copyleft::cgal::mesh_boolean(VA, FA, VB, FB, igl::MESH_BOOLEAN_TYPE_XOR, VC, FC, J);
 
-    Mesh mesh; 
+    Mesh mesh;
 
     mesh.vertices = VC;
     mesh.faces = FC;
@@ -83,7 +83,7 @@ Mesh mesh_symmetric_difference(RowMatrixXd VA, RowMatrixXi FA, RowMatrixXd VB, R
 
 using namespace pybind11::literals;
 
-PYBIND11_MODULE(booleans, m) {
+PYBIND11_MODULE(compas_libigl_booleans, m) {
     m.def("mesh_union", &mesh_union, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
     m.def("mesh_difference", &mesh_difference, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());
     m.def("mesh_intersection", &mesh_intersection, "VA"_a.noconvert(), "FA"_a.noconvert(), "VB"_a.noconvert(), "FB"_a.noconvert());

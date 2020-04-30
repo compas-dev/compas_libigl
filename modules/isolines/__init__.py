@@ -5,7 +5,7 @@ from __future__ import print_function
 import numpy as np
 from itertools import groupby
 
-from .isolines import trimesh_isolines as _trimesh_isolines
+from compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
 
 
 def trimesh_isolines(M, S, N=50):
