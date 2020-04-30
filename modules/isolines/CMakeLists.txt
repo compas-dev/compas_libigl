@@ -8,4 +8,3 @@ target_link_libraries(compas_libigl_isolines PRIVATE igl::core)
 
 #set_target_properties(isolines PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/src/compas_libigl/isolines")
 #set_target_properties(isolines PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/src/compas_libigl/isolines")
-#configure_file(__init__.py "${CMAKE_SOURCE_DIR}/src/compas_libigl/isolines/__init__.py" COPYONLY)

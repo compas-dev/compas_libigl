@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
 from compas_libigl_geodistance import trimesh_geodistance_exact as _exact
 from compas_libigl_geodistance import trimesh_geodistance_heat as _heat
 

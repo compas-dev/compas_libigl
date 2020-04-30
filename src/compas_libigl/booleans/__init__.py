@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
 from compas_libigl_booleans import mesh_union as _mesh_union
 from compas_libigl_booleans import mesh_difference as _mesh_difference
 from compas_libigl_booleans import mesh_symmetric_difference as _mesh_symmetric_difference
