@@ -10,12 +10,12 @@ source:
   # git_depth: 1
   # url: https://github.com/blockresearchgroup/compas_libigl/archive/alpha-{{ version }}.tar.gz
   # sha256: f90b39d88ea003bc2ca7925146babb20320cedebe096e4c276835490be8e10a0
-  path: $RECIPE_DIR/../../
   # git_url: ../
+  path: $RECIPE_DIR/../../
 
 build:
   number: 0
-  # script: "{{ PYTHON }} -m pip install . -vv"
+  script: "{{ PYTHON }} -m pip install . -vv"
   # script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vv"
 
 requirements:
@@ -23,9 +23,6 @@ requirements:
     - git
     - cmake
     - boost
-    # - pybind11
-    # - cgal
-    # - numpy >=1.15.4
   host:
     - python
     - pip

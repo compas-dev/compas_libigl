@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
 from compas_libigl_triangulation import triangulate_points
 
 
