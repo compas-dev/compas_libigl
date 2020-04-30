@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from .triangulation import triangulate_points
+from compas_libigl_triangulation import triangulate_points
 
 
 def delaunay_triangulation(V):

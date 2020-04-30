@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-from .planarize import planarize_quads as _planarize_quads
+from compas_libigl_planarize import planarize_quads as _planarize_quads
 
 
 def planarize_quads(M, kmax=500, maxdev=0.005):

@@ -19,13 +19,11 @@ here = path.abspath(path.dirname(__file__))
 
 
 def read(*names, **kwargs):
-    return io.open(
-        path.join(here, *names),
-        encoding=kwargs.get('encoding', 'utf8')
-    ).read()
+    return io.open(path.join(here, *names), encoding=kwargs.get('encoding', 'utf8')).read()
 
 
 class CMakeExtension(Extension):
+
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
@@ -37,8 +35,7 @@ class CMakeBuild(build_ext):
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
-            raise RuntimeError("CMake must be installed to build the following extensions: " +
-                               ", ".join(e.name for e in self.extensions))
+            raise RuntimeError("CMake must be installed to build the following extensions: " + ", ".join(e.name for e in self.extensions))
 
         if platform.system() == "Windows":
             cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
@@ -50,16 +47,18 @@ class CMakeBuild(build_ext):
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
-        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                      '-DPYTHON_EXECUTABLE=' + sys.executable,
-                      # For MacOS.
-                      # During compiling stage, the python module always links to a temporary generated library which is going to be destroyed.
-                      # Then importing the final installed module will return a link error
-                      # The following commands will force the module to look up the its dynmaic linked library in the same folder
-                      # '-DCMAKE_INSTALL_RPATH=@loader_path',
-                      # '-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON',
-                      # '-DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF'
-                      ]
+        cmake_args = [
+            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+            '-DPYTHON_EXECUTABLE=' + sys.executable,
+            # For MacOS.
+            # During compiling stage, the python module always links to a temporary generated library which is going to be destroyed.
+            # Then importing the final installed module will return a link error
+            # The following commands will force the module to look up the its dynmaic linked library in the same folder
+            # '-DCMAKE_INSTALL_RPATH=@loader_path',
+            # '-DCMAKE_INSTALL_RPATH=$ORIGIN',
+            # '-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON',
+            # '-DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF'
+        ]
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
@@ -68,14 +67,15 @@ class CMakeBuild(build_ext):
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
-            build_args += ['--', '/m']
+            # build_args += ['--', '/m']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             build_args += ['--', '-j2']
 
+        print(self.build_temp)
+
         env = os.environ.copy()
-        env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
-                                                              self.distribution.get_version())
+        env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
@@ -122,9 +122,6 @@ setup(
     install_requires=requirements,
     python_requires='>=3.6',
     extras_require=optional_requirements,
-    entry_points={
-        'console_scripts': [],
-    },
     ext_modules=[CMakeExtension('compas_libigl')],
     cmdclass=dict(build_ext=CMakeBuild),
 )

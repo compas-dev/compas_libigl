@@ -45,7 +45,7 @@ Eigen::VectorXd trimesh_geodistance_heat(RowMatrixXd V, RowMatrixXi F, int vid)
 
 using namespace pybind11::literals;
 
-PYBIND11_MODULE(geodistance, m) {
+PYBIND11_MODULE(compas_libigl_geodistance, m) {
     m.def("trimesh_geodistance_exact", &trimesh_geodistance_exact, "V"_a.noconvert(), "F"_a.noconvert(), "vid"_a);
     m.def("trimesh_geodistance_heat", &trimesh_geodistance_heat, "V"_a.noconvert(), "F"_a.noconvert(), "vid"_a);
 }
