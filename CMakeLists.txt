@@ -20,7 +20,12 @@ else ()
 endif ()
 
 #Eigen
-set(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen")
+# set(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen")
+if (WIN32)
+    set(EIGEN3_INCLUDE_DIR "${PYTHON_DIR}/Library/include/eigen3")
+else ()
+    set(EIGEN3_INCLUDE_DIR "${PYTHON_DIR}/include/eigen3")
+endif ()
 
 #Boost
 if (WIN32)
@@ -31,7 +36,7 @@ endif ()
 
 #Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pybind11)
 
 #Libigl
 option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)

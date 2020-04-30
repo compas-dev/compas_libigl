@@ -6,12 +6,19 @@ package:
   version: {{ version }}
 
 source:
-  # git_url: https://github.com/BlockResearchGroup/compas_libigl.git
-  # git_depth: 1
-  # url: https://github.com/blockresearchgroup/compas_libigl/archive/alpha-{{ version }}.tar.gz
-  # sha256: f90b39d88ea003bc2ca7925146babb20320cedebe096e4c276835490be8e10a0
-  # git_url: ../
-  path: $RECIPE_DIR/../../
+  - url: https://github.com/pybind/pybind11/archive/v2.5.0.tar.gz
+    folder: $RECIPE_DIR/../thirdparty/pybind11
+    fn: pybind11-2.5.0.tar.gz
+    sha256: 97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504
+  - url: https://github.com/libigl/libigl/archive/v2.2.0.tar.gz
+    folder: $RECIPE_DIR/../thirdparty/libigl
+    fn: libigl-2.2.0.tar.gz
+    sha256: b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5
+  - path: $RECIPE_DIR/../../
+
+#   - url: https://github.com/blockresearchgroup/compas_libigl/archive/v0.1.0.tar.gz
+#     fn: compas_libigl-0.1.0.tar.gz
+#     sha256: b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5
 
 build:
   number: 0
@@ -23,6 +30,7 @@ requirements:
     - git
     - cmake
     - boost
+    - eigen
   host:
     - python
     - pip

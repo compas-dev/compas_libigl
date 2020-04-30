@@ -1,8 +1,10 @@
 import os
 import hashlib
 
-HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '../temp/compas_libigl-alpha-0.1.0.tar.gz')
+# HERE = os.path.dirname(__file__)
+# FILE = os.path.join(HERE, '/Users/vanmelet/Downloads/pybind11-2.5.0.tar.gz')
+# FILE = '/Users/vanmelet/Downloads/pybind11-2.5.0.tar.gz'
+FILE = '/Users/vanmelet/Downloads/libigl-2.2.0.tar.gz'
 
 with open(FILE, 'rb') as f:
     data = f.read()
