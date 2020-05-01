@@ -1,6 +1,6 @@
 {% set name = "compas_libigl" %}
 {% set version = "0.1.2" %}
-{% set hash = "613a0d23f25e27dbe67b113f623154be31c0786e191c19a8d9e7b1f3480140af" %}
+{% set hash = "e411b45e1023a7826c571ecd63a619722631f4a8cdf0445b04a77c6e6147f826" %}
 {% set pybind11_version = "2.5.0" %}
 {% set pybind11_hash = "97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504" %}
 {% set libigl_version = "2.2.0" %}
@@ -26,16 +26,20 @@ source:
 build:
   number: 0
   script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
+  missing_dso_whitelist:
+    - libSystem.B.dylib
 
 requirements:
   build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - git
     - cmake
-    - boost
-    - eigen
   host:
     - python
     - pip
+    - boost
+    - eigen
   run:
     - COMPAS >=0.15.5
 
