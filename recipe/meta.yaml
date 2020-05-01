@@ -1,29 +1,31 @@
 {% set name = "compas_libigl" %}
-{% set version = "0.1.0" %}
+{% set version = "0.1.1" %}
+{% set hash = "613a0d23f25e27dbe67b113f623154be31c0786e191c19a8d9e7b1f3480140af" %}
+{% set pybind11_version = "2.5.0" %}
+{% set pybind11_hash = "97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504" %}
+{% set libigl_version = "2.2.0" %}
+{% set libigl_hash = "b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  - url: https://github.com/pybind/pybind11/archive/v2.5.0.tar.gz
-    folder: $RECIPE_DIR/../thirdparty/pybind11
-    fn: pybind11-2.5.0.tar.gz
-    sha256: 97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504
-  - url: https://github.com/libigl/libigl/archive/v2.2.0.tar.gz
-    folder: $RECIPE_DIR/../thirdparty/libigl
-    fn: libigl-2.2.0.tar.gz
-    sha256: b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5
-  - path: $RECIPE_DIR/../../
-
-#   - url: https://github.com/blockresearchgroup/compas_libigl/archive/v0.1.0.tar.gz
-#     fn: compas_libigl-0.1.0.tar.gz
-#     sha256: b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5
+  - url: https://github.com/pybind/pybind11/archive/v{{ pybind11_version }}.tar.gz
+    folder: ext/pybind11
+    fn: pybind11-{{ pybind11_version }}.tar.gz
+    sha256: {{ pybind11_hash }}
+  - url: https://github.com/libigl/libigl/archive/v{{ libigl_version }}.tar.gz
+    folder: ext/libigl
+    fn: libigl-{{ libigl_version }}.tar.gz
+    sha256: {{ libigl_hash }}
+  - url: https://github.com/blockresearchgroup/compas_libigl/archive/v{{ version }}.tar.gz
+    fn: compas_libigl-{{ version }}.tar.gz
+    sha256: {{ hash }}
 
 build:
   number: 0
-  script: "{{ PYTHON }} -m pip install . -vv"
-  # script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -vv"
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
 
 requirements:
   build:
