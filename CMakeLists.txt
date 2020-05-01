@@ -20,7 +20,6 @@ else ()
 endif ()
 
 #Eigen
-# set(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen")
 if (WIN32)
     set(EIGEN3_INCLUDE_DIR "${PYTHON_DIR}/Library/include/eigen3")
 else ()
