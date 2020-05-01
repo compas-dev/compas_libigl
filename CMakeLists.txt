@@ -36,7 +36,7 @@ endif ()
 
 #Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/pybind11)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
 option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
