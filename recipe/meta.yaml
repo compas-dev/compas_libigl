@@ -42,8 +42,8 @@ requirements:
     - boost
     - eigen
     - gmp 6.1.2  # [not win]
-    - gmp 5.0*  # [win]
     - mpfr 4.0.1  # [not win]
+    - gmp 5.0*  # [win]
     - mpfr 3.0*  # [win]
   run:
     - python
