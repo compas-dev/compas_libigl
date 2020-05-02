@@ -1,6 +1,6 @@
 {% set name = "compas_libigl" %}
-{% set version = "0.1.3" %}
-{% set hash = "8d0faf8fec607a160854a74b89fd13a737255d377c87bc8686ccde2131d2c094" %}
+{% set version = "0.1.6" %}
+{% set hash = "a2b381107c5af1f6d8f4d75871f74190cc64d2876b9d038da537c3d7a3814014" %}
 {% set pybind11_version = "2.5.0" %}
 {% set pybind11_hash = "97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504" %}
 {% set libigl_version = "2.2.0" %}
@@ -26,7 +26,7 @@ source:
 build:
   number: 0
   skip: true  # [py<36]
-  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
+  # script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
 
 requirements:
   build:
@@ -34,19 +34,20 @@ requirements:
     - {{ compiler('cxx') }}
     - git
     - cmake
-    - make
-    - dlib
+    - ninja  # [win]
   host:
-    - python
+    - python {{ python }}
     - pip
+    - setuptools
+    - cython
     - boost
     - eigen
     - gmp 6.1.2  # [not win]
     - mpfr 4.0.1  # [not win]
-    - gmp 5.0*  # [win]
-    - mpfr 3.0*  # [win]
+    # - gmp 5.0*  # [win]
+    # - mpfr 3.0*  # [win]
   run:
-    - python
+    - python {{ python }}
     - COMPAS >=0.15.5
 
 test:
