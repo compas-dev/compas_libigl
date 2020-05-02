@@ -39,7 +39,11 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
 option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
-option(LIBIGL_WITH_CGAL "Use CGAL" ON)
+if (WIN32)
+    option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
+else ()
+    option(LIBIGL_WITH_CGAL "Use CGAL" ON)
+endif ()
 find_package(LIBIGL REQUIRED)
 
 #COMPAS libigl modules
