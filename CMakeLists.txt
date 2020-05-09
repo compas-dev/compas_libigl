@@ -43,4 +43,27 @@ option(LIBIGL_WITH_CGAL "Use CGAL" ON)
 find_package(LIBIGL REQUIRED)
 
 #COMPAS libigl modules
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/modules)
+
+#booleans
+if (NOT WIN32)
+    pybind11_add_module(compas_libigl_booleans MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/booleans/booleans.cpp)
+    target_link_libraries(compas_libigl_booleans PRIVATE igl::core)
+    target_link_libraries(compas_libigl_booleans PRIVATE igl::cgal)
+endif()
+
+#geodistance
+pybind11_add_module(compas_libigl_geodistance MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/geodistance/geodistance.cpp)
+target_link_libraries(compas_libigl_geodistance PRIVATE igl::core)
+
+#isolines
+pybind11_add_module(compas_libigl_isolines MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/isolines/isolines.cpp)
+target_link_libraries(compas_libigl_isolines PRIVATE igl::core)
+
+#planarize
+pybind11_add_module(compas_libigl_planarize MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/planarize/planarize.cpp)
+target_link_libraries(compas_libigl_planarize PRIVATE igl::core)
+
+#triangulation
+pybind11_add_module(compas_libigl_triangulation MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/triangulation/triangulation.cpp)
+target_link_libraries(compas_libigl_triangulation PRIVATE igl::core)
+target_link_libraries(compas_libigl_triangulation PRIVATE igl::triangle)
