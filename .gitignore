@@ -116,3 +116,5 @@ build/**
 .DS_Store
 
 .vscode
+
+*.so
