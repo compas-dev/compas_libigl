@@ -12,6 +12,13 @@ conda activate igl
 pip install path/to/compas_libigl
 ```
 
+Optionally, install the COMPAS viewer for visualisation.
+
+```bash
+conda install PySide2 PyOpenGL --yes
+pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+```
+
 ## Libigl functions
 
 Currently the following functionalities of Libigl are included in the wrapper
@@ -24,9 +31,10 @@ Currently the following functionalities of Libigl are included in the wrapper
 
 > The boolean operations are currently not available on Windows.
 
-## Contribute
+## Examples
 
-If you want to contribute, developer guidelines are available here [Developer Guide](DEVGUIDE.md).
+The use of the wrapped functions is illustrated with scripts in the `examples` folder.
+Note that the functionality of the package is not directly available in Rhino, but can be used through `compas.rpc`.
 
 ## License
 
