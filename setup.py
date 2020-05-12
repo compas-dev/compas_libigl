@@ -22,6 +22,11 @@ def read(*names, **kwargs):
     return io.open(path.join(here, *names), encoding=kwargs.get('encoding', 'utf8')).read()
 
 
+# def get_pybind_include():
+#     import pybind11
+#     return os.path.dirname(pybind11.get_include())
+
+
 class CMakeExtension(Extension):
 
     def __init__(self, name, sourcedir=''):
