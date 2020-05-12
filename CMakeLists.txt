@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(compas_libigl)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 #Python
@@ -11,13 +11,6 @@ if (NOT WIN32)
     # so go one more level up
     get_filename_component(PYTHON_DIR ${PYTHON_DIR} DIRECTORY)
 endif ()
-
-#Python includes
-# if (WIN32)
-#     set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/Library/include")
-# else ()
-#     set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/include")
-# endif ()
 
 #Eigen
 if (WIN32)
@@ -34,7 +27,7 @@ else ()
 endif ()
 
 #Pybind11
-set(PYBIND11_CPP_STANDARD -std=c++11)
+set(PYBIND11_CPP_STANDARD -std=c++14)
 find_package(pybind11 REQUIRED)
 
 #Libigl
@@ -45,8 +38,6 @@ else ()
     option(LIBIGL_WITH_CGAL "Use CGAL" ON)
 endif ()
 find_package(LIBIGL REQUIRED)
-
-#COMPAS libigl modules
 
 #booleans
 if (NOT WIN32)
