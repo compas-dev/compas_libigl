@@ -13,11 +13,11 @@ if (NOT WIN32)
 endif ()
 
 #Python includes
-if (WIN32)
-    set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/Library/include")
-else ()
-    set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/include")
-endif ()
+# if (WIN32)
+#     set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/Library/include")
+# else ()
+#     set(CPLUS_INCLUDE_PATH "${PYTHON_DIR}/include")
+# endif ()
 
 #Eigen
 if (WIN32)
@@ -35,12 +35,12 @@ endif ()
 
 #Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
+find_package(pybind11 REQUIRED)
 
 #Libigl
 option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
 if (WIN32)
-    option(LIBIGL_WITH_CGAL "Use CGAL" ON)
+    option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
 else ()
     option(LIBIGL_WITH_CGAL "Use CGAL" ON)
 endif ()
