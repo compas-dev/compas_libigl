@@ -5,25 +5,25 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 #Python
-get_filename_component(PYTHON_DIR ${PYTHON_EXECUTABLE} DIRECTORY)
-if (NOT WIN32)
-    # on OSX the executable is in "bin"
-    # so go one more level up
-    get_filename_component(PYTHON_DIR ${PYTHON_DIR} DIRECTORY)
-endif ()
+# get_filename_component(PYTHON_DIR ${PYTHON_EXECUTABLE} DIRECTORY)
+# if (NOT WIN32)
+#     # on OSX the executable is in "bin"
+#     # so go one more level up
+#     get_filename_component(PYTHON_DIR ${PYTHON_DIR} DIRECTORY)
+# endif ()
 
 #Eigen
 if (WIN32)
-    set(EIGEN3_INCLUDE_DIR "${PYTHON_DIR}/Library/include/eigen3")
+    set(EIGEN3_INCLUDE_DIR "$ENV{CONDA_PREFIX}/Library/include/eigen3")
 else ()
-    set(EIGEN3_INCLUDE_DIR "${PYTHON_DIR}/include/eigen3")
+    set(EIGEN3_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/eigen3")
 endif ()
 
 #Boost
 if (WIN32)
-    set(BOOST_ROOT "${PYTHON_DIR}/Library/include")
+    set(BOOST_ROOT "$ENV{CONDA_PREFIX}/Library/include")
 else ()
-    set(BOOST_ROOT "${PYTHON_DIR}/include")
+    set(BOOST_ROOT "$ENV{CONDA_PREFIX}/include")
 endif ()
 
 #Pybind11
