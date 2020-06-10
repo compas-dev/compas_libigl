@@ -8,5 +8,6 @@ from .planarize import *
 from .triangulation import *
 from .massmatrix import *
 from .curvature import *
+from .intersections import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]
