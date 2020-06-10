@@ -19,9 +19,10 @@ source:
     folder: ext/libigl
     fn: libigl-{{ libigl_version }}.tar.gz
     sha256: {{ libigl_hash }}
-  - url: https://github.com/blockresearchgroup/compas_libigl/archive/v{{ version }}.tar.gz
-    fn: compas_libigl-{{ version }}.tar.gz
-    sha256: {{ hash }}
+  - path: ../
+#   - url: https://github.com/blockresearchgroup/compas_libigl/archive/v{{ version }}.tar.gz
+#     fn: compas_libigl-{{ version }}.tar.gz
+#     sha256: {{ hash }}
 
 build:
   number: 0
