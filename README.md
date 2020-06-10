@@ -1,6 +1,6 @@
 # compas_libigl
 
-Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
+COMPAS-compatible bindings for top-level algorithms of libigl generated with Pybind.
 
 ## Installation
 
@@ -28,22 +28,22 @@ Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
    pip install -e .
    ```
 
-4. Install the COMPAS viewer for visualisation.
+## Install COMPAS viewer (optional)
 
-   *On Mac.*
+*On Mac.*
 
-   ```bash
-   conda install PySide2 PyOpenGL --yes
-   pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
-   ```
+```bash
+conda install PySide2 PyOpenGL --yes
+pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+```
 
-   *On Windows.*
+*On Windows.*
 
-   ```bash
-   conda install PySide2 --yes
-   pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
-   pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
-   ```
+```bash
+conda install PySide2 --yes
+pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
+pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+```
 
 ## Libigl functions
 
@@ -54,6 +54,8 @@ Currently the following functionalities of Libigl are included in the wrapper
 * Quad mesh planarization
 * 2D Triangulations (Triangle)
 * Mass matrix of triangle mesh
+* Discrete gaussian curvature
+* Ray/mesh intersection
 
 ## Examples
 
@@ -63,7 +65,6 @@ Note that the functionality of the package is not directly available in Rhino, b
 ## License
 
 Libigl is licensed under MPL-2.
-Free use of CGAL is licensed under LGPL and GPL-3.
 Free use of Triangle is limited to personal and academic use and governed by a specific license agreement.
 
-All license notices are included.
+Both license notices are included.
