@@ -118,3 +118,5 @@ build/**
 .vscode
 
 *.so
+
+src/compas-viewers
