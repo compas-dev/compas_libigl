@@ -20,36 +20,27 @@ source:
     fn: libigl-{{ libigl_version }}.tar.gz
     sha256: {{ libigl_hash }}
   - path: ../
-#   - url: https://github.com/blockresearchgroup/compas_libigl/archive/v{{ version }}.tar.gz
-#     fn: compas_libigl-{{ version }}.tar.gz
-#     sha256: {{ hash }}
 
 build:
   number: 0
   skip: true  # [py<36]
-  # script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - git
-    - cmake
+    - cmake >=3.14
     - ninja  # [win]
   host:
     - python {{ python }}
     - pip
     - setuptools
-    - cython
     - boost
     - eigen
-    - gmp 6.1.2  # [not win]
-    - mpfr 4.0.1  # [not win]
-    - gmp 5.0*  # [win]
-    - mpfr 3.0*  # [win]
   run:
     - python {{ python }}
-    - COMPAS >=0.15.5
+    - COMPAS >=0.16.1
 
 test:
   imports:
