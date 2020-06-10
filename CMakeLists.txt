@@ -44,3 +44,6 @@ pybind11_add_module(compas_libigl_triangulation MODULE ${CMAKE_CURRENT_SOURCE_DI
 target_link_libraries(compas_libigl_triangulation PRIVATE igl::core)
 target_link_libraries(compas_libigl_triangulation PRIVATE igl::triangle)
 
+#massmatrix
+pybind11_add_module(compas_libigl_massmatrix MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/massmatrix/massmatrix.cpp)
+target_link_libraries(compas_libigl_massmatrix PRIVATE igl::core)

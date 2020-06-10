@@ -7,8 +7,14 @@
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
+namespace py = pybind11;
 
-Eigen::VectorXd trimesh_geodistance_exact(RowMatrixXd V, RowMatrixXi F, int vid)
+
+Eigen::VectorXd
+trimesh_geodistance_exact(
+    RowMatrixXd V,
+    RowMatrixXi F,
+    int vid)
 {
 	Eigen::VectorXd D;
 	Eigen::VectorXi VS, FS, VT, FT;
@@ -24,7 +30,11 @@ Eigen::VectorXd trimesh_geodistance_exact(RowMatrixXd V, RowMatrixXi F, int vid)
 }
 
 
-Eigen::VectorXd trimesh_geodistance_heat(RowMatrixXd V, RowMatrixXi F, int vid)
+Eigen::VectorXd
+trimesh_geodistance_heat(
+    RowMatrixXd V,
+    RowMatrixXi F,
+    int vid)
 {
     Eigen::VectorXi gamma;
     gamma.resize(1);
@@ -43,9 +53,20 @@ Eigen::VectorXd trimesh_geodistance_heat(RowMatrixXd V, RowMatrixXi F, int vid)
 }
 
 
-using namespace pybind11::literals;
-
 PYBIND11_MODULE(compas_libigl_geodistance, m) {
-    m.def("trimesh_geodistance_exact", &trimesh_geodistance_exact, "V"_a.noconvert(), "F"_a.noconvert(), "vid"_a);
-    m.def("trimesh_geodistance_heat", &trimesh_geodistance_heat, "V"_a.noconvert(), "F"_a.noconvert(), "vid"_a);
+    m.def(
+        "trimesh_geodistance_exact",
+        &trimesh_geodistance_exact,
+        py::arg("V").noconvert(),
+        py::arg("F").noconvert(),
+        py::arg("vid")
+    );
+
+    m.def(
+        "trimesh_geodistance_heat",
+        &trimesh_geodistance_heat,
+        py::arg("V").noconvert(),
+        py::arg("F").noconvert(),
+        py::arg("vid")
+    );
 }
