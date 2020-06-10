@@ -2,7 +2,6 @@
 #include <pybind11/eigen.h>
 #include <igl/triangle/triangulate.h>
 
-
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
@@ -15,7 +14,12 @@ struct Triangulation {
 };
 
 
-Triangulation triangulate_points(RowMatrixXd V, RowMatrixXi E, RowMatrixXd H, const char* opts)
+Triangulation
+triangulate_points(
+    RowMatrixXd V,
+    RowMatrixXi E,
+    RowMatrixXd H,
+    const char* opts)
 {
 	RowMatrixXd V2;
 	RowMatrixXi F2;
@@ -35,7 +39,14 @@ Triangulation triangulate_points(RowMatrixXd V, RowMatrixXi E, RowMatrixXd H, co
 
 
 PYBIND11_MODULE(compas_libigl_triangulation, m) {
-    m.def("triangulate_points", &triangulate_points, py::arg("V").noconvert(), py::arg("E").noconvert(), py::arg("H").noconvert(), py::arg("opts"));
+    m.def(
+        "triangulate_points",
+        &triangulate_points,
+        py::arg("V").noconvert(),
+        py::arg("E").noconvert(),
+        py::arg("H").noconvert(),
+        py::arg("opts")
+    );
 
     py::class_<Triangulation>(m, "Triangulation")
     	.def_readonly("vertices", &Triangulation::vertices)

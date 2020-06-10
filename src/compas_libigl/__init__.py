@@ -6,5 +6,6 @@ from .geodistance import *
 from .isolines import *
 from .planarize import *
 from .triangulation import *
+from .massmatrix import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]

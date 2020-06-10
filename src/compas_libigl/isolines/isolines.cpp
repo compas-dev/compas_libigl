@@ -7,13 +7,19 @@ namespace py = pybind11;
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
+
 struct Isolines {
 	RowMatrixXd vertices;
 	RowMatrixXi edges;
 };
 
 
-Isolines trimesh_isolines(RowMatrixXd V, RowMatrixXi F, Eigen::VectorXd z, int n)
+Isolines
+trimesh_isolines(
+    RowMatrixXd V,
+    RowMatrixXi F,
+    Eigen::VectorXd z,
+    int n)
 {
 	RowMatrixXd Vi;
 	RowMatrixXi Ei;
@@ -29,10 +35,15 @@ Isolines trimesh_isolines(RowMatrixXd V, RowMatrixXi F, Eigen::VectorXd z, int n
 }
 
 
-using namespace pybind11::literals;
-
 PYBIND11_MODULE(compas_libigl_isolines, m) {
-    m.def("trimesh_isolines", &trimesh_isolines, "V"_a.noconvert(), "F"_a.noconvert(), "z"_a, "n"_a);
+    m.def(
+        "trimesh_isolines",
+        &trimesh_isolines,
+        py::arg("V").noconvert(),
+        py::arg("F").noconvert(),
+        py::arg("z"),
+        py::arg("n")
+    );
 
     py::class_<Isolines>(m, "Isolines")
     	.def_readonly("vertices", &Isolines::vertices)
