@@ -41,9 +41,9 @@ c_diff = Mesh.from_vertices_and_faces(*C)
 # Visualization
 # ==============================================================================
 
-c_union.transform(Translation([7.5, 0, 0]))
-c_intersection.transform(Translation([15, 0, 0]))
-c_diff.transform(Translation([22.5, 0, 0]))
+c_union.transform(Translation.from_vector([7.5, 0, 0]))
+c_intersection.transform(Translation.from_vector([15, 0, 0]))
+c_diff.transform(Translation.from_vector([22.5, 0, 0]))
 
 viewer = MultiMeshViewer()
 
