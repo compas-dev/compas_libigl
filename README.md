@@ -4,18 +4,31 @@ Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
 
 ## Installation
 
-`compas_libigl` can be installed from source with `conda-build` using the `conda` recipe in `/recipe`.
+`compas_libigl` can be installed from source using pip.
+
+1. Create an environment
 
 ```bash
-conda create -n igl python=3.7 cmake">=3.14" --yes
+conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS">=0.16.1" --yes
 conda activate igl
-conda build recipe
-conda install compas_libigl --use-local
 ```
 
-> Don't forget to also install python.app on OSX.
+> On OSX, don't forget to also install python.app.
 
-Additionally, install the COMPAS viewer for visualisation.
+2. Clone the repo
+
+```bash
+git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
+cd compas_libigl
+```
+
+3. Install
+
+```bash
+pip install -e .
+```
+
+4. Install the COMPAS viewer for visualisation.
 
 *On Mac.*
 
@@ -28,7 +41,7 @@ pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_v
 
 ```bash
 conda install PySide2 --yes
-pip install wheels/PyOpenGL‑3.1.5‑cp37‑cp37m‑win_amd64.whl
+pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
 pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
 ```
 
