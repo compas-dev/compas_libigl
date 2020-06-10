@@ -18,7 +18,7 @@ RowMatrixXd planarize_quads(RowMatrixXd V, RowMatrixXi F, int maxiter = 100, dou
 
 using namespace pybind11::literals;
 
-PYBIND11_MODULE(planarize, m) {
+PYBIND11_MODULE(compas_libigl_planarize, m) {
     m.def("planarize_quads",
           &planarize_quads,
           "V"_a.noconvert(),

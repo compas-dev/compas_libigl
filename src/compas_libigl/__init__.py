@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 
 from .booleans import *
-# from .csgtree import *
 from .geodistance import *
 from .isolines import *
 from .planarize import *

@@ -3,9 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-from itertools import groupby
-
-from .isolines import trimesh_isolines as _trimesh_isolines
+from compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
 
 
 def trimesh_isolines(M, S, N=50):
@@ -35,8 +33,6 @@ def trimesh_isolines(M, S, N=50):
     S = np.asarray(S, dtype=np.float64)
     iso = _trimesh_isolines(V, F, S, N)
     return iso.vertices, iso.edges
-    # levels = groupby(sorted(edges, key=lambda edge: vertices[edge[0]][2]), key=lambda edge: vertices[edge[0]][2])
-    # return vertices, [[scalar, list(level)] for scalar, level in levels]
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]

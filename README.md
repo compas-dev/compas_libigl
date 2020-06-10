@@ -2,155 +2,57 @@
 
 Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
 
-## Requirements
+## Installation
 
-* Anaconda(3)
-* COMPAS
-* CMake
-* Boost
-
-Anaconda 3 can be obtained from the official website. With `conda` installing COMPAS is as simple as `$ conda install COMPAS`. Make sure you have the latest version of COMPAS. You can check the version by typing `python -c “import compas; print(compas.__version__)` in terminal.
-
-## Git Submodules
-
-* libigl
-* PyBind11
-* Eigen
-
-These are configured in the `.gitmodules` file and will be cloned into the `ext` folder.
-
-<https://git-scm.com/book/en/v2/Git-Tools-Submodules>
-<https://git-scm.com/docs/git-submodule>
-<https://git-scm.com/docs/gitmodules>
-
-**Make sure to clone the submodules together with the main repo.**
+`compas_libigl` can be installed from source with `conda-build` using the `conda` recipe in `/recipe`.
 
 ```bash
-git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
-```
-
-## Modules
-
-The folder `modules` contains the wrapper code per *module* that should be added to `compas_libigl`.
-Each module is in a separate folder with its own `CMakeLists.txt` and a `.cpp` file with the wrapper code.
-
-## Environment
-
-As with all things COMPAS, it is recommended to make a separate environment for experimenting with this package.
-
-```bash
-conda create -n igl python=3.7 COMPAS --yes
+conda create -n igl python=3.7 cmake">=3.14" --yes
 conda activate igl
+conda build recipe
+conda install compas_libigl --use-local
 ```
 
-> On Mac, don't forget to add `python.app`
+> Don't forget to also install python.app on OSX.
 
-To make sure that you can build the modules that require `CGAL`, you should also install `Boost` into this environment.
+Additionally, install the COMPAS viewer for visualisation.
+
+*On Mac.*
 
 ```bash
-conda install boost
+conda install PySide2 PyOpenGL --yes
+pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
 ```
 
-> Note that a conda install of Boost into an environment with Python 3.x will install Boost 1.70 and this is only supported since CMake 3.14.
-
-To use the viewers, install `compas_viewers` and its dependencies.
+*On Windows.*
 
 ```bash
-conda install PySide2 PyOpenGL
+conda install PySide2 --yes
+pip install wheels/PyOpenGL‑3.1.5‑cp37‑cp37m‑win_amd64.whl
 pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
 ```
 
-## Cmake
+## Libigl functions
 
-The project has three levels of `CMakeLists.txt` files.
+Currently the following functionalities of Libigl are included in the wrapper
 
-### /CMakeLists.txt
+* Boolean operations (CGAL)
+* Geodesic distance calculation
+* Scalarfield isolines
+* Quad mesh planarization
+* 2D Triangulations (Triangle)
 
-The top level file is located at the root of the project.
+> The boolean operations are currently not available on Windows.
 
-### /modules/CMakeLists.txt
+## Examples
 
-The second level file is in the `modules` folder. If you add a new wrapper module, make sure to register it in this file as well.
+The use of the wrapped functions is illustrated with scripts in the `examples` folder.
+Note that the functionality of the package is not directly available in Rhino, but can be used through `compas.rpc`.
 
-```make
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/xxx)
-```
+## License
 
-### /modules/xxx/CMakeLists.txt
+Libigl is licensed under MPL-2.
+Free use of CGAL is licensed under LGPL and GPL-3.
+Free use of Triangle is limited to personal and academic use and governed by a specific license agreement.
 
-Finally there is a `CMakeLists` file per wrapper module. There the most relevant part is to link the correct libraries. For example, the module that wraps `libigl`'s boolean operations requires `CGAL` and this should thus be reflected in the file.
-
-```make
-target_link_libraries(booleans PRIVATE igl::cgal)
-```
-
-## Compile & Install
-
-On Mac
-
-* `rm -rf build`
-* `pip install -e .`
-
-On Windows
-
-* `rmdir build /s`
-* `pip install -e .`
-
-## check Installation
-
-To verify, start an interactive python session and import the package. This should not throw any errors.
-
-```python
->>> import compas
->>> import compas_libigl
-```
-
-## Usage
-
-The compiled libraries are added directly into the `compas_libigl` package.
-If you add a new wrapper, make sure to add a corresponding entry in the `__init__.py` file of the package.
-
-Example scripts for simple use cases are located in the `scripts` folder.
-
-**If you make changes to the C++ part of `compas_libigl` you have to rebuild the package before these changes have an effect.**
-
-## Known Issues
-
-Boolean operations and their CSGtree variations depend on CGAL.
-On Windows, the installation of CGAL is problematic.
-Therefore, support for blooean operations is not enabled by default.
-To build `compas_libigl` with support for boolean operations, modify the following files:
-
-* `modules/CMakeLists.txt`:
-
-  * uncomment line 6 (`# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/csgtree)`)
-  * uncomment line 7 (`# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/booleans)`)
-
-* `src/compas_libigl/__init__.py`:
-
-  * uncomment line 5 (`# from .booleans import *`)
-  * uncomment line 6 (`# from .csgtree import *`)
-
-## Notes
-
-### Related projects
-
-* [PyMesh](https://github.com/PyMesh/PyMesh)
-* [PyTriangle](https://github.com/pletzer/pytriangle)
-* [Triangle](https://github.com/drufat/triangle)
-* [CMake Triangle](https://github.com/wo80/Triangle)
-* [Projects in C](https://userpages.umbc.edu/~rostamia/cbook/triangle.html)
-* [cppimport](https://github.com/tbenthompson/cppimport)
-
-### PyBind
-
-* [PyBind: building with cmake](https://pybind11.readthedocs.io/en/stable/compiling.html#building-with-cmake)
-* [PyBind: building manually](https://pybind11.readthedocs.io/en/stable/compiling.html#building-manually)
-* <https://github.com/pybind/pybind11/issues/134>
-* <https://github.com/pybind/pybind11/issues/1200>
-* <https://pybind11.readthedocs.io/en/stable/advanced/cast/stl.html>
-
-### SO
-
-* <https://stackoverflow.com/questions/16439654/how-can-i-compile-triangle-using-makefiles-on-a-windows-machine>
-* <https://stackoverflow.com/questions/1099981/why-cant-python-find-shared-objects-that-are-in-directories-in-sys-path>
+All license notices are included.

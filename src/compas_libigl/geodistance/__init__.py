@@ -3,9 +3,8 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
-from .geodistance import trimesh_geodistance_exact as _exact
-from .geodistance import trimesh_geodistance_heat as _heat
+from compas_libigl_geodistance import trimesh_geodistance_exact as _exact
+from compas_libigl_geodistance import trimesh_geodistance_heat as _heat
 
 
 def trimesh_geodistance(M, source, method='exact'):

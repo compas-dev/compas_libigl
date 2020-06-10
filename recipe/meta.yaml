@@ -1,0 +1,68 @@
+{% set name = "compas_libigl" %}
+{% set version = "0.1.8" %}
+{% set hash = "5add48573f2a5f7cd253644232f022305b10b493559d7601c2235926b7240feb" %}
+{% set pybind11_version = "2.5.0" %}
+{% set pybind11_hash = "97504db65640570f32d3fdf701c25a340c8643037c3b69aec469c10c93dc8504" %}
+{% set libigl_version = "2.2.0" %}
+{% set libigl_hash = "b336e548d718536956e2d6958a0624bc76d50be99039454072ecdc5cf1b2ede5" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  - url: https://github.com/pybind/pybind11/archive/v{{ pybind11_version }}.tar.gz
+    folder: ext/pybind11
+    fn: pybind11-{{ pybind11_version }}.tar.gz
+    sha256: {{ pybind11_hash }}
+  - url: https://github.com/libigl/libigl/archive/v{{ libigl_version }}.tar.gz
+    folder: ext/libigl
+    fn: libigl-{{ libigl_version }}.tar.gz
+    sha256: {{ libigl_hash }}
+  - path: ../
+#   - url: https://github.com/blockresearchgroup/compas_libigl/archive/v{{ version }}.tar.gz
+#     fn: compas_libigl-{{ version }}.tar.gz
+#     sha256: {{ hash }}
+
+build:
+  number: 0
+  skip: true  # [py<36]
+  # script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - git
+    - cmake
+    - ninja  # [win]
+  host:
+    - python {{ python }}
+    - pip
+    - setuptools
+    - cython
+    - boost
+    - eigen
+    - gmp 6.1.2  # [not win]
+    - mpfr 4.0.1  # [not win]
+    - gmp 5.0*  # [win]
+    - mpfr 3.0*  # [win]
+  run:
+    - python {{ python }}
+    - COMPAS >=0.15.5
+
+test:
+  imports:
+    - compas_libigl
+
+about:
+  home: https://github.com/blockresearchgroup/compas_libigl
+  license: MPL-2.0
+  license_file: LICENSE.MPL2
+  summary: 'COMPAS friendly wrappers for libigl functions.'
+  dev_url: https://github.com/blockresearchgroup/compas_libigl
+  doc_url: https://github.com/blockresearchgroup/compas_libigl
+
+extra:
+  recipe-maintainers:
+    - brgcode
