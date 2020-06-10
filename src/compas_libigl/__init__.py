@@ -7,5 +7,6 @@ from .isolines import *
 from .planarize import *
 from .triangulation import *
 from .massmatrix import *
+from .curvature import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]
