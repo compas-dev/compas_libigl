@@ -4,14 +4,6 @@ project(compas_libigl)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-#Python
-# get_filename_component(PYTHON_DIR ${PYTHON_EXECUTABLE} DIRECTORY)
-# if (NOT WIN32)
-#     # on OSX the executable is in "bin"
-#     # so go one more level up
-#     get_filename_component(PYTHON_DIR ${PYTHON_DIR} DIRECTORY)
-# endif ()
-
 #Eigen
 if (WIN32)
     set(EIGEN3_INCLUDE_DIR "$ENV{CONDA_PREFIX}/Library/include/eigen3")
@@ -32,19 +24,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
 option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
-if (WIN32)
-    option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
-else ()
-    option(LIBIGL_WITH_CGAL "Use CGAL" ON)
-endif ()
+option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
 find_package(LIBIGL REQUIRED)
-
-#booleans
-if (NOT WIN32)
-    pybind11_add_module(compas_libigl_booleans MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/booleans/booleans.cpp)
-    target_link_libraries(compas_libigl_booleans PRIVATE igl::core)
-    target_link_libraries(compas_libigl_booleans PRIVATE igl::cgal)
-endif()
 
 #geodistance
 pybind11_add_module(compas_libigl_geodistance MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/geodistance/geodistance.cpp)

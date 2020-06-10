@@ -8,54 +8,51 @@ Opinionated COMPAS-compatible bindings for top-level algorithms of libigl.
 
 1. Create an environment
 
-```bash
-conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS">=0.16.1" --yes
-conda activate igl
-```
+   ```bash
+   conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS">=0.16.1" --yes
+   conda activate igl
+   ```
 
-> On OSX, don't forget to also install python.app.
+   > On OSX, don't forget to also install python.app.
 
 2. Clone the repo
 
-```bash
-git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
-cd compas_libigl
-```
+   ```bash
+   git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
+   cd compas_libigl
+   ```
 
 3. Install
 
-```bash
-pip install -e .
-```
+   ```bash
+   pip install -e .
+   ```
 
 4. Install the COMPAS viewer for visualisation.
 
-*On Mac.*
+   *On Mac.*
 
-```bash
-conda install PySide2 PyOpenGL --yes
-pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
-```
+   ```bash
+   conda install PySide2 PyOpenGL --yes
+   pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+   ```
 
-*On Windows.*
+   *On Windows.*
 
-```bash
-conda install PySide2 --yes
-pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
-pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
-```
+   ```bash
+   conda install PySide2 --yes
+   pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
+   pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+   ```
 
 ## Libigl functions
 
 Currently the following functionalities of Libigl are included in the wrapper
 
-* Boolean operations (CGAL)
 * Geodesic distance calculation
 * Scalarfield isolines
 * Quad mesh planarization
 * 2D Triangulations (Triangle)
-
-> The boolean operations are currently not available on Windows.
 
 ## Examples
 
