@@ -53,6 +53,7 @@ Currently the following functionalities of Libigl are included in the wrapper
 * Scalarfield isolines
 * Quad mesh planarization
 * 2D Triangulations (Triangle)
+* Mass matrix of triangle mesh
 
 ## Examples
 
