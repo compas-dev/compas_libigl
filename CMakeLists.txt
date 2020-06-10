@@ -51,3 +51,7 @@ target_link_libraries(compas_libigl_massmatrix PRIVATE igl::core)
 #curvature
 pybind11_add_module(compas_libigl_curvature MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/curvature/curvature.cpp)
 target_link_libraries(compas_libigl_curvature PRIVATE igl::core)
+
+#intersections
+pybind11_add_module(compas_libigl_intersections MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/intersections/intersections.cpp)
+target_link_libraries(compas_libigl_intersections PRIVATE igl::core)
