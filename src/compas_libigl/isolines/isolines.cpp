@@ -31,7 +31,7 @@ Isolines trimesh_isolines(RowMatrixXd V, RowMatrixXi F, Eigen::VectorXd z, int n
 
 using namespace pybind11::literals;
 
-PYBIND11_MODULE(isolines, m) {
+PYBIND11_MODULE(compas_libigl_isolines, m) {
     m.def("trimesh_isolines", &trimesh_isolines, "V"_a.noconvert(), "F"_a.noconvert(), "z"_a, "n"_a);
 
     py::class_<Isolines>(m, "Isolines")
