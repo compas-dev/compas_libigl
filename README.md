@@ -1,32 +1,23 @@
 # compas_libigl
 
 COMPAS-compatible bindings for top-level algorithms of libigl generated with Pybind.
+Many of the functions provided by `compas_libigl` are based on the examples in the libigl tutorial.
 
 ## Installation
 
-`compas_libigl` can be installed from source using pip.
+`compas_libigl` can be installed using a combination of conda and pip.
 
-1. Create an environment
+```bash
+conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS">=0.16.1" --yes
+conda activate igl
+git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
+cd compas_libigl
+rm -rf build
+pip install -e .
+```
 
-   ```bash
-   conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS">=0.16.1" --yes
-   conda activate igl
-   ```
-
-   > On OSX, don't forget to also install python.app.
-
-2. Clone the repo
-
-   ```bash
-   git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
-   cd compas_libigl
-   ```
-
-3. Install
-
-   ```bash
-   pip install -e .
-   ```
+> If you have git/cmake installed, this can be omitted from the environment installation.
+> On Mac, don't forget to install `python.app`!
 
 ## Install COMPAS viewer (optional)
 
@@ -52,10 +43,11 @@ Currently the following functionalities of Libigl are included in the wrapper
 * Geodesic distance calculation
 * Scalarfield isolines
 * Quad mesh planarization
-* 2D Triangulations (Triangle)
-* Mass matrix of triangle mesh
+* 2D Triangulations (Triangle) *to be removed in favour of `compas_triangle`*
+* Mass matrix of triangle meshes
 * Discrete gaussian curvature
 * Ray/mesh intersection
+* Boundary loops
 
 ## Examples
 
