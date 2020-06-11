@@ -48,6 +48,8 @@ Currently the following functionalities of Libigl are included in the wrapper
 * Discrete gaussian curvature
 * Ray/mesh intersection
 * Boundary loops
+* Harmonic parametrisation
+* Least-squares conformal maps
 
 ## Examples
 
