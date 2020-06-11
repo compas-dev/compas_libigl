@@ -43,7 +43,6 @@ Currently the following functionalities of Libigl are included in the wrapper
 * Geodesic distance calculation
 * Scalarfield isolines
 * Quad mesh planarization
-* 2D Triangulations (Triangle) *to be removed in favour of `compas_triangle`*
 * Mass matrix of triangle meshes
 * Discrete gaussian curvature
 * Ray/mesh intersection
@@ -58,7 +57,4 @@ Note that the functionality of the package is not directly available in Rhino, b
 
 ## License
 
-Libigl is licensed under MPL-2.
-Free use of Triangle is limited to personal and academic use and governed by a specific license agreement.
-
-Both license notices are included.
+Libigl (and therefore also `compas_libigl`) is licensed under MPL-2.
