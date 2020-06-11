@@ -23,7 +23,7 @@ set(PYBIND11_CPP_STANDARD -std=c++11)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
 
 #Libigl
-option(LIBIGL_WITH_TRIANGLE "Use Triangle" ON)
+option(LIBIGL_WITH_TRIANGLE "Use Triangle" OFF)
 option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
 find_package(LIBIGL REQUIRED)
 
@@ -38,11 +38,6 @@ target_link_libraries(compas_libigl_isolines PRIVATE igl::core)
 #planarize
 pybind11_add_module(compas_libigl_planarize MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/planarize/planarize.cpp)
 target_link_libraries(compas_libigl_planarize PRIVATE igl::core)
-
-#triangulation
-pybind11_add_module(compas_libigl_triangulation MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/triangulation/triangulation.cpp)
-target_link_libraries(compas_libigl_triangulation PRIVATE igl::core)
-target_link_libraries(compas_libigl_triangulation PRIVATE igl::triangle)
 
 #massmatrix
 pybind11_add_module(compas_libigl_massmatrix MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/massmatrix/massmatrix.cpp)
