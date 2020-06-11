@@ -9,30 +9,31 @@ import compas_libigl as igl
 # ==============================================================================
 
 HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
+FILE = os.path.join(HERE, '..', 'data', 'camelhead.off')
 
-mesh = Mesh.from_json(FILE)
-
-tri = mesh.copy()
-tri.quads_to_triangles()
+mesh = Mesh.from_off(FILE)
+mesh_harmonic = mesh.copy()
+mesh_lscm = mesh.copy()
 
 # ==============================================================================
 # Boundaries
 # ==============================================================================
 
-M = tri.to_vertices_and_faces()
+M = mesh.to_vertices_and_faces()
 
-uv = igl.trimesh_harmonic_map(M)
+harmonic_uv = igl.trimesh_harmonic_map(M)
+lscm_uv = igl.trimesh_lscm(M)
 
-tri_uv = tri.copy()
+for index, key in enumerate(mesh.vertices()):
+    mesh_harmonic.vertex_attributes(key, 'xy', harmonic_uv[index])
 
-for index, key in enumerate(tri_uv.vertices()):
-    tri_uv.vertex_attributes(key, 'xy', uv[index])
+for index, key in enumerate(mesh.vertices()):
+    mesh_lscm.vertex_attributes(key, 'xy', lscm_uv[index])
 
 # ==============================================================================
 # Visualization
 # ==============================================================================
 
-plotter = MeshPlotter(tri_uv, figsize=(8, 5))
+plotter = MeshPlotter(mesh_lscm, figsize=(8, 5))
 plotter.draw_faces()
 plotter.show()
