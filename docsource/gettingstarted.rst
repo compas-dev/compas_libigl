@@ -20,25 +20,3 @@ Installation
 
     If you have `git` or `cmake` installed, this can be omitted from the environment installation.
     On Mac, don't forget to install ``python.app`` as well!
-
-
-Install COMPAS viewer (optional)
-================================
-
-On Mac
-------
-
-.. code-block:: bash
-
-    conda install PySide2 PyOpenGL --yes
-    pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
-
-
-On Windows
-----------
-
-.. code-block:: bash
-
-    conda install PySide2 --yes
-    pip install wheels/PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
-    pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
