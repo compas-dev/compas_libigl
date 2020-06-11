@@ -7,24 +7,31 @@ from compas_libigl_curvature import trimesh_curvature as _trimesh_curvature
 
 
 def trimesh_curvature(M):
-    """Compute the gaussian curvature of a triangle mesh.
+    """Compute the discrete gaussian curvature of a triangle mesh.
 
     Parameters
     ----------
-    M : tuple
-        A mesh represented by a list of vertices and a list of faces.
+    M : tuple or :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces
+        or a COMPAS mesh object.
 
     Returns
     -------
     array
-        The curvature per vertex.
+        The discrete gaussian curvature per vertex.
 
+    Examples
+    --------
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh.quads_to_triangles()
+    >>> curvature = igl.trimesh_curvature(mesh)
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    curvature = _trimesh_curvature(V, F)
-    return curvature
+    return _trimesh_curvature(V, F)
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]

@@ -1,34 +1,32 @@
-import os
-import compas
+import compas_libigl as igl
 from compas.datastructures import Mesh
-from compas.datastructures import mesh_quads_to_triangles
 from compas.utilities import Colormap
 from compas_plotters import MeshPlotter
-import compas_libigl as igl
 
-HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh2.json')
+# ==============================================================================
+# Input
+# ==============================================================================
 
-mesh = Mesh.from_json(FILE)
+mesh = Mesh.from_off(igl.get('tubemesh.off'))
+mesh.quads_to_triangles()
 
-tri = mesh.copy()
-mesh_quads_to_triangles(tri)
+# ==============================================================================
+# Geodesic distance
+# ==============================================================================
 
-M = tri.to_vertices_and_faces()
 source = mesh.get_any_vertex()
+distance = igl.trimesh_geodistance(mesh, source)
 
-D = igl.trimesh_geodistance(M, source)
-vertices, edges = igl.trimesh_isolines(M, D, 50)
+# ==============================================================================
+# Visualize
+# ==============================================================================
 
-lines = []
-for i, j in edges:
-    lines.append({
-        'start' : vertices[i],
-        'end'   : vertices[j],
-        'color' : (255, 0, 0)
-    })
+cmap = Colormap(distance, 'red')
 
 plotter = MeshPlotter(mesh, figsize=(8, 5))
+plotter.draw_vertices(
+    radius=0.2,
+    facecolor={key: cmap(distance[index]) for index, key in enumerate(mesh.vertices())}
+)
 plotter.draw_faces()
-plotter.draw_lines(lines)
 plotter.show()

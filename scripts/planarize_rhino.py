@@ -20,7 +20,7 @@ FILE = os.path.join(HERE, '..', 'data', 'tubemesh.off')
 mesh = Mesh.from_off(FILE)
 
 V, F = mesh.to_vertices_and_faces()
-V2 = igl.planarize_quads((V, F), KMAX, MAXDEV)
+V2 = igl.quadmesh_planarize((V, F), KMAX, MAXDEV)
 
 mesh = Mesh.from_vertices_and_faces(V2, F)
 

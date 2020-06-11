@@ -13,12 +13,13 @@ def intersection_ray_mesh(ray, mesh):
     ----------
     ray : tuple of point and vector
         A ray represented by a point and a direction vector.
-    mesh : tuple of vertices and faces
-        A mesh represented by a list of vertices and a list of faces.
+    mesh : tuple or :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces
+        or a COMPAS mesh object.
 
     Returns
     -------
-    array of tuple
+    array
         The array contains a tuple per intersection of the ray with the mesh.
         Each tuple contains:
 
@@ -27,13 +28,21 @@ def intersection_ray_mesh(ray, mesh):
         2. the u coordinate of the intersection in the barycentric coordinates of the face
         3. the distance between the ray origin and the hit
 
-    Notes
-    -----
+    Examples
+    --------
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh.quads_to_triangles()
+    >>> centroid = mesh.centroid()
+    >>> ray = [centroid[0], centroid[1], 0], [0, 0, 1.0]
+    >>> hits = igl.intersection_ray_mesh(ray, mesh)
+    >>> len(hits) == 1
+    True
+
     To compute the actual intersection point, do
 
-    .. code-block:: python
-
-        point = add_vectors(ray[0], scale_vector(ray[1], hit[3]))
+    >>> point = add_vectors(ray[0], scale_vector(ray[1], hits[0][3]))
 
     """
     point, vector = ray
@@ -42,8 +51,7 @@ def intersection_ray_mesh(ray, mesh):
     D = np.asarray(vector, dtype=np.float64)
     V = np.asarray(vertices, dtype=np.float64)
     F = np.asarray(faces, dtype=np.int32)
-    hits = _intersection_ray_mesh(P, D, V, F)
-    return hits
+    return _intersection_ray_mesh(P, D, V, F)
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]
