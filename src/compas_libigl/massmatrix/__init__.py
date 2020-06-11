@@ -12,20 +12,27 @@ def trimesh_massmatrix(M):
 
     Parameters
     ----------
-    M : tuple
-        A mesh represented by a list of vertices and a list of faces.
+    M : tuple or :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces
+        or by a COMPAS mesh object.
 
     Returns
     -------
     array
         The mass per vertex.
 
+    Examples
+    --------
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh.quads_to_triangles()
+    >>> mass = igl.trimesh_massmatrix(mesh)
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    mass = _trimesh_massmatrix(V, F)
-    return mass
+    return _trimesh_massmatrix(V, F)
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]

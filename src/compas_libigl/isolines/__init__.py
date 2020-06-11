@@ -12,8 +12,9 @@ def trimesh_isolines(M, S, N=50):
 
     Parameters
     ----------
-    M : tuple
-        A mesh represented by a list of vertices and a list of faces.
+    M : tuple or :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces
+        or by a COMPAS mesh object.
     S : list
         A list of scalars.
     N : int, optional
@@ -26,11 +27,31 @@ def trimesh_isolines(M, S, N=50):
         0. The coordinates of the polyline segments representing the isolines.
         1. The segments of the polylines.
 
+    Examples
+    --------
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh.quads_to_triangles()
+    >>> scalars = mesh.vertices_attribute('z')
+    >>> vertices, edges = igl.trimesh_isolines(mesh, scalars, 50)
+
+    To convert the vertices and edges to sets of isolines, use :mod:`groupby`
+
+    >>> levels = groupby(sorted(edges, key=lambda edge: vertices[edge[0]][2]), key=lambda edge: vertices[edge[0]][2])
+    >>> for value, edges in levels:
+    ...     for i, j in edges:
+    ...         line = vertices[i], vertices[j]
+    ...
+    >>>
+
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     S = np.asarray(S, dtype=np.float64)
+    # return the isolines as a tuple
+    # not a struct
     iso = _trimesh_isolines(V, F, S, N)
     return iso.vertices, iso.edges
 

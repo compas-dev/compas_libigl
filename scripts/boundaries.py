@@ -1,30 +1,19 @@
-import os
-from compas.datastructures import Mesh
-from compas.utilities import Colormap
-from compas_plotters import MeshPlotter
 import compas_libigl as igl
+from compas.datastructures import Mesh
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
 
-HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'tubemesh.json')
-
-mesh = Mesh.from_json(FILE)
-
-tri = mesh.copy()
-tri.quads_to_triangles()
+mesh = Mesh.from_off(igl.get('tubemesh.off'))
+mesh.quads_to_triangles()
 
 # ==============================================================================
 # Boundaries
 # ==============================================================================
 
-boundary = tri.vertices_on_boundary(ordered=True)
-
-M = tri.to_vertices_and_faces()
-
-boundaries = igl.trimesh_boundaries(M)
+boundary = mesh.vertices_on_boundary(ordered=True)
+boundaries = igl.trimesh_boundaries(mesh)
 
 print(boundary)
 print(boundaries[0])

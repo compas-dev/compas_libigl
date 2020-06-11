@@ -7,24 +7,37 @@ from compas_libigl_boundaries import trimesh_boundaries as _trimesh_boundaries
 
 
 def trimesh_boundaries(M):
-    """Compute the boundaries of a triangle mesh.
+    """Compute all (ordered) boundary loops of a manifold triangle mesh.
 
     Parameters
     ----------
-    M : tuple
-        A mesh represented by a list of vertices and a list of faces.
+    M : tuple or :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces
+        or a COMPAS mesh object.
 
     Returns
     -------
     array
-        The boundaries of the triangle mesh.
+        The ordered boundary loops of the triangle mesh.
 
+    Notes
+    -----
+    The input mesh should be manifold.
+
+    Examples
+    --------
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh.quads_to_triangles()
+    >>> boundaries = igl.trimesh_boundaries(mesh)
+    >>> len(boundaries) == 1
+    True
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    boundaries = _trimesh_boundaries(V, F)
-    return boundaries
+    return _trimesh_boundaries(V, F)
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]

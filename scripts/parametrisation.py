@@ -1,31 +1,31 @@
-import os
+import compas_libigl as igl
+
 from compas.datastructures import Mesh
 from compas.utilities import Colormap
 from compas_plotters import MeshPlotter
-import compas_libigl as igl
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
 
-HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '..', 'data', 'camelhead.off')
-
-mesh = Mesh.from_off(FILE)
+mesh = Mesh.from_off(igl.get('camelhead.off'))
 mesh_harmonic = mesh.copy()
 mesh_lscm = mesh.copy()
 
 # ==============================================================================
-# Boundaries
+# Harmonic parametrisation
 # ==============================================================================
 
-M = mesh.to_vertices_and_faces()
-
-harmonic_uv = igl.trimesh_harmonic_map(M)
-lscm_uv = igl.trimesh_lscm(M)
+harmonic_uv = igl.trimesh_harmonic(mesh)
 
 for index, key in enumerate(mesh.vertices()):
     mesh_harmonic.vertex_attributes(key, 'xy', harmonic_uv[index])
+
+# ==============================================================================
+# Least-squares conformal map
+# ==============================================================================
+
+lscm_uv = igl.trimesh_lscm(mesh)
 
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, 'xy', lscm_uv[index])
