@@ -9,7 +9,7 @@ from .triangulation import *
 from .massmatrix import *
 from .curvature import *
 from .intersections import *
-# from .parametrisation import *
+from .parametrisation import *
 from .boundaries import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]

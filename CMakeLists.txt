@@ -60,6 +60,6 @@ target_link_libraries(compas_libigl_intersections PRIVATE igl::core)
 pybind11_add_module(compas_libigl_boundaries MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/boundaries/boundaries.cpp)
 target_link_libraries(compas_libigl_boundaries PRIVATE igl::core)
 
-# #parametrisations
-# pybind11_add_module(compas_libigl_parametrisation MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/parametrisation/parametrisation.cpp)
-# target_link_libraries(compas_libigl_parametrisation PRIVATE igl::core)
+#parametrisations
+pybind11_add_module(compas_libigl_parametrisation MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/parametrisation/parametrisation.cpp)
+target_link_libraries(compas_libigl_parametrisation PRIVATE igl::core)
