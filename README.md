@@ -19,6 +19,25 @@ pip install -e .
 > If you have git/cmake installed, this can be omitted from the environment installation.
 > On Mac, don't forget to install `python.app`!
 
+## Install COMPAS viewer (optional)
+
+*On Mac.*
+
+```bash
+conda install PySide2 PyOpenGL --yes
+pip install -e git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+```
+
+*On Windows.*
+
+Get the PyOpenGL wheel for your setup from here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyopengl>.
+
+```bash
+conda install PySide2 --yes
+pip install PyOpenGL-3.1.5-cp37-cp37m-win_amd64.whl
+pip install git+https://github.com/compas-dev/compas_viewers.git#egg=compas_viewers
+```
+
 ## Libigl functions
 
 Currently the following functionalities of Libigl are included in the wrapper
@@ -35,7 +54,7 @@ Currently the following functionalities of Libigl are included in the wrapper
 
 ## Examples
 
-The use of the wrapped functions is illustrated with scripts in the `scripts` folder.
+The use of the wrapped functions is illustrated with scripts in the `examples` folder.
 Note that the functionality of the package is not directly available in Rhino, but can be used through `compas.rpc`.
 
 ## License
