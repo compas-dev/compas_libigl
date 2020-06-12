@@ -13,10 +13,8 @@ Installation
     conda activate igl
     git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
     cd compas_libigl
-    rm -rf build
     pip install -e .
 
 .. note::
 
-    If you have `git` or `cmake` installed, this can be omitted from the environment installation.
     On Mac, don't forget to install ``python.app`` as well!
