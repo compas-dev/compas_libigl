@@ -13,7 +13,8 @@ TriMesh
     :toctree: generated/
 
     trimesh_boundaries
-    trimesh_curvature
+    trimesh_curvature_directions
+    trimesh_gaussian_curvature
     trimesh_geodistance
     trimesh_isolines
     trimesh_massmatrix
@@ -115,6 +116,14 @@ def get(filename):
         return localpath
     else:
         return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(filename)
+
+
+def get_beetle():
+    return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/beetle.off"
+
+
+def get_armadillo():
+    return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/armadillo.obj"
 
 
 __all__ = [name for name in dir() if not name.startswith('_')]

@@ -6,7 +6,7 @@ import numpy as np
 from compas_libigl_curvature import trimesh_curvature as _trimesh_curvature
 
 
-def trimesh_curvature(M):
+def trimesh_gaussian_curvature(M):
     """Compute the discrete gaussian curvature of a triangle mesh.
 
     Parameters
@@ -32,6 +32,10 @@ def trimesh_curvature(M):
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     return _trimesh_curvature(V, F)
+
+
+def trimesh_curvature_directions():
+    pass
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]
