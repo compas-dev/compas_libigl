@@ -44,8 +44,8 @@ base = Point(-7, 0, 0)
 
 sphere = Sphere(base, 1.0)
 
-theta = np.linspace(0, np.pi, 10, endpoint=False)
-phi = np.linspace(0, 2 * np.pi, 10, endpoint=False)
+theta = np.linspace(0, np.pi, 20, endpoint=False)
+phi = np.linspace(0, 2 * np.pi, 20, endpoint=False)
 theta, phi = np.meshgrid(theta, phi)
 theta = theta.ravel()
 phi = phi.ravel()

@@ -45,6 +45,13 @@ Ray/mesh intersection
 Curvature
 =========
 
+.. figure:: ../examples/gaussian-curvature.png
+    :figclass: figure
+    :class: figure-img img-fluid
+
+    Gaussian curvature of :download:`tubemesh.off <https://raw.githubusercontent.com/blockresearchgroup/compas_libigl/master/tubemesh.off>`,
+    generated with :download:`examples/curvature.py <../examples/curvature.py>`
+
 
 Geodesic distance
 =================
