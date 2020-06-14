@@ -9,15 +9,17 @@ namespace py = pybind11;
 using RowMatrixXd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
+using Hit = std::tuple<int, float, float, float>;
+using HitList = std::vector<Hit>;
 
-std::vector<std::tuple<int, float, float, float>>
+HitList
 intersection_ray_mesh(
     Eigen::Vector3d point,
     Eigen::Vector3d direction,
     RowMatrixXd V,
     RowMatrixXi F)
 {
-    std::vector<std::tuple<int, float, float, float>> hits;
+    HitList hits;
     std::vector<igl::Hit> igl_hits;
 
 	bool result = igl::ray_mesh_intersect(point, direction, V, F, igl_hits);

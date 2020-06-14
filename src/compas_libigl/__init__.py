@@ -13,13 +13,14 @@ TriMesh
     :toctree: generated/
 
     trimesh_boundaries
-    trimesh_curvature_directions
     trimesh_gaussian_curvature
+    trimesh_principal_curvature
     trimesh_geodistance
     trimesh_isolines
     trimesh_massmatrix
     trimesh_harmonic
     trimesh_lscm
+    trimesh_remesh_along_isoline
 
 
 QuadMesh
