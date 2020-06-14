@@ -56,6 +56,7 @@ from .curvature import *
 from .intersections import *
 from .parametrisation import *
 from .boundaries import *
+from .meshing import *
 
 
 __author__ = ["tom van mele"]
