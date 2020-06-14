@@ -17,11 +17,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="intersection_ray_mesh" href="compas_libigl.intersection_ray_mesh.html" />
+    <link rel="next" title="quadmesh_planarize" href="compas_libigl.quadmesh_planarize.html" />
   
   
   
-    <link rel="prev" title="trimesh_remesh_along_isoline" href="compas_libigl.trimesh_remesh_along_isoline.html" />
+    <link rel="prev" title="trimesh_lscm" href="compas_libigl.trimesh_lscm.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -76,29 +76,29 @@
       <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 py-5 compas-content" role="main">
         
         
-        <div class="detail section" id="quadmesh-planarize">
-<h1 class="display-4 p-0 mb-5">quadmesh_planarize</h1>
+        <div class="detail section" id="trimesh-remesh-along-isoline">
+<h1 class="display-4 p-0 mb-5">trimesh_remesh_along_isoline</h1>
 <dl class="function">
-<dt id="compas_libigl.quadmesh_planarize">
-<code class="sig-prename descclassname">compas_libigl.</code><code class="sig-name descname">quadmesh_planarize</code><span class="sig-paren">(</span><em class="sig-param">M</em>, <em class="sig-param">kmax=500</em>, <em class="sig-param">maxdev=0.005</em><span class="sig-paren">)</span></dt>
-<dd><p>Planarize the faces of a quad mesh.</p>
+<dt id="compas_libigl.trimesh_remesh_along_isoline">
+<code class="sig-prename descclassname">compas_libigl.</code><code class="sig-name descname">trimesh_remesh_along_isoline</code><span class="sig-paren">(</span><em class="sig-param">mesh</em>, <em class="sig-param">scalarfield</em>, <em class="sig-param">scalar</em><span class="sig-paren">)</span></dt>
+<dd><p>Remesh a mesh along an isoline of a scalarfield over the vertices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>M</strong> (tuple or <a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.datastructures.Mesh.html#compas.datastructures.Mesh" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Mesh</span></code></a>) – A quad mesh represented by a list of vertices and a list of faces
-or by a COMPAS mesh object.</p></li>
-<li><p><strong>kmax</strong> (<em>int, optional</em>) – The maximum number of iterations.
-Default is <code class="docutils literal notranslate"><span class="pre">500</span></code>.</p></li>
-<li><p><strong>maxdev</strong> (<em>float, optional</em>) – The maximum deviation from planar.
-Default is <code class="docutils literal notranslate"><span class="pre">0.005</span></code>.</p></li>
+<li><p><strong>mesh</strong> (tuple or <a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.datastructures.Mesh.html#compas.datastructures.Mesh" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Mesh</span></code></a>) – A mesh represented by a list of vertices and a list of faces
+or a COMPAS mesh object.</p></li>
+<li><p><strong>scalarfield</strong> (<em>list or array of float</em>) – A scalar value per vertex of the mesh.</p></li>
+<li><p><strong>scalar</strong> (<em>float</em>) – A value within the range of the scalarfield.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>list</em> – The coordinates of the new vertices.</p>
+<dd class="field-even"><p><em>tuple</em> – Vertices and faces of the remeshed mesh.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="go">&gt;&gt;&gt;</span>
 </code></pre></div>
 </div>
 </dd></dl>
@@ -135,8 +135,8 @@ Default is <code class="docutils literal notranslate"><span class="pre">0.005</s
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_massmatrix.html">trimesh_massmatrix</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_harmonic.html">trimesh_harmonic</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_lscm.html">trimesh_lscm</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">quadmesh_planarize</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">trimesh_remesh_along_isoline</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.quadmesh_planarize.html">quadmesh_planarize</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
 </ul>
 </li>
@@ -153,7 +153,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">0.005</s
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">quadmesh_planarize</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">trimesh_remesh_along_isoline</a></li>
 </ul>
 
       </div>
