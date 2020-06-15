@@ -17,11 +17,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="intersection_rays_mesh" href="compas_libigl.intersection_rays_mesh.html" />
+    <link rel="next" title="License" href="../../license.html" />
   
   
   
-    <link rel="prev" title="quadmesh_planarize" href="compas_libigl.quadmesh_planarize.html" />
+    <link rel="prev" title="intersection_ray_mesh" href="compas_libigl.intersection_ray_mesh.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -76,49 +76,12 @@
       <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 py-5 compas-content" role="main">
         
         
-        <div class="detail section" id="intersection-ray-mesh">
-<h1 class="display-4 p-0 mb-5">intersection_ray_mesh</h1>
+        <div class="detail section" id="intersection-rays-mesh">
+<h1 class="display-4 p-0 mb-5">intersection_rays_mesh</h1>
 <dl class="function">
-<dt id="compas_libigl.intersection_ray_mesh">
-<code class="sig-prename descclassname">compas_libigl.</code><code class="sig-name descname">intersection_ray_mesh</code><span class="sig-paren">(</span><em class="sig-param">ray</em>, <em class="sig-param">mesh</em><span class="sig-paren">)</span></dt>
-<dd><p>Compute the intersection(s) between a ray and a mesh.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ray</strong> (<em>tuple of point and vector</em>) – A ray represented by a point and a direction vector.</p></li>
-<li><p><strong>mesh</strong> (tuple or <a class="reference external" href="https://compas-dev.github.io/main/api/generated/compas.datastructures.Mesh.html#compas.datastructures.Mesh" title="(in COMPAS v0.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Mesh</span></code></a>) – A mesh represented by a list of vertices and a list of faces
-or a COMPAS mesh object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p><em>array</em> – The array contains a tuple per intersection of the ray with the mesh.
-Each tuple contains:</p>
-<ol class="arabic simple" start="0">
-<li><p>the index of the intersected face</p></li>
-<li><p>the u coordinate of the intersection in the barycentric coordinates of the face</p></li>
-<li><p>the u coordinate of the intersection in the barycentric coordinates of the face</p></li>
-<li><p>the distance between the ray origin and the hit</p></li>
-</ol>
-</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_off</span><span class="p">(</span><span class="n">igl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tubemesh.off&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span><span class="o">.</span><span class="n">quads_to_triangles</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">centroid</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ray</span> <span class="o">=</span> <span class="p">[</span><span class="n">centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">hits</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">intersection_ray_mesh</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="go">True</span>
-</code></pre></div>
-</div>
-<p>To compute the actual intersection point, do</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hits</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]))</span>
-</code></pre></div>
-</div>
-</dd></dl>
+<dt id="compas_libigl.intersection_rays_mesh">
+<code class="sig-prename descclassname">compas_libigl.</code><code class="sig-name descname">intersection_rays_mesh</code><span class="sig-paren">(</span><em class="sig-param">rays</em>, <em class="sig-param">mesh</em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
 
 </div>
 
@@ -154,8 +117,8 @@ Each tuple contains:</p>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_lscm.html">trimesh_lscm</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.quadmesh_planarize.html">quadmesh_planarize</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">intersection_ray_mesh</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.intersection_rays_mesh.html">intersection_rays_mesh</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="compas_libigl.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">intersection_rays_mesh</a></li>
 </ul>
 </li>
 </ul>
@@ -171,7 +134,7 @@ Each tuple contains:</p>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">intersection_ray_mesh</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">intersection_rays_mesh</a></li>
 </ul>
 
       </div>

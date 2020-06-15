@@ -39,6 +39,7 @@ Miscellaneous
     :toctree: generated/
 
     intersection_ray_mesh
+    intersection_rays_mesh
 
 """
 from __future__ import absolute_import

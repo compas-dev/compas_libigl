@@ -56,3 +56,9 @@ Curvature
 Geodesic distance
 =================
 
+.. figure:: ../examples/geodistance.png
+    :figclass: figure
+    :class: figure-img img-fluid
+
+    Geodesic distance on :download:`tubemesh.off <https://raw.githubusercontent.com/blockresearchgroup/compas_libigl/master/tubemesh.off>`,
+    generated with :download:`examples/geodistance.py <../examples/geodistance.py>`

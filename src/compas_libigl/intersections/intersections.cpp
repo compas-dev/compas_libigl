@@ -12,6 +12,7 @@ using RowMatrixXi = Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::Ro
 using Hit = std::tuple<int, float, float, float>;
 using HitList = std::vector<Hit>;
 
+
 HitList
 intersection_ray_mesh(
     Eigen::Vector3d point,
@@ -34,12 +35,49 @@ intersection_ray_mesh(
 }
 
 
+std::vector<HitList>
+intersection_rays_mesh(
+    RowMatrixXd points,
+    RowMatrixXd directions,
+    RowMatrixXd V,
+    RowMatrixXi F)
+{
+    std::vector<HitList> hits_per_ray;
+
+    int r = points.rows();
+
+    for (int i = 0; i < r; i++){
+        std::vector<igl::Hit> igl_hits;
+        bool result = igl::ray_mesh_intersect(points.row(i), directions.row(i), V, F, igl_hits);
+
+        HitList hits;
+        if (result) {
+            for (const auto& hit : igl_hits) {
+                hits.push_back(std::make_tuple(hit.id, hit.u, hit.v, hit.t));
+            }
+        }
+        hits_per_ray.push_back(hits);
+    }
+
+    return hits_per_ray;
+}
+
+
 PYBIND11_MODULE(compas_libigl_intersections, m) {
     m.def(
         "intersection_ray_mesh",
         &intersection_ray_mesh,
         py::arg("point"),
         py::arg("direction"),
+        py::arg("V").noconvert(),
+        py::arg("F").noconvert()
+    );
+
+    m.def(
+        "intersection_rays_mesh",
+        &intersection_rays_mesh,
+        py::arg("points"),
+        py::arg("directions"),
         py::arg("V").noconvert(),
         py::arg("F").noconvert()
     );
