@@ -98,9 +98,13 @@ html_theme = "compaspkg"
 html_theme_path = sphinx_compas_theme.get_html_theme_path()
 
 html_theme_options = {
-    "package_name"    : "compas_libigl",
-    "package_title"   : project,
-    "package_version" : release,
+    "package_name"       : "compas_libigl",
+    "package_title"      : project,
+    "package_version"    : release,
+    "package_author"     : "Tom Van Mele",
+    "package_description": "COMPAS-compatible Python bindings for libigl",
+    "package_repo"       : "https://github.com/BlockResearchGroup/compas_libigl",
+    "package_docs"       : "https://blockresearchgroup.github.io/compas_libigl"
 }
 
 html_context = {}
