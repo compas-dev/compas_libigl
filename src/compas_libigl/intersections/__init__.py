@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 from compas_libigl_intersections import intersection_ray_mesh as _intersection_ray_mesh
+from compas_libigl_intersections import intersection_rays_mesh as _intersection_rays_mesh
 
 
 def intersection_ray_mesh(ray, mesh):
@@ -52,6 +53,17 @@ def intersection_ray_mesh(ray, mesh):
     V = np.asarray(vertices, dtype=np.float64)
     F = np.asarray(faces, dtype=np.int32)
     return _intersection_ray_mesh(P, D, V, F)
+
+
+def intersection_rays_mesh(rays, mesh):
+    points, vectors = zip(*rays)
+    vertices, faces = mesh
+    P = np.asarray(points, dtype=np.float64)
+    D = np.asarray(vectors, dtype=np.float64)
+    V = np.asarray(vertices, dtype=np.float64)
+    F = np.asarray(faces, dtype=np.int32)
+    return _intersection_rays_mesh(P, D, V, F)
+
 
 
 __all__ = [_ for _ in dir() if not _.startswith('_')]
