@@ -15,7 +15,7 @@ mesh.quads_to_triangles()
 # ==============================================================================
 
 source = mesh.get_any_vertex()
-distance = igl.trimesh_geodistance(mesh, source, method='heat')
+distance = igl.trimesh_geodistance(mesh.to_vertices_and_faces(), source, method='heat')
 
 # ==============================================================================
 # Visualize

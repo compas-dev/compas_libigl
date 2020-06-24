@@ -15,7 +15,7 @@ mesh.quads_to_triangles()
 # Mass matrix
 # ==============================================================================
 
-mass = igl.trimesh_massmatrix(mesh)
+mass = igl.trimesh_massmatrix(mesh.to_vertices_and_faces())
 
 # ==============================================================================
 # Visualisation

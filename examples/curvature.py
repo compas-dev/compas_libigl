@@ -17,7 +17,7 @@ mesh.quads_to_triangles()
 # curvature
 # ==============================================================================
 
-curvature = igl.trimesh_gaussian_curvature(mesh)
+curvature = igl.trimesh_gaussian_curvature(mesh.to_vertices_and_faces())
 
 # ==============================================================================
 # Visualisation

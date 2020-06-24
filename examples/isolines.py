@@ -22,7 +22,7 @@ mesh.transform(S * Rz * Rx)
 # ==============================================================================
 
 scalars = mesh.vertices_attribute('z')
-vertices, edges = igl.trimesh_isolines(mesh, scalars, 10)
+vertices, edges = igl.trimesh_isolines(mesh.to_vertices_and_faces(), scalars, 10)
 isolines = igl.groupsort_isolines(vertices, edges)
 
 # ==============================================================================
