@@ -32,7 +32,7 @@ def trimesh_gaussian_curvature(M):
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    return _trimesh_gaussian_curvature(V, F)
+    return _gaussian(V, F)
 
 
 def trimesh_principal_curvature():

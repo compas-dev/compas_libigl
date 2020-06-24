@@ -58,7 +58,7 @@ for x, y, z in hemi:
 
 index_face = {index: face for index, face in enumerate(mesh.faces())}
 
-hits_per_ray = igl.intersection_rays_mesh(rays, mesh)
+hits_per_ray = igl.intersection_rays_mesh(rays, mesh.to_vertices_and_faces())
 
 intersections = []
 for ray, hits in zip(rays, hits_per_ray):

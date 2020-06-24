@@ -21,7 +21,7 @@ mesh.transform(S * Rz * Rx)
 # Boundaries
 # ==============================================================================
 
-boundaries = igl.trimesh_boundaries(mesh)
+boundaries = igl.trimesh_boundaries(mesh.to_vertices_and_faces())
 
 # ==============================================================================
 # Visualize
