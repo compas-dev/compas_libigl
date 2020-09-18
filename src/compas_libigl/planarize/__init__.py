@@ -1,11 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from compas_libigl_planarize import planarize_quads as _planarize_quads
+from compas.plugins import plugin
 
 
+@plugin(category='quadmesh')
 def quadmesh_planarize(M, kmax=500, maxdev=0.005):
     """Planarize the faces of a quad mesh.
 

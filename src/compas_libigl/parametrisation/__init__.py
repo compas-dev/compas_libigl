@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from compas_libigl_parametrisation import trimesh_harmonic_map as _harmonic
 from compas_libigl_parametrisation import trimesh_lscm as _lscm
+from compas.plugins import plugin
 
 
+@plugin(category='trimesh')
 def trimesh_harmonic(M):
     """Compute the harmonic parametrisation of a triangle mesh within a fixed circular boundary.
 
@@ -45,6 +43,7 @@ def trimesh_harmonic(M):
     return _harmonic(V, F)
 
 
+@plugin(category='trimesh')
 def trimesh_lscm(M):
     """Compute the least squares conformal map of a triangle mesh.
 

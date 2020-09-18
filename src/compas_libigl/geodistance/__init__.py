@@ -1,20 +1,17 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from compas_libigl_geodistance import trimesh_geodistance_exact as _exact
 from compas_libigl_geodistance import trimesh_geodistance_heat as _heat
+from compas.plugins import plugin
 
 
+@plugin(category='trimesh')
 def trimesh_geodistance(M, source, method='exact'):
     """Compute the geodesic distance from every vertex of the mesh to a source vertex.
 
     Parameters
     ----------
-    M : tuple or :class:`compas.datastructures.Mesh`
-        A triangle mesh represented by a tuple of vertices and faces
-        or a COMPAS mesh object.
+    M : (list, list)
+        A mesh represented by a list of vertices and a list of faces.
     source : int
         The index of the vertex from where the geodesic distances should be calculated.
     method : {'exact', 'heat'}

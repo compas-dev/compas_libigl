@@ -42,10 +42,6 @@ Miscellaneous
     intersection_rays_mesh
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os
 import compas
 
@@ -128,5 +124,16 @@ def get_beetle():
 def get_armadillo():
     return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/armadillo.obj"
 
+
+__all_plugins__ = [
+    'compas_libigl.curvature',
+    'compas_libigl.geodistance',
+    'compas_libigl.intersections',
+    'compas_libigl.isolines',
+    'compas_libigl.massmatrix',
+    'compas_libigl.meshing',
+    'compas_libigl.parametrisation',
+    'compas_libigl.planarize'
+]
 
 __all__ = [name for name in dir() if not name.startswith('_')]

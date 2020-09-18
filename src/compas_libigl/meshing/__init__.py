@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from compas_libigl_meshing \
     import trimesh_remesh_along_isoline as _trimesh_remesh_along_isoline
+from compas.plugins import plugin
 
 
+@plugin(category='trimesh')
 def trimesh_remesh_along_isoline(mesh, scalarfield, scalar):
     """Remesh a mesh along an isoline of a scalarfield over the vertices.
 
