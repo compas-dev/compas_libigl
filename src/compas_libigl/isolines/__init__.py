@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from itertools import groupby
 from compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
+from compas.plugins import plugin
 
 
+@plugin(category='trimesh')
 def trimesh_isolines(M, S, N=50):
     """Compute isolines on a triangle mesh using a scalarfield of data points
     assigned to its vertices.

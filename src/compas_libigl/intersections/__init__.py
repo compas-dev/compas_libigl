@@ -1,22 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import numpy as np
 from compas_libigl_intersections import intersection_ray_mesh as _intersection_ray_mesh
 from compas_libigl_intersections import intersection_rays_mesh as _intersection_rays_mesh
+from compas.plugins import plugin
 
 
-def intersection_ray_mesh(ray, mesh):
+@plugin(category="intersections")
+def intersection_ray_mesh(ray, M):
     """Compute the intersection(s) between a ray and a mesh.
 
     Parameters
     ----------
     ray : tuple of point and vector
         A ray represented by a point and a direction vector.
-    mesh : tuple or :class:`compas.datastructures.Mesh`
-        A mesh represented by a list of vertices and a list of faces
-        or a COMPAS mesh object.
+    M : (list, list)
+        A mesh represented by a list of vertices and a list of faces.
 
     Returns
     -------
@@ -47,7 +44,7 @@ def intersection_ray_mesh(ray, mesh):
 
     """
     point, vector = ray
-    vertices, faces = mesh
+    vertices, faces = M
     P = np.asarray(point, dtype=np.float64)
     D = np.asarray(vector, dtype=np.float64)
     V = np.asarray(vertices, dtype=np.float64)
@@ -55,9 +52,9 @@ def intersection_ray_mesh(ray, mesh):
     return _intersection_ray_mesh(P, D, V, F)
 
 
-def intersection_rays_mesh(rays, mesh):
+def intersection_rays_mesh(rays, M):
     points, vectors = zip(*rays)
-    vertices, faces = mesh
+    vertices, faces = M
     P = np.asarray(points, dtype=np.float64)
     D = np.asarray(vectors, dtype=np.float64)
     V = np.asarray(vertices, dtype=np.float64)
