@@ -16,7 +16,7 @@ mesh_lscm = mesh.copy()
 # Harmonic parametrisation
 # ==============================================================================
 
-harmonic_uv = igl.trimesh_harmonic(mesh)
+harmonic_uv = igl.trimesh_harmonic(mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):
     mesh_harmonic.vertex_attributes(key, 'xy', harmonic_uv[index])
@@ -25,7 +25,7 @@ for index, key in enumerate(mesh.vertices()):
 # Least-squares conformal map
 # ==============================================================================
 
-lscm_uv = igl.trimesh_lscm(mesh)
+lscm_uv = igl.trimesh_lscm(mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, 'xy', lscm_uv[index])
