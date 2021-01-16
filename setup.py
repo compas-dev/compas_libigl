@@ -70,7 +70,9 @@ class CMakeBuild(build_ext):
             #     '-DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF']
 
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
+            cmake_args += ['-DLIBIGL_INCLUDE_DIR=../../ext/libigl/include'] 
             build_args += ['--', '-j2']
+
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
