@@ -45,15 +45,15 @@ Miscellaneous
 import os
 import compas
 
-from .geodistance import *
-from .isolines import *
-from .planarize import *
-from .massmatrix import *
-from .curvature import *
-from .intersections import *
-from .parametrisation import *
-from .boundaries import *
-from .meshing import *
+from .geodistance import *  # noqa F403
+from .isolines import *  # noqa F403
+from .planarize import *  # noqa F403
+from .massmatrix import *  # noqa F403
+from .curvature import *  # noqa F403
+from .intersections import *  # noqa F403
+from .parametrisation import *  # noqa F403
+from .boundaries import *  # noqa F403
+from .meshing import *  # noqa F403
 
 
 __author__ = ["tom van mele"]
