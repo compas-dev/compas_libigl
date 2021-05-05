@@ -10,7 +10,7 @@ on:
 
 defaults:
   run:
-    shell: bash -l {0}
+    shell: powershell
 
 
 jobs:
