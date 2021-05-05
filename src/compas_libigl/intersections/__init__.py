@@ -62,5 +62,4 @@ def intersection_rays_mesh(rays, M):
     return _intersection_rays_mesh(P, D, V, F)
 
 
-
 __all__ = [_ for _ in dir() if not _.startswith('_')]

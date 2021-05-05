@@ -1,6 +1,5 @@
 import numpy as np
-from compas_libigl_meshing \
-    import trimesh_remesh_along_isoline as _trimesh_remesh_along_isoline
+from compas_libigl_meshing import trimesh_remesh_along_isoline as _trimesh_remesh_along_isolines
 from compas.plugins import plugin
 
 
