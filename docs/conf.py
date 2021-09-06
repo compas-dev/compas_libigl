@@ -43,7 +43,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
     "sphinx.ext.githubpages",
-    "matplotlib.sphinxext.plot_directive",
+    # "matplotlib.sphinxext.plot_directive",
 ]
 
 # autodoc options
