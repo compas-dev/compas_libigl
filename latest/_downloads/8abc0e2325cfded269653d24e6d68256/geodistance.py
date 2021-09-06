@@ -29,4 +29,4 @@ plotter.draw_vertices(
     facecolor={key: cmap(distance[index]) for index, key in enumerate(mesh.vertices())}
 )
 plotter.draw_faces()
-plotter.save('examples/geodistance.png')
+plotter.show()
