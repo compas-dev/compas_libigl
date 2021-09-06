@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from __future__ import print_function
-
 import io
 from os import path
 import os
@@ -10,8 +7,6 @@ import platform
 import subprocess
 
 from setuptools import setup, Extension
-from setuptools.command.develop import develop
-from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
