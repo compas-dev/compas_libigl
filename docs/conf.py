@@ -6,9 +6,11 @@
 
 import sys
 import os
+import inspect
+import importlib
 
 import sphinx_compas_theme
-
+from sphinx.ext.napoleon.docstring import NumpyDocstring
 
 # -- General configuration ------------------------------------------------
 
@@ -20,14 +22,13 @@ version = ".".join(release.split(".")[0:2])
 
 master_doc = "index"
 source_suffix = [".rst", ]
-templates_path = ["_templates", ]
+templates_path = sphinx_compas_theme.get_autosummary_templates_path()
 exclude_patterns = []
 
-pygments_style   = "sphinx"
-show_authors     = True
+pygments_style = "sphinx"
+show_authors = True
 add_module_names = True
-language         = None
-
+language = None
 
 # -- Extension configuration ------------------------------------------------
 
@@ -35,22 +36,34 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
+    "sphinx.ext.coverage",
+    "sphinx.ext.linkcode",
+    "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinx.ext.githubpages",
     "matplotlib.sphinxext.plot_directive",
 ]
 
 # autodoc options
 
-autodoc_default_flags = [
-    "undoc-members",
-    "show-inheritance",
-]
+autodoc_default_options = {
+    "undoc-members": True,
+    "show-inheritance": True,
+}
 
 autodoc_member_order = "alphabetical"
 
 autoclass_content = "class"
+
+def skip(app, what, name, obj, would_skip, options):
+    if name.startswith('_'):
+        return True
+    return would_skip
+
+def setup(app):
+    app.connect("autodoc-skip-member", skip)
 
 # autosummary options
 
@@ -58,7 +71,7 @@ autosummary_generate = True
 
 # napoleon options
 
-napoleon_google_docstring = True
+napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
@@ -72,25 +85,68 @@ napoleon_use_rtype = False
 
 # plot options
 
-# plot_include_source
-# plot_pre_code
-# plot_basedir
-# plot_formats
-# plot_rcparams
-# plot_apply_rcparams
-# plot_working_directory
-# plot_template
-
 plot_html_show_source_link = False
 plot_html_show_formats = False
+
+# docstring sections
+
+def parse_attributes_section(self, section):
+    return self._format_fields("Attributes", self._consume_fields())
+
+NumpyDocstring._parse_attributes_section = parse_attributes_section
+
+def patched_parse(self):
+    self._sections["attributes"] = self._parse_attributes_section
+    self._unpatched_parse()
+
+NumpyDocstring._unpatched_parse = NumpyDocstring._parse
+NumpyDocstring._parse = patched_parse
 
 # intersphinx options
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/", None),
-    "compas": ("https://compas-dev.github.io/main", "https://compas-dev.github.io/main/objects.inv"),
+    "compas": ("https://compas.dev/compas/latest/", None),
 }
 
+# linkcode
+
+def linkcode_resolve(domain, info):
+    if domain != 'py':
+        return None
+    if not info['module']:
+        return None
+    if not info['fullname']:
+        return None
+
+    package = info['module'].split('.')[0]
+    if not package.startswith('compas_libigl'):
+        return None
+
+    module = importlib.import_module(info['module'])
+    parts = info['fullname'].split('.')
+
+    if len(parts) == 1:
+        obj = getattr(module, info['fullname'])
+        filename = inspect.getmodule(obj).__name__.replace('.', '/')
+        lineno = inspect.getsourcelines(obj)[1]
+    elif len(parts) == 2:
+        obj_name, attr_name = parts
+        obj = getattr(module, obj_name)
+        attr = getattr(obj, attr_name)
+        if inspect.isfunction(attr):
+            filename = inspect.getmodule(obj).__name__.replace('.', '/')
+            lineno = inspect.getsourcelines(attr)[1]
+        else:
+            return None
+    else:
+        return None
+
+    return f"https://github.com/compas-dev/compas_libigl/blob/master/src/{filename}.py#L{lineno}"
+
+# extlinks
+
+extlinks = {}
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -98,21 +154,21 @@ html_theme = "compaspkg"
 html_theme_path = sphinx_compas_theme.get_html_theme_path()
 
 html_theme_options = {
-    "package_name"       : "compas_libigl",
-    "package_title"      : project,
-    "package_version"    : release,
-    "package_author"     : "Tom Van Mele",
-    "package_description": "COMPAS-compatible Python bindings for libigl",
-    "package_repo"       : "https://github.com/BlockResearchGroup/compas_libigl",
-    "package_docs"       : "https://blockresearchgroup.github.io/compas_libigl"
+    "package_name"    : "compas_libigl",
+    "package_title"   : project,
+    "package_version" : release,
+    "package_author"  : "compas-dev",
+    "package_docs"    : "https://compas.dev/compas_libigl/",
+    "package_repo"    : "https://github.com/compas-dev/compas_libigl",
+    "package_old_versions_txt": "https://compas.dev/compas_libigl/doc_versions.txt"
 }
 
 html_context = {}
 html_static_path = []
-html_extra_path = [".nojekyll"]
+html_extra_path = []
 html_last_updated_fmt = ""
 html_copy_source = False
 html_show_sourcelink = False
-html_add_permalinks = ""
-html_experimental_html5_writer = True
+html_permalinks = False
+html_permalinks_icon = ""
 html_compact_lists = True
