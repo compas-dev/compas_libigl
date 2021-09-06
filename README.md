@@ -19,8 +19,6 @@ pip install -e .
 > If you have git/cmake installed, this can be omitted from the environment installation.
 > On Mac, don't forget to install `python.app`!
 
-```
-
 ## Libigl functions
 
 Currently the following functionalities of Libigl are included in the wrapper
