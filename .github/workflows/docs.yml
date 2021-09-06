@@ -29,7 +29,7 @@ jobs:
 
       - name: build (windows)
         run: |
-          conda install git cmake">=3.14" boost eigen COMPAS">=0.16.1" -y
+          conda install git cmake">=3.14" boost eigen=3.3 COMPAS">=0.16.1" -y
           pip install -r requirements-dev.txt
           invoke docs
 
@@ -50,11 +50,11 @@ jobs:
           keep_history: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     outputs:
       commit_type: ${{ steps.docs.outputs.commit_type }}
       current_version: ${{ steps.docs.outputs.current_version }}
-  
+
   docVersions:
     needs: build
     if: needs.build.outputs.commit_type == 'tag'

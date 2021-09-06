@@ -33,9 +33,9 @@ jobs:
 
       - name: build
         run: |
-          conda install git cmake">=3.14" boost eigen COMPAS">=0.16.1" -y
+          conda install git cmake">=3.14" boost eigen=3.3 COMPAS">=0.16.1" -y
           pip install -r requirements-dev.txt
-  
+
       - name: Lint with flake8
         run: |
           invoke lint
