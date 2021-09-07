@@ -23,6 +23,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - uses: conda-incubator/setup-miniconda@v2.0.0
         with:
@@ -33,7 +35,7 @@ jobs:
 
       - name: build
         run: |
-          conda install git cmake">=3.14" boost eigen=3.3 COMPAS">=0.16.1" -y
+          conda install git cmake">=3.14" boost eigen COMPAS --yes
           pip install -r requirements-dev.txt
 
       - name: Lint with flake8
