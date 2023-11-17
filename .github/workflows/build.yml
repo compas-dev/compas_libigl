@@ -29,7 +29,7 @@ jobs:
           miniconda-version: "latest"
           activate-environment: igl
           channels: conda-forge
-          python-version: 3.7
+          python-version: 3.8
 
       - name: build
         run: |
