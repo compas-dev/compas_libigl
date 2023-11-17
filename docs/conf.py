@@ -71,7 +71,7 @@ extensions = [
     "sphinx.ext.coverage",
     # "sphinx.ext.inheritance_diagram",
     "sphinx.ext.graphviz",
-    "matplotlib.sphinxext.plot_directive",
+    # "matplotlib.sphinxext.plot_directive",
     "sphinx.ext.autodoc.typehints",
     "sphinx_design",
     "sphinx_inline_tabs",
