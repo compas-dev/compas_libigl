@@ -7,7 +7,9 @@ compas_libigl
    :titlesonly:
 
    Overview <self>
-   gettingstarted
+   installation
+   tutorial
    examples
    api
    license
+   acknowledgements

@@ -8,7 +8,7 @@ Many of the functions provided by `compas_libigl` are based on the examples in t
 `compas_libigl` can be installed using a combination of conda and pip.
 
 ```bash
-conda create -n igl python=3.7 git cmake">=3.14" boost eigen COMPAS compas_view2 --yes
+conda create -n igl python=3.7 git cmake">=3.14" boost eigen=3.3 COMPAS compas_view2 --yes
 conda activate igl
 git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
 cd compas_libigl

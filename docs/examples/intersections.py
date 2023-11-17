@@ -1,35 +1,34 @@
-import math
 import numpy as np
+import compas
 import compas_libigl as igl
 
-from compas.geometry import add_vectors, scale_vector, cross_vectors
-from compas.geometry import intersection_line_plane
-from compas.geometry import Point, Vector, Line, Plane, Sphere
-from compas.geometry import Translation
+from compas.geometry import Point, Line, Translation
 from compas.datastructures import Mesh
+from compas.colors import Color
 
-from compas_viewers.objectviewer import ObjectViewer
+from compas_view2.app import App
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
 
-mesh = Mesh.from_off(igl.get('tubemesh.off'))
-mesh.quads_to_triangles()
+mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
-z = mesh.vertices_attribute('z')
+z = mesh.vertices_attribute("z")
 zmin = min(z)
 
 T = Translation.from_vector([0, 0, -zmin])
 mesh.transform(T)
 
+trimesh = mesh.copy()
+trimesh.quads_to_triangles()
+
 # ==============================================================================
 # Rays
 # ==============================================================================
 
-base = Point(-7, 0, 0)
-
-sphere = Sphere(base, 1.0)
+base = Point(*mesh.centroid())
+base.z = 0
 
 theta = np.linspace(0, np.pi, 20, endpoint=False)
 phi = np.linspace(0, 2 * np.pi, 20, endpoint=False)
@@ -74,12 +73,13 @@ for ray, hits in zip(rays, hits_per_ray):
 # Visualisation
 # ==============================================================================
 
-viewer = ObjectViewer()
+viewer = App(width=1600, height=900)
+viewer.view.camera.position = [1, -6, 2]
+viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(mesh, settings={'color': '#cccccc', 'opacity': 0.5, 'edges.on': False})
+viewer.add(mesh, opacity=0.7)
 
 for intersection in intersections:
-    viewer.add(Line(base, intersection), settings={'edges.color': '#ff0000', 'edges.width': 3})
+    viewer.add(Line(base, intersection), linecolor=Color.blue(), linewidth=3)
 
-viewer.update()
-viewer.show()
+viewer.run()

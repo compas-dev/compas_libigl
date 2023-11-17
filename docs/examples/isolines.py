@@ -1,9 +1,10 @@
 import math
 import compas_libigl as igl
 from compas.datastructures import Mesh
-from compas.utilities import Colormap, rgb_to_hex
-from compas.geometry import Line, Polyline, Rotation, Scale
-from compas_viewers.objectviewer import ObjectViewer
+from compas.colors import ColorMap
+from compas.geometry import Polyline, Rotation, Scale
+from compas_view2.app import App
+from compas_view2.objects import Collection
 
 # ==============================================================================
 # Input geometry
@@ -21,27 +22,37 @@ mesh.transform(S * Rz * Rx)
 # Isolines
 # ==============================================================================
 
-scalars = mesh.vertices_attribute('z')
-vertices, edges = igl.trimesh_isolines(mesh.to_vertices_and_faces(), scalars, 10)
+scalars = mesh.vertices_attribute("z")
+vertices, edges = igl.trimesh_isolines(mesh.to_vertices_and_faces(), scalars, 100)
 isolines = igl.groupsort_isolines(vertices, edges)
 
 # ==============================================================================
 # Visualisation
 # ==============================================================================
 
-viewer = ObjectViewer()
+viewer = App(width=1600, height=900)
+viewer.view.camera.position = [8, -7, 1]
+viewer.view.camera.look_at([1, 0, 0])
 
-viewer.add(mesh, settings={'color': '#ffffff', 'vertices.on': False, 'edges.on': False})
+viewer.add(mesh, opacity=0.7, show_lines=False)
 
-cmap = Colormap(scalars, 'rgb')
+minval = min(scalars) - 0.01
+maxval = max(scalars) + 0.01
+
+cmap = ColorMap.from_rgb()
+
 for value, paths in isolines:
+    polylines = []
     for path in paths:
         points = [vertices[path[0][0]]]
         for i, j in path:
             points.append(vertices[j])
-        viewer.add(
-            Polyline(points),
-            settings={'edges.color': rgb_to_hex(cmap(value)), 'edges.width': 5, 'vertices.on': False})
+        polylines.append(Polyline(points))
 
-viewer.update()
+    viewer.add(
+        Collection(polylines),
+        linecolor=cmap(value, minval=minval, maxval=maxval),
+        linewidth=3,
+    )
+
 viewer.show()
