@@ -33,6 +33,3 @@ def trimesh_gaussian_curvature(M):
 
 def trimesh_principal_curvature():
     pass
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]

@@ -4,7 +4,7 @@ from compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
 from compas.plugins import plugin
 
 
-@plugin(category='trimesh')
+@plugin(category="trimesh")
 def trimesh_isolines(M, S, N=50):
     """Compute isolines on a triangle mesh using a scalarfield of data points
     assigned to its vertices.
@@ -69,7 +69,10 @@ def groupsort_isolines(vertices, edges):
     --------
     >>>
     """
-    levels = groupby(sorted(edges, key=lambda edge: vertices[edge[0]][2]), key=lambda edge: round(vertices[edge[0]][2], 3))
+    levels = groupby(
+        sorted(edges, key=lambda edge: vertices[edge[0]][2]),
+        key=lambda edge: round(vertices[edge[0]][2], 3),
+    )
     isolines = []
     for value, edges in levels:
         paths = []
@@ -108,6 +111,3 @@ def groupsort_isolines(vertices, edges):
                     edges.remove(edge)
         isolines.append((value, paths))
     return isolines
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]

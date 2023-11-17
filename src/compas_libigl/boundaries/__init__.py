@@ -33,6 +33,3 @@ def trimesh_boundaries(M):
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     return _trimesh_boundaries(V, F)
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]

@@ -1,6 +1,8 @@
 import numpy as np
 from compas_libigl_intersections import intersection_ray_mesh as _intersection_ray_mesh
-from compas_libigl_intersections import intersection_rays_mesh as _intersection_rays_mesh
+from compas_libigl_intersections import (
+    intersection_rays_mesh as _intersection_rays_mesh,
+)
 from compas.plugins import plugin
 
 
@@ -60,6 +62,3 @@ def intersection_rays_mesh(rays, M):
     V = np.asarray(vertices, dtype=np.float64)
     F = np.asarray(faces, dtype=np.int32)
     return _intersection_rays_mesh(P, D, V, F)
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]

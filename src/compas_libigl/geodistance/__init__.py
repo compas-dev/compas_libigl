@@ -4,8 +4,8 @@ from compas_libigl_geodistance import trimesh_geodistance_heat as _heat
 from compas.plugins import plugin
 
 
-@plugin(category='trimesh')
-def trimesh_geodistance(M, source, method='exact'):
+@plugin(category="trimesh")
+def trimesh_geodistance(M, source, method="exact"):
     """Compute the geodesic distance from every vertex of the mesh to a source vertex.
 
     Parameters
@@ -35,11 +35,8 @@ def trimesh_geodistance(M, source, method='exact'):
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    if method == 'exact':
+    if method == "exact":
         return _exact(V, F, source)
-    if method == 'heat':
+    if method == "heat":
         return _heat(V, F, source)
     raise NotImplementedError
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]

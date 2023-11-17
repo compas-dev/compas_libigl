@@ -4,7 +4,7 @@ from compas_libigl_parametrisation import trimesh_lscm as _lscm
 from compas.plugins import plugin
 
 
-@plugin(category='trimesh')
+@plugin(category="trimesh")
 def trimesh_harmonic(M):
     """Compute the harmonic parametrisation of a triangle mesh within a fixed circular boundary.
 
@@ -43,7 +43,7 @@ def trimesh_harmonic(M):
     return _harmonic(V, F)
 
 
-@plugin(category='trimesh')
+@plugin(category="trimesh")
 def trimesh_lscm(M):
     """Compute the least squares conformal map of a triangle mesh.
 
@@ -80,6 +80,3 @@ def trimesh_lscm(M):
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     return _lscm(V, F)
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]
