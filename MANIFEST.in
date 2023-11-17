@@ -3,6 +3,8 @@ graft src
 prune .github
 prune data
 prune docs
+prune ext
+prune recipe
 prune scripts
 prune tests
 prune temp
@@ -12,13 +14,14 @@ include README.md
 include AUTHORS.md
 include CHANGELOG.md
 include requirements.txt
+include CMakeLists.txt
+
+recursive-include cmake *.cmake
 
 exclude requirements-dev.txt
-exclude pytest.ini .bumpversion.cfg .editorconfig
+exclude pytest.ini .bumpversion.cfg .editorconfig .gitmodules
 exclude tasks.py
 exclude conftest.py
 exclude CONTRIBUTING.md
-recursive-exclude ext/libigl
-recursive-exclude ext/pybind11
 
-global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store
+global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store *.so
