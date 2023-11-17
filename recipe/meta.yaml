@@ -37,7 +37,7 @@ requirements:
     - pip
     - setuptools
     - boost
-    - eigen
+    - eigen =3.3
   run:
     - python {{ python }}
     - COMPAS >=0.16.1

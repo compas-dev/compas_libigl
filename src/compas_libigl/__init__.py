@@ -1,59 +1,15 @@
-"""
-********************************************************************************
-compas_libigl
-********************************************************************************
-
-.. currentmodule:: compas_libigl
-
-
-TriMesh
-=======
-
-.. autosummary::
-    :toctree: generated/
-
-    trimesh_boundaries
-    trimesh_gaussian_curvature
-    trimesh_principal_curvature
-    trimesh_geodistance
-    trimesh_isolines
-    trimesh_massmatrix
-    trimesh_harmonic
-    trimesh_lscm
-    trimesh_remesh_along_isoline
-
-
-QuadMesh
-========
-
-.. autosummary::
-    :toctree: generated/
-
-    quadmesh_planarize
-
-
-Miscellaneous
-=============
-
-.. autosummary::
-    :toctree: generated/
-
-    intersection_ray_mesh
-    intersection_rays_mesh
-
-"""
 import os
 import compas
 
-from .geodistance import *  # noqa F403
-from .isolines import *  # noqa F403
-from .planarize import *  # noqa F403
-from .massmatrix import *  # noqa F403
-from .curvature import *  # noqa F403
-from .intersections import *  # noqa F403
-from .parametrisation import *  # noqa F403
-from .boundaries import *  # noqa F403
-from .meshing import *  # noqa F403
+from .boundaries import trimesh_boundaries
+from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
+from .geodistance import trimesh_geodistance
+from .intersections import intersection_ray_mesh, intersection_rays_mesh
+from .isolines import trimesh_isolines, groupsort_isolines
+from .massmatrix import trimesh_massmatrix
+from .meshing import trimesh_remesh_along_isoline
+from .parametrisation import trimesh_harmonic, trimesh_lscm
+from .planarize import quadmesh_planarize
 
 
 __author__ = ["tom van mele"]
@@ -107,14 +63,16 @@ def get(filename):
     >>> mesh = Mesh.from_off(igl.get('bunny.off'))
 
     """
-    filename = filename.strip('/')
+    filename = filename.strip("/")
 
     localpath = compas._os.absjoin(DATA, filename)
 
     if os.path.exists(localpath):
         return localpath
     else:
-        return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(filename)
+        return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(
+            filename
+        )
 
 
 def get_beetle():
@@ -126,14 +84,35 @@ def get_armadillo():
 
 
 __all_plugins__ = [
-    'compas_libigl.curvature',
-    'compas_libigl.geodistance',
-    'compas_libigl.intersections',
-    'compas_libigl.isolines',
-    'compas_libigl.massmatrix',
-    'compas_libigl.meshing',
-    'compas_libigl.parametrisation',
-    'compas_libigl.planarize'
+    "compas_libigl.curvature",
+    "compas_libigl.geodistance",
+    "compas_libigl.intersections",
+    "compas_libigl.isolines",
+    "compas_libigl.massmatrix",
+    "compas_libigl.meshing",
+    "compas_libigl.parametrisation",
+    "compas_libigl.planarize",
 ]
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    "HOME",
+    "DATA",
+    "DOCS",
+    "TEMP",
+    "get",
+    "get_beetle",
+    "get_armadillo",
+    "trimesh_boundaries",
+    "trimesh_gaussian_curvature",
+    "trimesh_principal_curvature",
+    "trimesh_geodistance",
+    "intersection_ray_mesh",
+    "intersection_rays_mesh",
+    "trimesh_isolines",
+    "groupsort_isolines",
+    "trimesh_massmatrix",
+    "trimesh_remesh_along_isoline",
+    "trimesh_harmonic",
+    "trimesh_lscm",
+    "quadmesh_planarize",
+]

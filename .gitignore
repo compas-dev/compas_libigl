@@ -120,3 +120,5 @@ build/**
 *.so
 
 src/compas-viewers
+
+generated

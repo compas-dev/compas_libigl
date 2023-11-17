@@ -1,25 +1,16 @@
 import compas_libigl as igl
-
 from compas.datastructures import Mesh
-from compas.utilities import Colormap
-from compas_plotters import MeshPlotter
+from compas.geometry import Scale, Translation
+from compas_view2.app import App
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
 
-mesh = Mesh.from_off(igl.get('camelhead.off'))
-mesh_harmonic = mesh.copy()
+mesh = Mesh.from_off(igl.get("camelhead.off"))
+
 mesh_lscm = mesh.copy()
-
-# ==============================================================================
-# Harmonic parametrisation
-# ==============================================================================
-
-harmonic_uv = igl.trimesh_harmonic(mesh.to_vertices_and_faces())
-
-for index, key in enumerate(mesh.vertices()):
-    mesh_harmonic.vertex_attributes(key, 'xy', harmonic_uv[index])
+mesh_lscm.vertices_attribute("z", 0)
 
 # ==============================================================================
 # Least-squares conformal map
@@ -28,12 +19,19 @@ for index, key in enumerate(mesh.vertices()):
 lscm_uv = igl.trimesh_lscm(mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):
-    mesh_lscm.vertex_attributes(key, 'xy', lscm_uv[index])
+    mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])
+
+mesh_lscm.transform(Scale.from_factors([3, 3, 3]))
 
 # ==============================================================================
 # Visualization
 # ==============================================================================
 
-plotter = MeshPlotter(mesh_lscm, figsize=(8, 5))
-plotter.draw_faces()
-plotter.show()
+X = Translation.from_vector([2.5, 1.5, 0]) * Scale.from_factors([3, 3, 3])
+
+mesh.transform(X)
+
+viewer = App()
+viewer.add(mesh)
+viewer.add(mesh_lscm)
+viewer.run()

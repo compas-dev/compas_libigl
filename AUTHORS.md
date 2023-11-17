@@ -1,3 +1,3 @@
 # Authors
 
-- Tom Van Mele <<van.mele@arch.ethz.ch>> [@brgcode](https://github.com/brgcode)
+- Tom Van Mele <<van.mele@arch.ethz.ch>> [@tomvanmele](https://github.com/tomvanmele)
