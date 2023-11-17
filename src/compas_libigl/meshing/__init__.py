@@ -1,9 +1,11 @@
 import numpy as np
-from compas_libigl_meshing import trimesh_remesh_along_isoline as _trimesh_remesh_along_isolines
+from compas_libigl_meshing import (
+    trimesh_remesh_along_isoline as _trimesh_remesh_along_isolines,
+)
 from compas.plugins import plugin
 
 
-@plugin(category='trimesh')
+@plugin(category="trimesh")
 def trimesh_remesh_along_isoline(mesh, scalarfield, scalar):
     """Remesh a mesh along an isoline of a scalarfield over the vertices.
 
@@ -34,6 +36,3 @@ def trimesh_remesh_along_isoline(mesh, scalarfield, scalar):
     F = np.asarray(F, dtype=np.int32)
     S = np.asarray(scalarfield, dtype=np.float64)
     return _trimesh_remesh_along_isolines(V, F, S, scalar)
-
-
-__all__ = [_ for _ in dir() if not _.startswith('_')]
