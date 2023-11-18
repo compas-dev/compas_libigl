@@ -11,9 +11,16 @@ on:
       - main
 
 jobs:
-  docs:
+  build:
+    name: custom build and deploy docs
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
     steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - uses: compas-dev/compas-actions.docs@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
