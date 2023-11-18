@@ -1,0 +1,13 @@
+name: igl
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - git
+  - cmake>=3.14
+  - boost
+  - eigen=3.3
+  - compas
+  - pip:
+    - -r requirements-dev.txt
