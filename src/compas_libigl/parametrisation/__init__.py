@@ -26,7 +26,8 @@ def trimesh_harmonic(M):
     >>> mesh = Mesh.from_off(igl.get('camelhead.off'))
     >>> mesh_uv = mesh.copy()
     >>> mesh_uv.vertices_attribute('z', 0)
-    >>> uv = igl.trimesh_harmonic(mesh)
+    >>> M = mesh.to_vertices_and_faces()
+    >>> uv = igl.trimesh_harmonic(M)
     >>> for key in mesh.vertices():
     ...     mesh_uv.vertex_attributes(key, 'xy', uv[key])
     ...
@@ -65,7 +66,8 @@ def trimesh_lscm(M):
     >>> mesh = Mesh.from_off(igl.get('camelhead.off'))
     >>> mesh_uv = mesh.copy()
     >>> mesh_uv.vertices_attribute('z', 0)
-    >>> uv = igl.trimesh_lscm(mesh)
+    >>> M = mesh.to_vertices_and_faces()
+    >>> uv = igl.trimesh_lscm(M)
     >>> for key in mesh.vertices():
     ...     mesh_uv.vertex_attributes(key, 'xy', uv[key])
     ...

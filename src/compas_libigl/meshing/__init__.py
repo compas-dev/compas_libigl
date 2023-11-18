@@ -26,8 +26,6 @@ def trimesh_remesh_along_isoline(mesh, scalarfield, scalar):
 
     Examples
     --------
-    >>> import compas_libigl as igl
-    >>> from compas.datastructures import Mesh
     >>>
 
     """

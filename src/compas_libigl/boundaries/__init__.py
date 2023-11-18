@@ -21,11 +21,13 @@ def trimesh_boundaries(M):
 
     Examples
     --------
-    >>> import compas_libigl as igl
+    >>> import compas
+    >>> import compas_libigl
     >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh = Mesh.from_off(compas.get('tubemesh.off'))
     >>> mesh.quads_to_triangles()
-    >>> boundaries = igl.trimesh_boundaries(mesh)
+    >>> M = mesh.to_vertices_and_faces()
+    >>> boundaries = compas_libigl.trimesh_boundaries(M)
     >>> len(boundaries) == 1
     True
     """

@@ -28,12 +28,14 @@ def trimesh_isolines(M, S, N=50):
 
     Examples
     --------
-    >>> import compas_libigl as igl
+    >>> import compas
+    >>> import compas_libigl
     >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh = Mesh.from_off(compas.get('tubemesh.off'))
     >>> mesh.quads_to_triangles()
+    >>> M = mesh.to_vertices_and_faces()
     >>> scalars = mesh.vertices_attribute('z')
-    >>> vertices, edges = igl.trimesh_isolines(mesh, scalars, 50)
+    >>> vertices, edges = compas_libigl.trimesh_isolines(M, scalars, 50)
 
     To convert the vertices and edges to sets of isolines, use :func:`groupsort_isolines`
 
