@@ -572,14 +572,23 @@ document.write(`
                   
   <section id="installation">
 <h1>Installation</h1>
-<p>We are working on a <code class="docutils literal notranslate"><span class="pre">conda</span></code> package for <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_libigl</span></code>.
-However, it is currently not available, yet.</p>
-<p>In the meantime, <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_libigl</span></code> can be installed using a combination of <cite>conda</cite> and <cite>pip</cite>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>igl<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7<span class="w"> </span>git<span class="w"> </span>cmake<span class="s2">&quot;&gt;=3.14&quot;</span><span class="w"> </span>boost<span class="w"> </span><span class="nv">eigen</span><span class="o">=</span><span class="m">3</span>.3<span class="w"> </span>compas<span class="s2">&quot;</span>
-<span class="s2">conda activate igl</span>
-<span class="s2">git clone --recursive https://github.com/compas-dev/compas_libigl.git</span>
-<span class="s2">cd compas_libigl</span>
-<span class="s2">pip install -e .</span>
+<p>We are working on a <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> package for <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_libigl</span></code>.
+However, it is currently not available, yet.
+In the meantime, <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_libigl</span></code> can be installed “from source” using a combination of <code class="docutils literal notranslate"><span class="pre">conda</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment with the required dependencies and activate it.
+Note that you can choose a different name for the environment than <code class="docutils literal notranslate"><span class="pre">igl</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>igl<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7<span class="w"> </span>git<span class="w"> </span>cmake<span class="s2">&quot;&gt;=3.14&quot;</span><span class="w"> </span>boost<span class="w"> </span><span class="nv">eigen</span><span class="o">=</span><span class="m">3</span>.3<span class="w"> </span>compas
+conda<span class="w"> </span>activate<span class="w"> </span>igl
+</pre></div>
+</div>
+<p>Get a local copy of the source code of <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_libigl</span></code> with all submodules.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/compas-dev/compas_libigl.git
+</pre></div>
+</div>
+<p>Install the package in “editable” mode using <code class="docutils literal notranslate"><span class="pre">pip</span></code>.
+Note that this will automatically build the C++ extension.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>compas_libigl
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
