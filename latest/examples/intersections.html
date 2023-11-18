@@ -582,7 +582,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">compas</span>
 <span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
 
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Line</span><span class="p">,</span> <span class="n">Translation</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Line</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
 
@@ -593,12 +593,6 @@ document.write(`
 <span class="c1"># ==============================================================================</span>
 
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tubemesh.obj&quot;</span><span class="p">))</span>
-
-<span class="n">z</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
-<span class="n">zmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-
-<span class="n">T</span> <span class="o">=</span> <span class="n">Translation</span><span class="o">.</span><span class="n">from_vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">zmin</span><span class="p">])</span>
-<span class="n">mesh</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
 <span class="n">trimesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">trimesh</span><span class="o">.</span><span class="n">quads_to_triangles</span><span class="p">()</span>
