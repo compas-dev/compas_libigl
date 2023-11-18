@@ -155,7 +155,7 @@
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="index.html">
-                        Overview
+                        Introduction
                       </a>
                     </li>
                 
@@ -339,7 +339,7 @@ document.write(`
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="index.html">
-                        Overview
+                        Introduction
                       </a>
                     </li>
                 
@@ -476,7 +476,7 @@ document.write(`
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Tutorial</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -572,7 +572,16 @@ document.write(`
                   
   <section id="tutorial">
 <h1>Tutorial</h1>
-<p>Coming soon!</p>
+<ul class="simple">
+<li><p>Similar input parameters as hte original code</p></li>
+<li><p>Meshes represented by a list of vertices and a list of triangles</p></li>
+<li><p>Both Python lists and Numpy arrays are supported</p></li>
+<li><p>Most functions are implemented as pluggables for plugins of COMPAS core</p></li>
+<li><p>Therefore, the code can be used from compas_libigl or from compas directly</p></li>
+<li><p>Results can easily be visualized using the COMPAS Viewer</p></li>
+<li><p>Since the binding is generated with PyBind11 and wraps C++ code, it cannot be used in Rhino/Grasshopper directly</p></li>
+<li><p>However it can be used there through RPC</p></li>
+</ul>
 </section>
 
 
