@@ -30,18 +30,21 @@ def intersection_ray_mesh(ray, M):
 
     Examples
     --------
-    >>> import compas_libigl as igl
+    >>> import compas
+    >>> import compas_libigl
     >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh = Mesh.from_off(compas.get('tubemesh.off'))
     >>> mesh.quads_to_triangles()
+    >>> M = mesh.to_vertices_and_faces()
     >>> centroid = mesh.centroid()
     >>> ray = [centroid[0], centroid[1], 0], [0, 0, 1.0]
-    >>> hits = igl.intersection_ray_mesh(ray, mesh)
+    >>> hits = compas_libigl.intersection_ray_mesh(ray, M)
     >>> len(hits) == 1
     True
 
     To compute the actual intersection point, do
 
+    >>> from compas.geometry import add_vectors, scale_vector
     >>> point = add_vectors(ray[0], scale_vector(ray[1], hits[0][3]))
 
     """

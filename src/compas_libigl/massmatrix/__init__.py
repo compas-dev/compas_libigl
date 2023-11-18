@@ -21,11 +21,14 @@ def trimesh_massmatrix(M):
 
     Examples
     --------
-    >>> import compas_libigl as igl
+    >>> import compas
+    >>> import compas_libigl
     >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get('tubemesh.off'))
+    >>> mesh = Mesh.from_off(compas.get('tubemesh.off'))
     >>> mesh.quads_to_triangles()
-    >>> mass = igl.trimesh_massmatrix(mesh)
+    >>> M = mesh.to_vertices_and_faces()
+    >>> mass = compas_libigl.trimesh_massmatrix(M)
+
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)

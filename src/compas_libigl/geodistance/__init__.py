@@ -31,6 +31,7 @@ def trimesh_geodistance(M, source, method="exact"):
     Examples
     --------
     >>>
+
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
