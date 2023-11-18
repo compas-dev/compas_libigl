@@ -2,7 +2,7 @@ import numpy as np
 import compas
 import compas_libigl as igl
 
-from compas.geometry import Point, Line, Translation
+from compas.geometry import Point, Line
 from compas.datastructures import Mesh
 from compas.colors import Color
 
@@ -13,12 +13,6 @@ from compas_view2.app import App
 # ==============================================================================
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
-
-z = mesh.vertices_attribute("z")
-zmin = min(z)
-
-T = Translation.from_vector([0, 0, -zmin])
-mesh.transform(T)
 
 trimesh = mesh.copy()
 trimesh.quads_to_triangles()
