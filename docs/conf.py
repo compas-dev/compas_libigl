@@ -50,9 +50,6 @@ source_suffix = {
 templates_path = sphinx_compas_theme.get_autosummary_templates_path() + ["_templates"]
 exclude_patterns = ["_build", "**.ipynb_checkpoints", "_notebooks", "**/__temp"]
 
-# pygments_style = "sphinx"
-# pygments_dark_style = "monokai"
-# show_authors = True
 add_module_names = True
 language = "en"
 
@@ -65,32 +62,21 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
-    # "sphinx.ext.linkcode",
     "sphinx.ext.extlinks",
     "sphinx.ext.githubpages",
     "sphinx.ext.coverage",
-    # "sphinx.ext.inheritance_diagram",
-    "sphinx.ext.graphviz",
-    # "matplotlib.sphinxext.plot_directive",
     "sphinx.ext.autodoc.typehints",
     "sphinx_design",
     "sphinx_inline_tabs",
     "sphinx_togglebutton",
     "sphinx_remove_toctrees",
     "sphinx_copybutton",
-    # "sphinxcontrib.bibtex",
     "numpydoc",
 ]
-
-# remove_from_toctrees = ["api/generated/*"]
 
 numpydoc_show_class_members = False
 numpydoc_class_members_toctree = False
 numpydoc_attributes_as_param_list = True
-
-# bibtex options
-
-# bibtex_bibfiles = ['refs.bib']
 
 # autodoc options
 
