@@ -17,7 +17,6 @@ copyright = "COMPAS Association"
 author = "Tom Van Mele"
 package = "compas_libigl"
 organization = "compas-dev"
-version = "0.1.0"
 
 
 def get_latest_version():
