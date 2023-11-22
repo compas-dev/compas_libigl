@@ -1,15 +1,8 @@
-from typing import Any, Tuple
-from nptyping import NDArray
 import numpy as np
 from compas_libigl_boundaries import trimesh_boundaries as _trimesh_boundaries
 
 
-def trimesh_boundaries(
-    M: Tuple[
-        NDArray[(Any, 3), np.float64],
-        NDArray[(Any, 3), np.int32],
-    ]
-) -> NDArray[(Any, Any), np.int32]:
+def trimesh_boundaries(M):
     """Compute all (ordered) boundary loops of a manifold triangle mesh.
 
     Parameters
