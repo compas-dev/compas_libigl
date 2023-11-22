@@ -1,7 +1,7 @@
 import hashlib
 from pathlib import Path
 
-FILE = Path(__file__).parent / "pybind11-2.5.0.tar.gz"
+FILE = Path(__file__).parent / "compas_libigl-0.2.0.tar.gz"
 
 with open(FILE, "rb") as f:
     data = f.read()
