@@ -113,6 +113,9 @@ temp/**
 ext/**
 !ext/PLACEHOLDER
 
+recipe/**
+!recipe/sha256.py
+
 build/**
 
 .DS_Store
