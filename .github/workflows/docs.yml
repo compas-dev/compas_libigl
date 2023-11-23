@@ -5,22 +5,15 @@ on:
     branches:
       - main
     tags:
-      - "v*"
+      - 'v*'
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
-    name: custom build and deploy docs
+  docs:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: powershell
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - uses: compas-dev/compas-actions.docs@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
