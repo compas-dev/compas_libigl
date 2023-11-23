@@ -8,42 +8,19 @@ on:
     branches:
       - main
 
-defaults:
-  run:
-    shell: powershell
-
 jobs:
-  build-packages:
+  Build:
+    if: "!contains(github.event.pull_request.labels.*.name, 'docs-only')"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
+        python: ['3.8', '3.9', '3.10']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: compas-dev/compas-actions.build@v3
         with:
-          submodules: recursive
-
-      - uses: conda-incubator/setup-miniconda@v2.0.0
-        with:
-          miniconda-version: "latest"
-          activate-environment: igl
-          channels: conda-forge
-          python-version: 3.8
-
-      - name: build
-        run: |
-          conda install git cmake">=3.14" boost eigen=3.3 compas --yes
-          pip install -r requirements-dev.txt
-
-      - name: Lint with flake8
-        run: |
-          invoke lint
-
-      - name: Test with pytest
-        run: |
-          invoke test
-
-      - name: Test build docs
-        run: |
-          invoke docs
+          invoke_lint: true
+          check_import: true
+          use_conda: true
+          python: ${{ matrix.python }}
