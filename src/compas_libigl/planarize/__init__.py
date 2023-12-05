@@ -1,5 +1,5 @@
 import numpy as np
-from ..compas_libigl_planarize import planarize_quads as _planarize_quads
+from compas_libigl_planarize import planarize_quads as _planarize_quads
 from compas.plugins import plugin
 
 
