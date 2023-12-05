@@ -10,6 +10,7 @@ prune tests
 prune temp
 
 include LICENSE
+include LICENSE.igl
 include README.md
 include AUTHORS.md
 include CHANGELOG.md

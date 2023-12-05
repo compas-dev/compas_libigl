@@ -2,6 +2,10 @@
 License
 ********************************************************************************
 
-`libigl` (and therefore also `compas_libigl`) is licensed under MPL-2.
+``compas_libigl`` is licensed under MIT.
 
-.. literalinclude:: ../LICENSE.MPL2
+.. literalinclude:: ../LICENSE
+
+``libigl`` is licensed under MPL-2.
+
+.. literalinclude:: ../LICENSE.igl
