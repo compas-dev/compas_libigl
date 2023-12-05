@@ -1,6 +1,8 @@
 import numpy as np
-from compas_libigl_geodistance import trimesh_geodistance_exact as _exact
-from compas_libigl_geodistance import trimesh_geodistance_heat as _heat
+from compas_libigl.compas_libigl_geodistance import (
+    trimesh_geodistance_exact as _exact,
+    trimesh_geodistance_heat as _heat,
+)
 from compas.plugins import plugin
 
 

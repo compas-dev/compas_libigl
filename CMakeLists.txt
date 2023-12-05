@@ -3,6 +3,7 @@ project(compas_libigl)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl)
 
 # Eigen
 if(WIN32)
@@ -20,9 +21,6 @@ endif()
 
 # Pybind11
 set(PYBIND11_CPP_STANDARD -std=c++11)
-
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11)
-# add_subdirectory($ENV{CONDA_PREFIX})
 find_package(pybind11 CONFIG REQUIRED)
 
 # Libigl

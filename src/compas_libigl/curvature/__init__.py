@@ -1,5 +1,7 @@
 import numpy as np
-from compas_libigl_curvature import trimesh_gaussian_curvature as _gaussian
+from compas_libigl.compas_libigl_curvature import (
+    trimesh_gaussian_curvature as _gaussian,
+)
 from compas.plugins import plugin
 
 
