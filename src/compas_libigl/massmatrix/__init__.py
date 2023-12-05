@@ -1,5 +1,7 @@
 import numpy as np
-from compas_libigl_massmatrix import trimesh_massmatrix as _trimesh_massmatrix
+from compas_libigl.compas_libigl_massmatrix import (
+    trimesh_massmatrix as _trimesh_massmatrix,
+)
 from compas.plugins import plugin
 
 

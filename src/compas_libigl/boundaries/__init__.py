@@ -1,5 +1,7 @@
 import numpy as np
-from compas_libigl_boundaries import trimesh_boundaries as _trimesh_boundaries
+from compas_libigl.compas_libigl_boundaries import (
+    trimesh_boundaries as _trimesh_boundaries,
+)
 
 
 def trimesh_boundaries(M):
