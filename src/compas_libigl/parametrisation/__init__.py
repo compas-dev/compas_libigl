@@ -1,5 +1,5 @@
 import numpy as np
-from compas_libigl.compas_libigl_parametrisation import (
+from .compas_libigl_parametrisation import (
     trimesh_harmonic_map as _harmonic,
     trimesh_lscm as _lscm,
 )
