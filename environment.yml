@@ -8,6 +8,7 @@ dependencies:
   - cmake>=3.14
   - boost
   - eigen=3.3
+  - pybind11
   - compas
   - pip:
     - -r requirements-dev.txt
