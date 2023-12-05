@@ -96,7 +96,7 @@ optional_requirements = {}
 
 setup(
     name="compas_libigl",
-    version="0.3.0",
+    version="0.3.1",
     description="Opinionated COMPAS compatible bindings for top-level algorithms of libigl.",
     long_description=long_description,
     long_description_content_type="text/markdown",
