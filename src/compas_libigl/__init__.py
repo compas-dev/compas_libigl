@@ -1,14 +1,16 @@
 import os
 import compas
 
-from .boundaries import trimesh_boundaries
-from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
+# from .boundaries import trimesh_boundaries
+# from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
 from .geodistance import trimesh_geodistance
-from .intersections import intersection_ray_mesh, intersection_rays_mesh
+
+# from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
-from .massmatrix import trimesh_massmatrix
-from .meshing import trimesh_remesh_along_isoline
-from .parametrisation import trimesh_harmonic, trimesh_lscm
+
+# from .massmatrix import trimesh_massmatrix
+# from .meshing import trimesh_remesh_along_isoline
+# from .parametrisation import trimesh_harmonic, trimesh_lscm
 from .planarize import quadmesh_planarize
 
 
