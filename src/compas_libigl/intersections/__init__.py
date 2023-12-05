@@ -1,5 +1,5 @@
 import numpy as np
-from .compas_libigl_intersections import (
+from ..compas_libigl_intersections import (
     intersection_ray_mesh as _intersection_ray_mesh,
     intersection_rays_mesh as _intersection_rays_mesh,
 )

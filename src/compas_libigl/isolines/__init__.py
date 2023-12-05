@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import groupby
-from .compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
+from ..compas_libigl_isolines import trimesh_isolines as _trimesh_isolines
 from compas.plugins import plugin
 
 
