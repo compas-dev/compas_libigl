@@ -16,7 +16,7 @@ __author__ = ["tom van mele"]
 __copyright__ = "Block Research Group - ETH Zurich"
 __license__ = "Mozilla Public License Version 2.0"
 __email__ = "van.mele@arch.ethz.ch"
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 
 HERE = os.path.dirname(__file__)
