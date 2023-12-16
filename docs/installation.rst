@@ -5,9 +5,12 @@ Installation
 Stable
 ======
 
+On ``conda-forge``, ``compas_libigl`` is available for Python 3.8, 3.9, and 3.10 on Windows, macOS, and Linux.
+
 .. code-block:: bash
 
     conda install -c conda-forge compas_libigl
+
 
 Dev Install
 ===========
