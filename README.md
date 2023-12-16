@@ -5,19 +5,26 @@ Many of the functions provided by `compas_libigl` are based on the examples in t
 
 ## Installation
 
-`compas_libigl` can be installed using a combination of conda and pip.
+### Stable
+
+The stable version of `compas_libigl` can now be installed from conda-forge.
 
 ```bash
-conda create -n igl python=3.7 git cmake">=3.14" boost eigen=3.3 COMPAS compas_view2 --yes
+conda create -n igl compas_libigl
+```
+
+### Dev install
+
+A dev version of `compas_libigl` can be installed using a combination of conda and pip.
+
+```bash
+conda create -n igl-dev python=3.9 git cmake">=3.14" boost eigen=3.3 pybind11 --yes
 conda activate igl
 git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
 cd compas_libigl
 rm -rf build
 pip install -e .
 ```
-
-> If you have git/cmake installed, this can be omitted from the environment installation.
-> On Mac, don't forget to install `python.app`!
 
 ## Libigl functions
 
