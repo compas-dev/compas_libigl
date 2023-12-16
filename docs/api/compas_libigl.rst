@@ -9,9 +9,9 @@ Functions
 
 .. autosummary::
     :toctree: generated/
+    :nosignatures:
 
     intersection_ray_mesh
-    intersection_rays_mesh
     trimesh_boundaries
     trimesh_gaussian_curvature
     trimesh_principal_curvature

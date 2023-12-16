@@ -50,6 +50,9 @@ autodoc_default_options = {
     "show-inheritance": True,
 }
 autodoc_member_order = "groupwise"
+autodoc_typehints = "description"
+autodoc_class_signature = "separated"
+
 autoclass_content = "class"
 
 
