@@ -2,16 +2,24 @@
 Installation
 ********************************************************************************
 
-We are working on a ``conda-forge`` package for :mod:`compas_libigl`.
-However, it is currently not available, yet.
-In the meantime, :mod:`compas_libigl` can be installed "from source" using a combination of ``conda`` and ``pip``.
-
-Create a ``conda`` environment with the required dependencies and activate it.
-Note that you can choose a different name for the environment than ``igl``.
+Stable
+======
 
 .. code-block:: bash
 
-    conda create -n igl python=3.7 git cmake">=3.14" boost eigen=3.3 compas
+    conda install -c conda-forge compas_libigl
+
+Dev Install
+===========
+
+Adevelopment version of :mod:`compas_libigl` can be installed "from source" using a combination of ``conda`` and ``pip``.
+
+Create a ``conda`` environment with the required dependencies and activate it.
+Note that you can choose a different name for the environment than ``igl-dev``.
+
+.. code-block:: bash
+
+    conda create -n igl-dev python=3.9 git cmake">=3.14" boost eigen=3.3 pybind11
     conda activate igl
 
 Get a local copy of the source code of :mod:`compas_libigl` with all submodules.
