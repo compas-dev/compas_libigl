@@ -1,8 +1,8 @@
 import compas
 import compas_libigl as igl
-from compas.datastructures import Mesh
 from compas.colors import ColorMap
-from compas_view2.app import App
+from compas.datastructures import Mesh
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -28,14 +28,14 @@ cmap = ColorMap.from_rgb()
 minval = min(mass)
 maxval = max(mass)
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [1, -6, 2]
-viewer.view.camera.look_at([1, 1, 1])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [1, -6, 2]
+# viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(mesh)
+viewer.scene.add(mesh, show_points=False)
 
 for m, vertex in zip(mass, mesh.vertices()):
     point = mesh.vertex_point(vertex)
-    viewer.add(point, pointsize=30, pointcolor=cmap(m, minval, maxval))
+    viewer.scene.add(point, pointsize=30, pointcolor=cmap(m, minval, maxval))
 
-viewer.run()
+viewer.show()

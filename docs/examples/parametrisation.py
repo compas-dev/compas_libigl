@@ -1,7 +1,8 @@
 import compas_libigl as igl
 from compas.datastructures import Mesh
-from compas.geometry import Scale, Translation
-from compas_view2.app import App
+from compas.geometry import Scale
+from compas.geometry import Translation
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -31,7 +32,7 @@ X = Translation.from_vector([2.5, 1.5, 0]) * Scale.from_factors([3, 3, 3])
 
 mesh.transform(X)
 
-viewer = App()
-viewer.add(mesh)
-viewer.add(mesh_lscm)
-viewer.run()
+viewer = Viewer()
+viewer.scene.add(mesh, show_points=False)
+viewer.scene.add(mesh_lscm, show_points=False)
+viewer.show()

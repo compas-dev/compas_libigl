@@ -1,10 +1,12 @@
 import math
-import compas_libigl as libigl
 
-from compas.datastructures import Mesh
-from compas.geometry import Polyline, Rotation, Scale
+import compas_libigl as libigl
 from compas.colors import Color
-from compas_view2.app import App
+from compas.datastructures import Mesh
+from compas.geometry import Polyline
+from compas.geometry import Rotation
+from compas.geometry import Scale
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -28,20 +30,21 @@ boundaries = libigl.trimesh_boundaries(mesh.to_vertices_and_faces())
 # Visualize
 # ==============================================================================
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [8, -7, 1]
-viewer.view.camera.look_at([1, 0, 0])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [8, -7, 1]
+# viewer.view.camera.look_at([1, 0, 0])
 
-viewer.add(
+viewer.scene.add(
     mesh,
     facecolor=Color.green(),
     linecolor=Color.green().darkened(20),
     opacity=0.7,
+    show_points=False,
 )
 
 for vertices in boundaries:
     points = mesh.vertices_attributes("xyz", keys=vertices)
     polyline = Polyline(points)
-    viewer.add(polyline, linecolor=Color.red(), linewidth=3)
+    viewer.scene.add(polyline, linecolor=Color.red(), linewidth=3)
 
-viewer.run()
+viewer.show()
