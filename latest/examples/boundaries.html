@@ -575,12 +575,14 @@ document.write(`
 <img alt="../_images/boundaries.png" class="figure-img img-fluid" src="../_images/boundaries.png" />
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">libigl</span>
 
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polyline</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Scale</span>
+<span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">libigl</span>
 <span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
-<span class="kn">from</span> <span class="nn">compas_view2.app</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polyline</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Rotation</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Scale</span>
+<span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
@@ -604,23 +606,24 @@ document.write(`
 <span class="c1"># Visualize</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">look_at</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+<span class="c1"># viewer.view.camera.position = [8, -7, 1]</span>
+<span class="c1"># viewer.view.camera.look_at([1, 0, 0])</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="n">mesh</span><span class="p">,</span>
     <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">(),</span>
     <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span><span class="o">.</span><span class="n">darkened</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
     <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">show_points</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">boundaries</span><span class="p">:</span>
     <span class="n">points</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
     <span class="n">polyline</span> <span class="o">=</span> <span class="n">Polyline</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-    <span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">polyline</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">polyline</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

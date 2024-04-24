@@ -576,10 +576,11 @@ document.write(`
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compas</span>
 <span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
+<span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">ColorMap</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">mesh_flatness</span>
-<span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span><span class="p">,</span> <span class="n">ColorMap</span>
-<span class="kn">from</span> <span class="nn">compas_view2.app</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input</span>
@@ -607,18 +608,16 @@ document.write(`
 
 <span class="n">cmap</span> <span class="o">=</span> <span class="n">ColorMap</span><span class="o">.</span><span class="n">from_two_colors</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">(),</span> <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">())</span>
 
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">look_at</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+<span class="c1"># viewer.view.camera.position = [1, -6, 2]</span>
+<span class="c1"># viewer.view.camera.look_at([1, 1, 1])</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="n">mesh</span><span class="p">,</span>
-    <span class="n">facecolor</span><span class="o">=</span><span class="p">{</span>
-        <span class="n">face</span><span class="p">:</span> <span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="n">dev</span><span class="p">[</span><span class="n">face</span><span class="p">])</span> <span class="k">if</span> <span class="n">dev</span><span class="p">[</span><span class="n">face</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="k">else</span> <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">()</span>
-    <span class="p">},</span>
+    <span class="n">facecolor</span><span class="o">=</span><span class="p">{</span><span class="n">face</span><span class="p">:</span> <span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="n">dev</span><span class="p">[</span><span class="n">face</span><span class="p">])</span> <span class="k">if</span> <span class="n">dev</span><span class="p">[</span><span class="n">face</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="k">else</span> <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span> <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">()},</span>
+    <span class="n">show_points</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

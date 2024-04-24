@@ -576,12 +576,12 @@ document.write(`
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compas</span>
 <span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
-
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">Line</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
-
-<span class="kn">from</span> <span class="nn">compas_view2.app</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
@@ -602,11 +602,11 @@ document.write(`
 <span class="c1"># Visualisation</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">look_at</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+<span class="c1"># viewer.view.camera.position = [1, -6, 2]</span>
+<span class="c1"># viewer.view.camera.look_at([1, 1, 1])</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">show_points</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
     <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">is_vertex_on_boundary</span><span class="p">(</span><span class="n">vertex</span><span class="p">):</span>
@@ -617,13 +617,13 @@ document.write(`
     <span class="n">c</span> <span class="o">=</span> <span class="n">curvature</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
     <span class="n">normal</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
 
-    <span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
         <span class="n">Line</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">point</span> <span class="o">+</span> <span class="n">normal</span><span class="p">),</span>
         <span class="n">linecolor</span><span class="o">=</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">()),</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

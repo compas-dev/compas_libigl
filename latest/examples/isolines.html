@@ -575,12 +575,16 @@ document.write(`
 <img alt="../_images/isolines.png" class="figure-img img-fluid" src="../_images/isolines.png" />
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
 <span class="kn">import</span> <span class="nn">compas_libigl</span> <span class="k">as</span> <span class="nn">igl</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">ColorMap</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polyline</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Scale</span>
-<span class="kn">from</span> <span class="nn">compas_view2.app</span> <span class="kn">import</span> <span class="n">App</span>
-<span class="kn">from</span> <span class="nn">compas_view2.objects</span> <span class="kn">import</span> <span class="n">Collection</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polyline</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Rotation</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Scale</span>
+
+<span class="c1"># from compas_view2.objects import Collection</span>
+<span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
@@ -606,11 +610,11 @@ document.write(`
 <span class="c1"># Visualisation</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">look_at</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+<span class="c1"># viewer.view.camera.position = [8, -7, 1]</span>
+<span class="c1"># viewer.view.camera.look_at([1, 0, 0])</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_points</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">minval</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">scalars</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.01</span>
 <span class="n">maxval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">scalars</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span>
@@ -625,11 +629,11 @@ document.write(`
             <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
         <span class="n">polylines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polyline</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
 
-    <span class="n">viewer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-        <span class="n">Collection</span><span class="p">(</span><span class="n">polylines</span><span class="p">),</span>
-        <span class="n">linecolor</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="n">maxval</span><span class="p">),</span>
-        <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="c1"># viewer.scene.add(</span>
+    <span class="c1">#     Collection(polylines),</span>
+    <span class="c1">#     linecolor=cmap(value, minval=minval, maxval=maxval),</span>
+    <span class="c1">#     linewidth=3,</span>
+    <span class="c1"># )</span>
 
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
