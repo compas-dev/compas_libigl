@@ -70,9 +70,7 @@ def get(filename):
     if os.path.exists(localpath):
         return localpath
     else:
-        return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(
-            filename
-        )
+        return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(filename)
 
 
 def get_beetle():
