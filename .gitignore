@@ -107,8 +107,7 @@ ENV/
 *.3dmbak
 *.rhl
 
-temp/**
-!temp/PLACEHOLDER
+temp
 
 ext/**
 !ext/PLACEHOLDER
@@ -129,3 +128,6 @@ src/compas-viewers
 generated
 
 *.gz
+
+.pytest_cache
+.ruff_cache
