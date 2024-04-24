@@ -1,12 +1,11 @@
-import numpy as np
 import compas
 import compas_libigl as igl
-
-from compas.geometry import Point, Line
-from compas.datastructures import Mesh
+import numpy as np
 from compas.colors import Color
-
-from compas_view2.app import App
+from compas.datastructures import Mesh
+from compas.geometry import Line
+from compas.geometry import Point
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -67,13 +66,13 @@ for ray, hits in zip(rays, hits_per_ray):
 # Visualisation
 # ==============================================================================
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [1, -6, 2]
-viewer.view.camera.look_at([1, 1, 1])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [1, -6, 2]
+# viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(mesh, opacity=0.7)
+viewer.scene.add(mesh, opacity=0.7, show_points=False)
 
 for intersection in intersections:
-    viewer.add(Line(base, intersection), linecolor=Color.blue(), linewidth=3)
+    viewer.scene.add(Line(base, intersection), linecolor=Color.blue(), linewidth=3)
 
-viewer.run()
+viewer.show()

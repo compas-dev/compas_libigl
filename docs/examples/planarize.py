@@ -1,9 +1,10 @@
 import compas
 import compas_libigl as igl
+from compas.colors import Color
+from compas.colors import ColorMap
 from compas.datastructures import Mesh
 from compas.datastructures import mesh_flatness
-from compas.colors import Color, ColorMap
-from compas_view2.app import App
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input
@@ -31,15 +32,13 @@ dev = mesh_flatness(mesh, maxdev=TOL)
 
 cmap = ColorMap.from_two_colors(Color.white(), Color.blue())
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [1, -6, 2]
-viewer.view.camera.look_at([1, 1, 1])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [1, -6, 2]
+# viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(
+viewer.scene.add(
     mesh,
-    facecolor={
-        face: (cmap(dev[face]) if dev[face] <= 1.0 else Color.red())
-        for face in mesh.faces()
-    },
+    facecolor={face: (cmap(dev[face]) if dev[face] <= 1.0 else Color.red()) for face in mesh.faces()},
+    show_points=False,
 )
-viewer.run()
+viewer.show()

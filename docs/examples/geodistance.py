@@ -1,9 +1,10 @@
 import compas
 import compas_libigl as igl
-from compas.geometry import Point
+from compas.colors import Color
+from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.colors import Color, ColorMap
-from compas_view2.app import App
+from compas.geometry import Point
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input
@@ -19,9 +20,7 @@ trimesh.quads_to_triangles()
 # ==============================================================================
 
 source = trimesh.vertex_sample(size=1)[0]
-distance = igl.trimesh_geodistance(
-    trimesh.to_vertices_and_faces(), source, method="heat"
-)
+distance = igl.trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="heat")
 
 # ==============================================================================
 # Visualize
@@ -29,14 +28,14 @@ distance = igl.trimesh_geodistance(
 
 cmap = ColorMap.from_color(Color.red())
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [1, -6, 2]
-viewer.view.camera.look_at([1, 1, 1])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [1, -6, 2]
+# viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(mesh)
+viewer.scene.add(mesh, show_points=False)
 
 for d, vertex in zip(distance, mesh.vertices()):
     point = Point(*mesh.vertex_attributes(vertex, "xyz"))
-    viewer.add(point, pointsize=30, pointcolor=cmap(d, min(distance), max(distance)))
+    viewer.scene.add(point, pointsize=30, pointcolor=cmap(d, min(distance), max(distance)))
 
-viewer.run()
+viewer.show()

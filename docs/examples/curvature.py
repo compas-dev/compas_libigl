@@ -1,11 +1,11 @@
 import compas
 import compas_libigl as igl
-
-from compas.geometry import Point, Vector, Line
-from compas.datastructures import Mesh
 from compas.colors import Color
-
-from compas_view2.app import App
+from compas.datastructures import Mesh
+from compas.geometry import Line
+from compas.geometry import Point
+from compas.geometry import Vector
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -26,11 +26,11 @@ curvature = igl.trimesh_gaussian_curvature(trimesh.to_vertices_and_faces())
 # Visualisation
 # ==============================================================================
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [1, -6, 2]
-viewer.view.camera.look_at([1, 1, 1])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [1, -6, 2]
+# viewer.view.camera.look_at([1, 1, 1])
 
-viewer.add(mesh, opacity=0.7)
+viewer.scene.add(mesh, opacity=0.7, show_points=False)
 
 for vertex in mesh.vertices():
     if mesh.is_vertex_on_boundary(vertex):
@@ -41,10 +41,10 @@ for vertex in mesh.vertices():
     c = curvature[vertex]
     normal.scale(10 * c)
 
-    viewer.add(
+    viewer.scene.add(
         Line(point, point + normal),
         linecolor=(Color.red() if c > 0 else Color.blue()),
         linewidth=2,
     )
 
-viewer.run()
+viewer.show()

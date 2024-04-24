@@ -1,10 +1,14 @@
 import math
+
 import compas_libigl as igl
-from compas.datastructures import Mesh
 from compas.colors import ColorMap
-from compas.geometry import Polyline, Rotation, Scale
-from compas_view2.app import App
-from compas_view2.objects import Collection
+from compas.datastructures import Mesh
+from compas.geometry import Polyline
+from compas.geometry import Rotation
+from compas.geometry import Scale
+
+# from compas_view2.objects import Collection
+from compas_viewer import Viewer
 
 # ==============================================================================
 # Input geometry
@@ -30,11 +34,11 @@ isolines = igl.groupsort_isolines(vertices, edges)
 # Visualisation
 # ==============================================================================
 
-viewer = App(width=1600, height=900)
-viewer.view.camera.position = [8, -7, 1]
-viewer.view.camera.look_at([1, 0, 0])
+viewer = Viewer(width=1600, height=900)
+# viewer.view.camera.position = [8, -7, 1]
+# viewer.view.camera.look_at([1, 0, 0])
 
-viewer.add(mesh, opacity=0.7, show_lines=False)
+viewer.scene.add(mesh, opacity=0.7, show_lines=False, show_points=False)
 
 minval = min(scalars) - 0.01
 maxval = max(scalars) + 0.01
@@ -49,10 +53,10 @@ for value, paths in isolines:
             points.append(vertices[j])
         polylines.append(Polyline(points))
 
-    viewer.add(
-        Collection(polylines),
-        linecolor=cmap(value, minval=minval, maxval=maxval),
-        linewidth=3,
-    )
+    # viewer.scene.add(
+    #     Collection(polylines),
+    #     linecolor=cmap(value, minval=minval, maxval=maxval),
+    #     linewidth=3,
+    # )
 
 viewer.show()
