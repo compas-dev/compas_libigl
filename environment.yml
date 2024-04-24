@@ -1,9 +1,8 @@
-name: igl
 channels:
   - conda-forge
 dependencies:
-  - python=3.8
-  - pip
+  - python>=3.9
+  - pip>=19.0
   - git
   - cmake>=3.14
   - boost
@@ -11,4 +10,4 @@ dependencies:
   - pybind11
   - compas
   - pip:
-    - -r requirements-dev.txt
+      - -e .[dev]
