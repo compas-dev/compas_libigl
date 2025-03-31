@@ -2,6 +2,7 @@ import os
 import compas
 from ._nanobind import add, __doc__
 from .boundaries import trimesh_boundaries
+from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
 
 # from .boundaries import trimesh_boundaries
 # from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
@@ -85,7 +86,7 @@ def get_armadillo():
 
 __all_plugins__ = [
     "compas_libigl._nanobindcompas_libigl._boundaries",
-    # "compas_libigl.curvature",
+    "compas_libigl.curvature",
     # "compas_libigl.geodistance",
     # "compas_libigl.intersections",
     # "compas_libigl.isolines",
@@ -103,6 +104,8 @@ __all__ = [
     add,
     __doc__,
     trimesh_boundaries,
+    trimesh_gaussian_curvature,
+    trimesh_principal_curvature,
     # "get",
     # "get_beetle",
     # "get_armadillo",
