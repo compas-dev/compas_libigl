@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15...3.26)
 
-project(coompas_libigl LANGUAGES CXX)
+project(compas_libigl LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -153,8 +153,8 @@ function(add_nanobind_module module_name source_file)
     endif()
 
     target_link_libraries(${module_name} PRIVATE Threads::Threads)
-    install(TARGETS ${module_name} LIBRARY DESTINATION coompas_libigl)
+    install(TARGETS ${module_name} LIBRARY DESTINATION compas_libigl)
 endfunction()
 
 # Add modules
-add_nanobind_module(_libigl src/nanobind.cpp)
+add_nanobind_module(nanobind src/nanobind.cpp)
