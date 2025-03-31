@@ -43,3 +43,5 @@
 #include <igl/remove_unreferenced.h>
 
 namespace nb = nanobind;
+
+using namespace nb::literals;
