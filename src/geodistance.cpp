@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(geodistance, m) {
+NB_MODULE(_geodistance, m) {
 
     m.def(
         "function_name",

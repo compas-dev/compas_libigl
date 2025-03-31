@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(planarize, m) {
+NB_MODULE(_planarize, m) {
 
     m.def(
         "function_name",

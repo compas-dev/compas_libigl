@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(meshing, m) {
+NB_MODULE(_meshing, m) {
 
     m.def(
         "function_name",

@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(parametrisation, m) {
+NB_MODULE(_parametrisation, m) {
 
     m.def(
         "function_name",

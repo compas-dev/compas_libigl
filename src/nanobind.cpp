@@ -1,8 +1,8 @@
 #include <nanobind/nanobind.h>
 #include "compas.hpp"
 
-NB_MODULE(nanobind, m) {
-    m.doc() = "COMPAS libigl nanobindbindings for geometry processing.";
+NB_MODULE(_nanobind, m) {
+    m.doc() = "COMPAS libigl nanobind bindings for geometry processing.";
 
     m.def("add", [](int a, int b) { return a + b; }, "a"_a, "b"_a,
           "Add two numbers\n\n"

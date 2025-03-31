@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(curvature, m) {
+NB_MODULE(_curvature, m) {
 
     m.def(
         "function_name",

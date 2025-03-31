@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(isolines, m) {
+NB_MODULE(_isolines, m) {
 
     m.def(
         "function_name",

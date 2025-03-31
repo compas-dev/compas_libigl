@@ -2,7 +2,7 @@
 
 void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
 
-NB_MODULE(intersections, m) {
+NB_MODULE(_intersections, m) {
 
     m.def(
         "function_name",
