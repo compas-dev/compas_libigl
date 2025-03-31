@@ -1,25 +1,61 @@
 cmake_minimum_required(VERSION 3.15...3.26)
 
-project(nanobind_example LANGUAGES CXX)
+project(coompas_libigl LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_BUILD_TYPE Release)
+
+# =====================================================================
+# Set this flag to ON for developing to reduce build time.
+# Set this flag to OFF for publishing for file size reduction.
+# =====================================================================
+option(ENABLE_PRECOMPILED_HEADERS "Enable precompiled headers for the build" ON)
+
+# =====================================================================
+# Set maximum heap size for MSVC
+# =====================================================================
+
+if(MSVC)
+    set(CMAKE_GENERATOR_PLATFORM x64)
+    add_compile_options(/Zm1200) 
+endif()
+
+# =====================================================================
+# Build size reduction.
+# =====================================================================
+
+if (NOT ENABLE_PRECOMPILED_HEADERS)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O1") # Optimize for size on MSVC
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os") # Optimize for size on GCC/Clang
+    endif()
+endif()
+
+# =====================================================================
+# Dependencies
+# =====================================================================
 include(ExternalProject)
 
 # Define source directories for external dependencies
 set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
 set(EIGEN_SOURCE_DIR "${EXTERNAL_DIR}/eigen")
 set(LIBIGL_SOURCE_DIR "${EXTERNAL_DIR}/libigl")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
-# Create a custom target for all external dependencies
-add_custom_target(external_downloads ALL)
+# Create directories if they don't exist
+file(MAKE_DIRECTORY ${EXTERNAL_DIR})
+file(MAKE_DIRECTORY ${EIGEN_SOURCE_DIR})
+file(MAKE_DIRECTORY ${LIBIGL_SOURCE_DIR})
 
-# Download and configure Eigen
-if(NOT EXISTS "${EIGEN_SOURCE_DIR}")
+# Download Eigen first
+if(NOT EXISTS "${EIGEN_SOURCE_DIR}/Eigen")
     message(STATUS "Downloading Eigen...")
     ExternalProject_Add(
         eigen_download
+        PREFIX ${EXTERNAL_DIR}
         URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
         SOURCE_DIR "${EIGEN_SOURCE_DIR}"
         CONFIGURE_COMMAND ""
@@ -29,14 +65,15 @@ if(NOT EXISTS "${EIGEN_SOURCE_DIR}")
         UPDATE_COMMAND ""
         PATCH_COMMAND ""
     )
-    add_dependencies(external_downloads eigen_download)
 endif()
 
-# Download and configure libigl
-if(NOT EXISTS "${LIBIGL_SOURCE_DIR}")
+# Download libigl after Eigen
+if(NOT EXISTS "${LIBIGL_SOURCE_DIR}/include/igl")
     message(STATUS "Downloading libigl...")
     ExternalProject_Add(
         libigl_download
+        DEPENDS eigen_download
+        PREFIX ${EXTERNAL_DIR}
         URL https://github.com/libigl/libigl/archive/refs/heads/main.zip
         SOURCE_DIR "${LIBIGL_SOURCE_DIR}"
         CONFIGURE_COMMAND ""
@@ -47,6 +84,14 @@ if(NOT EXISTS "${LIBIGL_SOURCE_DIR}")
         PATCH_COMMAND ""
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
+endif()
+
+# Create a custom target for all external dependencies
+add_custom_target(external_downloads ALL)
+if(TARGET eigen_download)
+    add_dependencies(external_downloads eigen_download)
+endif()
+if(TARGET libigl_download)
     add_dependencies(external_downloads libigl_download)
 endif()
 
@@ -77,6 +122,12 @@ if (NOT SKBUILD)
   after editing C++ files.")
 endif()
 
+# Enhanced PCH configuration
+if (ENABLE_PRECOMPILED_HEADERS)
+    set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
+    set(CMAKE_PCH_WARN_INVALID ON)
+endif() 
+
 # Find Python and nanobind
 find_package(Python 3.8
   REQUIRED COMPONENTS Interpreter Development.Module
@@ -84,21 +135,26 @@ find_package(Python 3.8
 find_package(nanobind CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 
-# Add nanobind module
-nanobind_add_module(
-  nanobind_example_ext
-  STABLE_ABI
-  NB_STATIC
-  src/nanobind_example_ext.cpp
-)
+# Function to add a nanobind module with include directories
+function(add_nanobind_module module_name source_file)
+    nanobind_add_module(${module_name} STABLE_ABI NB_STATIC ${source_file})
 
-# Add dependencies and include directories
-add_dependencies(nanobind_example_ext external_downloads)
-target_include_directories(nanobind_example_ext PRIVATE 
-    ${EIGEN_INCLUDE_DIR}
-    ${LIBIGL_INCLUDE_DIR}
-)
-target_link_libraries(nanobind_example_ext PRIVATE Threads::Threads)
+    # Ensure external dependencies are downloaded first
+    add_dependencies(${module_name} external_downloads)
 
-# Install directive for scikit-build-core
-install(TARGETS nanobind_example_ext LIBRARY DESTINATION nanobind_example)
+    # Add include directories
+    target_include_directories(${module_name} SYSTEM PRIVATE
+        ${EIGEN_INCLUDE_DIR}
+        ${LIBIGL_INCLUDE_DIR}
+    )
+
+    if (ENABLE_PRECOMPILED_HEADERS)
+        target_precompile_headers(${module_name} PRIVATE src/compas.h)
+    endif()
+
+    target_link_libraries(${module_name} PRIVATE Threads::Threads)
+    install(TARGETS ${module_name} LIBRARY DESTINATION coompas_libigl)
+endfunction()
+
+# Add modules
+add_nanobind_module(_libigl src/nanobind.cpp)

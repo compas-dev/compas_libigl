@@ -8,3 +8,28 @@ external
 *.egg-info
 .vscode
 .vs
+§
+
+# Build directories
+build/
+_build/
+_skbuild/
+dist/
+*.egg-info/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# External dependencies
+external/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
