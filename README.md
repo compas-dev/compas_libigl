@@ -1,50 +1,60 @@
-# compas_libigl
+nanobind_example
+================
 
-COMPAS-compatible bindings for top-level algorithms of libigl generated with Pybind.
-Many of the functions provided by `compas_libigl` are based on the examples in the libigl tutorial.
+|      CI              | status |
+|----------------------|--------|
+| pip builds           | [![Pip Action Status][actions-pip-badge]][actions-pip-link] |
+| wheels               | [![Wheel Action Status][actions-wheels-badge]][actions-wheels-link] |
 
-## Installation
+[actions-pip-link]:        https://github.com/wjakob/nanobind_example/actions?query=workflow%3APip
+[actions-pip-badge]:       https://github.com/wjakob/nanobind_example/workflows/Pip/badge.svg
+[actions-wheels-link]:     https://github.com/wjakob/nanobind_example/actions?query=workflow%3AWheels
+[actions-wheels-badge]:    https://github.com/wjakob/nanobind_example/workflows/Wheels/badge.svg
 
-### Stable
 
-The stable version of `compas_libigl` can now be installed from conda-forge.
+This repository contains a tiny project showing how to create C++ bindings
+using [nanobind](https://github.com/wjakob/nanobind) and
+[scikit-build-core](https://scikit-build-core.readthedocs.io/en/latest/index.html). It
+was derived from the corresponding _pybind11_ [example
+project](https://github.com/pybind/scikit_build_example/) developed by
+[@henryiii](https://github.com/henryiii).
 
-```bash
-conda create -n igl compas_libigl
+Furthermore, the [bazel](https://github.com/wjakob/nanobind_example/tree/bazel) branch contains an example
+on how to build nanobind bindings extensions with Bazel using the [nanobind-bazel](https://github.com/nicholasjng/nanobind-bazel/) project.
+
+Installation
+------------
+
+1. Clone this repository
+2. Run `pip install ./nanobind_example`
+
+Afterwards, you should be able to issue the following commands (shown in an
+interactive Python session):
+
+```pycon
+>>> import nanobind_example
+>>> nanobind_example.add(1, 2)
+3
 ```
 
-### Dev install
+CI Examples
+-----------
 
-A dev version of `compas_libigl` can be installed using a combination of conda and pip.
+The `.github/workflows` directory contains two continuous integration workflows
+for GitHub Actions. The first one (`pip`) runs automatically after each commit
+and ensures that packages can be built successfully and that tests pass.
 
-```bash
-conda create -n igl-dev python=3.9 git cmake">=3.14" boost eigen=3.3 pybind11 --yes
-conda activate igl
-git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
-cd compas_libigl
-rm -rf build
-pip install -e .
-```
+The `wheels` workflow uses
+[cibuildwheel](https://cibuildwheel.readthedocs.io/en/stable/) to automatically
+produce binary wheels for a large variety of platforms. If a `pypi_password`
+token is provided using GitHub Action's _secrets_ feature, this workflow can
+even automatically upload packages on PyPI.
 
-## Libigl functions
 
-Currently the following functionalities of Libigl are included in the wrapper
+License
+-------
 
-* Geodesic distance calculation
-* Scalarfield isolines
-* Quad mesh planarization
-* Mass matrix of triangle meshes
-* Discrete gaussian curvature
-* Ray/mesh intersection
-* Boundary loops
-* Harmonic parametrisation
-* Least-squares conformal maps
-
-## Examples
-
-The use of the wrapped functions is illustrated with scripts in the `examples` folder.
-Note that the functionality of the package is not directly available in Rhino, but can be used through `compas.rpc`.
-
-## License
-
-Libigl (and therefore also `compas_libigl`) is licensed under MPL-2.
+_nanobind_ and this example repository are both provided under a BSD-style
+license that can be found in the [LICENSE](./LICENSE) file. By using,
+distributing, or contributing to this project, you agree to the terms and
+conditions of this license.

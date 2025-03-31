@@ -1,107 +1,104 @@
-cmake_minimum_required(VERSION 3.14)
-project(compas_libigl)
+cmake_minimum_required(VERSION 3.15...3.26)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+project(nanobind_example LANGUAGES CXX)
 
-# MODULE library output directory
-# if(WIN32)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl)
-# else()
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl)
-# endif()
+include(ExternalProject)
 
-# Eigen
-if(WIN32)
-    set(EIGEN3_INCLUDE_DIR "$ENV{CONDA_PREFIX}/Library/include/eigen3")
-else()
-    set(EIGEN3_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/eigen3")
+# Define source directories for external dependencies
+set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set(EIGEN_SOURCE_DIR "${EXTERNAL_DIR}/eigen")
+set(LIBIGL_SOURCE_DIR "${EXTERNAL_DIR}/libigl")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
+# Create a custom target for all external dependencies
+add_custom_target(external_downloads ALL)
+
+# Download and configure Eigen
+if(NOT EXISTS "${EIGEN_SOURCE_DIR}")
+    message(STATUS "Downloading Eigen...")
+    ExternalProject_Add(
+        eigen_download
+        URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+        SOURCE_DIR "${EIGEN_SOURCE_DIR}"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        LOG_DOWNLOAD ON
+        UPDATE_COMMAND ""
+        PATCH_COMMAND ""
+    )
+    add_dependencies(external_downloads eigen_download)
 endif()
 
-# Boost
-if(WIN32)
-    set(BOOST_ROOT "$ENV{CONDA_PREFIX}/Library/include")
-else()
-    set(BOOST_ROOT "$ENV{CONDA_PREFIX}/include")
+# Download and configure libigl
+if(NOT EXISTS "${LIBIGL_SOURCE_DIR}")
+    message(STATUS "Downloading libigl...")
+    ExternalProject_Add(
+        libigl_download
+        URL https://github.com/libigl/libigl/archive/refs/heads/main.zip
+        SOURCE_DIR "${LIBIGL_SOURCE_DIR}"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        LOG_DOWNLOAD ON
+        UPDATE_COMMAND ""
+        PATCH_COMMAND ""
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    add_dependencies(external_downloads libigl_download)
 endif()
 
-# Pybind11
-set(PYBIND11_CPP_STANDARD -std=c++11)
-find_package(pybind11 CONFIG REQUIRED)
+# Add include directories for external dependencies
+set(EIGEN_INCLUDE_DIR "${EIGEN_SOURCE_DIR}")
+set(LIBIGL_INCLUDE_DIR "${LIBIGL_SOURCE_DIR}/include")
 
-# Libigl
-option(LIBIGL_WITH_TRIANGLE "Use Triangle" OFF)
-option(LIBIGL_WITH_CGAL "Use CGAL" OFF)
-find_package(LIBIGL REQUIRED)
+if (NOT SKBUILD)
+  message(WARNING "\
+  This CMake file is meant to be executed using 'scikit-build'. Running
+  it directly will almost certainly not produce the desired result. If
+  you are a user trying to install this package, please use the command
+  below, which will install all necessary build dependencies, compile
+  the package in an isolated environment, and then install it.
+  =====================================================================
+   $ pip install .
+  =====================================================================
+  If you are a software developer, and this is your own package, then
+  it is usually much more efficient to install the build dependencies
+  in your environment once and use the following command that avoids
+  a costly creation of a new virtual environment at every compilation:
+  =====================================================================
+   $ pip install nanobind scikit-build-core[pyproject]
+   $ pip install --no-build-isolation -ve .
+  =====================================================================
+  You may optionally add -Ceditable.rebuild=true to auto-rebuild when
+  the package is imported. Otherwise, you need to re-run the above
+  after editing C++ files.")
+endif()
 
-# geodistance
-pybind11_add_module(compas_libigl_geodistance MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/geodistance/geodistance.cpp)
+# Find Python and nanobind
+find_package(Python 3.8
+  REQUIRED COMPONENTS Interpreter Development.Module
+  OPTIONAL_COMPONENTS Development.SABIModule)
+find_package(nanobind CONFIG REQUIRED)
+find_package(Threads REQUIRED)
 
-# set_target_properties(compas_libigl_geodistance
-# PROPERTIES
-# RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/geodistance/
-# LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/geodistance/
-# )
-target_link_libraries(compas_libigl_geodistance PRIVATE igl::core)
+# Add nanobind module
+nanobind_add_module(
+  nanobind_example_ext
+  STABLE_ABI
+  NB_STATIC
+  src/nanobind_example_ext.cpp
+)
 
-# isolines
-pybind11_add_module(compas_libigl_isolines MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/isolines/isolines.cpp)
+# Add dependencies and include directories
+add_dependencies(nanobind_example_ext external_downloads)
+target_include_directories(nanobind_example_ext PRIVATE 
+    ${EIGEN_INCLUDE_DIR}
+    ${LIBIGL_INCLUDE_DIR}
+)
+target_link_libraries(nanobind_example_ext PRIVATE Threads::Threads)
 
-# set_target_properties(compas_libigl_isolines
-# PROPERTIES
-# RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/isolines/
-# LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/isolines/
-# )
-target_link_libraries(compas_libigl_isolines PRIVATE igl::core)
-
-# planarize
-pybind11_add_module(compas_libigl_planarize MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/planarize/planarize.cpp)
-
-# set_target_properties(compas_libigl_planarize
-# PROPERTIES
-# RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/planarize/
-# LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/planarize/
-# )
-target_link_libraries(compas_libigl_planarize PRIVATE igl::core)
-
-# massmatrix
-pybind11_add_module(compas_libigl_massmatrix MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/massmatrix/massmatrix.cpp)
-target_link_libraries(compas_libigl_massmatrix PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_massmatrix PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/massmatrix/)
-# set_target_properties(compas_libigl_massmatrix PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/massmatrix/)
-
-# curvature
-pybind11_add_module(compas_libigl_curvature MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/curvature/curvature.cpp)
-target_link_libraries(compas_libigl_curvature PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_curvature PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/curvature/)
-# set_target_properties(compas_libigl_curvature PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/curvature/)
-
-# intersections
-pybind11_add_module(compas_libigl_intersections MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/intersections/intersections.cpp)
-target_link_libraries(compas_libigl_intersections PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_intersections PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/intersections/)
-# set_target_properties(compas_libigl_intersections PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/intersections/)
-
-# boundaries
-pybind11_add_module(compas_libigl_boundaries MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/boundaries/boundaries.cpp)
-target_link_libraries(compas_libigl_boundaries PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_boundaries PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/boundaries/)
-# set_target_properties(compas_libigl_boundaries PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/boundaries/)
-
-# parametrisations
-pybind11_add_module(compas_libigl_parametrisation MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/parametrisation/parametrisation.cpp)
-target_link_libraries(compas_libigl_parametrisation PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_parametrisation PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/parametrisation/)
-# set_target_properties(compas_libigl_parametrisation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/parametrisation/)
-
-# meshing
-pybind11_add_module(compas_libigl_meshing MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/meshing/meshing.cpp)
-target_link_libraries(compas_libigl_meshing PRIVATE igl::core)
-
-# set_target_properties(compas_libigl_meshing PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/meshing/)
-# set_target_properties(compas_libigl_meshing PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/compas_libigl/meshing/)
+# Install directive for scikit-build-core
+install(TARGETS nanobind_example_ext LIBRARY DESTINATION nanobind_example)
