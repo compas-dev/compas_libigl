@@ -149,7 +149,7 @@ function(add_nanobind_module module_name source_file)
     )
 
     if (ENABLE_PRECOMPILED_HEADERS)
-        target_precompile_headers(${module_name} PRIVATE src/compas.h)
+        target_precompile_headers(${module_name} PRIVATE src/compas.hpp)
     endif()
 
     target_link_libraries(${module_name} PRIVATE Threads::Threads)
@@ -158,6 +158,7 @@ endfunction()
 
 # Add modules
 add_nanobind_module(nanobind src/nanobind.cpp)
+add_nanobind_module(types_std src/types_std.cpp)
 add_nanobind_module(boundaries src/boundaries.cpp)
 add_nanobind_module(curvature src/curvature.cpp)
 add_nanobind_module(geodistance src/geodistance.cpp)
@@ -167,4 +168,3 @@ add_nanobind_module(massmatrix src/massmatrix.cpp)
 add_nanobind_module(meshing src/meshing.cpp)
 add_nanobind_module(parametrisation src/parametrisation.cpp)
 add_nanobind_module(planarize src/planarize.cpp)
-

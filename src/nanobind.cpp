@@ -1,5 +1,5 @@
 #include <nanobind/nanobind.h>
-#include "compas.h"
+#include "compas.hpp"
 
 NB_MODULE(nanobind, m) {
     m.doc() = "COMPAS libigl nanobindbindings for geometry processing.";
