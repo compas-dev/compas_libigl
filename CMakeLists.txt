@@ -158,3 +158,13 @@ endfunction()
 
 # Add modules
 add_nanobind_module(nanobind src/nanobind.cpp)
+add_nanobind_module(boundaries src/boundaries.cpp)
+add_nanobind_module(curvature src/curvature.cpp)
+add_nanobind_module(geodistance src/geodistance.cpp)
+add_nanobind_module(intersections src/intersections.cpp)
+add_nanobind_module(isolines src/isolines.cpp)
+add_nanobind_module(massmatrix src/massmatrix.cpp)
+add_nanobind_module(meshing src/meshing.cpp)
+add_nanobind_module(parametrisation src/parametrisation.cpp)
+add_nanobind_module(planarize src/planarize.cpp)
+
