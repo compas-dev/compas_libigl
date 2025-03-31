@@ -18,12 +18,9 @@ conda create -n igl compas_libigl
 A dev version of `compas_libigl` can be installed using a combination of conda and pip.
 
 ```bash
-conda create -n igl-dev python=3.9 git cmake">=3.14" boost eigen=3.3 pybind11 --yes
+conda create -n igl-dev python=3.9 --yes
 conda activate igl
-git clone --recursive https://github.com/BlockResearchGroup/compas_libigl.git
-cd compas_libigl
-rm -rf build
-pip install -e .
+pip install --no-build-isolation -ve .
 ```
 
 ## Libigl functions

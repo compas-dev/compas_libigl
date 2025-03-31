@@ -122,18 +122,22 @@ if (NOT SKBUILD)
   after editing C++ files.")
 endif()
 
-# Enhanced PCH configuration
-if (ENABLE_PRECOMPILED_HEADERS)
-    set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
-    set(CMAKE_PCH_WARN_INVALID ON)
-endif() 
-
 # Find Python and nanobind
 find_package(Python 3.8
   REQUIRED COMPONENTS Interpreter Development.Module
   OPTIONAL_COMPONENTS Development.SABIModule)
 find_package(nanobind CONFIG REQUIRED)
 find_package(Threads REQUIRED)
+
+# Create a shared precompiled header library
+if (ENABLE_PRECOMPILED_HEADERS)
+    add_library(compas_pch INTERFACE)
+    target_precompile_headers(compas_pch INTERFACE src/compas.hpp)
+    target_include_directories(compas_pch INTERFACE
+        ${EIGEN_INCLUDE_DIR}
+        ${LIBIGL_INCLUDE_DIR}
+    )
+endif()
 
 # Function to add a nanobind module with include directories
 function(add_nanobind_module module_name source_file)
@@ -142,14 +146,14 @@ function(add_nanobind_module module_name source_file)
     # Ensure external dependencies are downloaded first
     add_dependencies(${module_name} external_downloads)
 
-    # Add include directories
-    target_include_directories(${module_name} SYSTEM PRIVATE
-        ${EIGEN_INCLUDE_DIR}
-        ${LIBIGL_INCLUDE_DIR}
-    )
-
+    # Add include directories and link PCH if enabled
     if (ENABLE_PRECOMPILED_HEADERS)
-        target_precompile_headers(${module_name} PRIVATE src/compas.hpp)
+        target_link_libraries(${module_name} PRIVATE compas_pch)
+    else()
+        target_include_directories(${module_name} SYSTEM PRIVATE
+            ${EIGEN_INCLUDE_DIR}
+            ${LIBIGL_INCLUDE_DIR}
+        )
     endif()
 
     target_link_libraries(${module_name} PRIVATE Threads::Threads)

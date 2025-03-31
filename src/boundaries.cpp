@@ -1,13 +1,23 @@
 #include "boundaries.hpp"
 
-void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
+using namespace Eigen;
 
-NB_MODULE(curvature, m) {
+std::vector<std::vector<int>>
+trimesh_boundaries(
+    compas::RowMatrixXi F)
+{
+    std::vector<std::vector<int>> L;
 
+	igl::boundary_loop(F, L);
+
+    return L;
+}
+
+NB_MODULE(compas_libigl_boundaries, m) {
     m.def(
-        "function_name",
-        &function,
-        "Description.",
-        "V"_a,
-        "F"_a);
+        "trimesh_boundaries",
+        &trimesh_boundaries,
+        "Compute list of ordered boundary loops for a manifold mesh.",
+        "F"_a
+    );
 }
