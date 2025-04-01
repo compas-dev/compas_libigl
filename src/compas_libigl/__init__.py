@@ -3,6 +3,7 @@ import compas
 from ._nanobind import add, __doc__
 from .boundaries import trimesh_boundaries
 from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
+from .geodistance import trimesh_geodistance
 
 # from .boundaries import trimesh_boundaries
 # from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
@@ -106,6 +107,7 @@ __all__ = [
     trimesh_boundaries,
     trimesh_gaussian_curvature,
     trimesh_principal_curvature,
+    trimesh_geodistance,
     # "get",
     # "get_beetle",
     # "get_armadillo",

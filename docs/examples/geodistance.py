@@ -20,7 +20,7 @@ trimesh.quads_to_triangles()
 # ==============================================================================
 
 source = trimesh.vertex_sample(size=1)[0]
-distance = igl.trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="heat")
+distance = igl.trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="exact")
 
 # ==============================================================================
 # Visualize
