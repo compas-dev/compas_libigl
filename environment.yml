@@ -6,5 +6,6 @@ dependencies:
   - git
   - cmake>=3.14
   - compas
+  - invoke
   - pip:
       - -e .[dev]
