@@ -40,6 +40,8 @@
 
 #include <igl/isolines.h>
 
+#include <igl/massmatrix.h>
+
 #include <igl/map_vertices_to_circle.h>
 #include <igl/harmonic.h>
 #include <igl/doublearea.h>
