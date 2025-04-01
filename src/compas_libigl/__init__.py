@@ -7,10 +7,10 @@ from .geodistance import trimesh_geodistance
 from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
+from .parametrisation import trimesh_harmonic, trimesh_lscm
 
-# from .meshing import trimesh_remesh_along_isoline
-# from .parametrisation import trimesh_harmonic, trimesh_lscm
 # from .planarize import quadmesh_planarize
+# from .meshing import trimesh_remesh_along_isoline
 
 
 __author__ = ["tom van mele", "petras vestartas"]
@@ -89,9 +89,9 @@ __all_plugins__ = [
     "compas_libigl.intersections",
     "compas_libigl.isolines",
     "compas_libigl.massmatrix",
+    "compas_libigl.parametrisation",
+    "compas_libigl.planarize",
     # "compas_libigl.meshing",
-    # "compas_libigl.parametrisation",
-    # "compas_libigl.planarize",
 ]
 
 __all__ = [
@@ -113,8 +113,8 @@ __all__ = [
     "trimesh_isolines",
     "groupsort_isolines",
     "trimesh_massmatrix",
-    # "trimesh_remesh_along_isoline",
-    # "trimesh_harmonic",
-    # "trimesh_lscm",
+    "trimesh_harmonic",
+    "trimesh_lscm",
     # "quadmesh_planarize",
+    # "trimesh_remesh_along_isoline",
 ]

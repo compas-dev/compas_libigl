@@ -17,6 +17,7 @@ mesh_lscm.vertices_attribute("z", 0)
 # Least-squares conformal map
 # ==============================================================================
 
+#lscm_uv = igl.trimesh_harmonic(mesh.to_vertices_and_faces())
 lscm_uv = igl.trimesh_lscm(mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):

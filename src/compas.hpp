@@ -24,8 +24,8 @@
 
 // libigl includes
 #include <igl/boundary_loop.h>
+
 #include <igl/cotmatrix.h>
-#include <igl/massmatrix.h>
 #include <igl/invert_diag.h>
 
 #include <igl/gaussian_curvature.h>
@@ -44,6 +44,10 @@
 
 #include <igl/map_vertices_to_circle.h>
 #include <igl/harmonic.h>
+#include <igl/lscm.h>
+
+#include <igl/planarize_quad_mesh.h>
+
 #include <igl/doublearea.h>
 #include <igl/grad.h>
 #include <igl/per_vertex_normals.h>
