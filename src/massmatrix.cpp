@@ -1,6 +1,6 @@
 #include "massmatrix.hpp"
 
-void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
+void function(const compas::RowMatrixXd& V, const compas::RowMatrixXi& F) {}
 
 NB_MODULE(_massmatrix, m) {
 

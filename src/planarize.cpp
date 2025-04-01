@@ -1,6 +1,6 @@
 #include "planarize.hpp"
 
-void function(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F) {}
+void function(const compas::RowMatrixXd& V, const compas::RowMatrixXi& F) {}
 
 NB_MODULE(_planarize, m) {
 

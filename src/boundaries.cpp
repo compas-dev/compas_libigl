@@ -1,8 +1,6 @@
 #include "boundaries.hpp"
 
-using namespace Eigen;
-
-std::vector<std::vector<int>> trimesh_boundaries(const MatrixXi& F) {
+std::vector<std::vector<int>> trimesh_boundaries(const compas::RowMatrixXi& F) {
     std::vector<std::vector<int>> L;
     igl::boundary_loop(F, L);
     return L;

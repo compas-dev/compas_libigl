@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/compas_cgal
+      url: https://pypi.org/project/compas_libigl
     permissions:
       id-token: write  # Required for PyPI trusted publishing
 

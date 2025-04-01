@@ -1,7 +1,5 @@
 #include "curvature.hpp"
 
-using namespace Eigen;
-
 Eigen::VectorXd trimesh_gaussian_curvature(const compas::RowMatrixXd& V, const compas::RowMatrixXi& F) {
     Eigen::VectorXd C;
     igl::gaussian_curvature(V, F, C);
