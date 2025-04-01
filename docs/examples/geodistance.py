@@ -36,6 +36,8 @@ viewer.scene.add(mesh, show_points=False)
 
 for d, vertex in zip(distance, mesh.vertices()):
     point = Point(*mesh.vertex_attributes(vertex, "xyz"))
-    viewer.scene.add(point, pointsize=30, pointcolor=cmap(d, min(distance), max(distance)))
+    viewer.scene.add(point, pointsize=10, pointcolor=cmap(d, min(distance), max(distance)))
+
+viewer.scene.add(Point(*mesh.vertex_attributes(source, "xyz")), pointsize=30, pointcolor=Color.black())
 
 viewer.show()

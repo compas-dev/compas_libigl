@@ -4,11 +4,9 @@ from ._nanobind import add, __doc__
 from .boundaries import trimesh_boundaries
 from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
 from .geodistance import trimesh_geodistance
+from .intersections import intersection_ray_mesh, intersection_rays_mesh
 
-# from .boundaries import trimesh_boundaries
-# from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
-# from .geodistance import trimesh_geodistance
-# from .intersections import intersection_ray_mesh, intersection_rays_mesh
+
 # from .isolines import trimesh_isolines, groupsort_isolines
 # from .massmatrix import trimesh_massmatrix
 # from .meshing import trimesh_remesh_along_isoline
@@ -88,8 +86,8 @@ def get_armadillo():
 __all_plugins__ = [
     "compas_libigl._nanobindcompas_libigl._boundaries",
     "compas_libigl.curvature",
-    # "compas_libigl.geodistance",
-    # "compas_libigl.intersections",
+    "compas_libigl.geodistance",
+    "compas_libigl.intersections",
     # "compas_libigl.isolines",
     # "compas_libigl.massmatrix",
     # "compas_libigl.meshing",
@@ -104,19 +102,15 @@ __all__ = [
     "TEMP",
     add,
     __doc__,
+    "get",
+    "get_beetle",
+    "get_armadillo",
     trimesh_boundaries,
     trimesh_gaussian_curvature,
     trimesh_principal_curvature,
     trimesh_geodistance,
-    # "get",
-    # "get_beetle",
-    # "get_armadillo",
-    # "trimesh_boundaries",
-    # "trimesh_gaussian_curvature",
-    # "trimesh_principal_curvature",
-    # "trimesh_geodistance",
-    # "intersection_ray_mesh",
-    # "intersection_rays_mesh",
+    intersection_ray_mesh,
+    intersection_rays_mesh,
     # "trimesh_isolines",
     # "groupsort_isolines",
     # "trimesh_massmatrix",

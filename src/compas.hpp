@@ -27,11 +27,17 @@
 #include <igl/cotmatrix.h>
 #include <igl/massmatrix.h>
 #include <igl/invert_diag.h>
+
 #include <igl/gaussian_curvature.h>
 #include <igl/principal_curvature.h>
+
 #include <igl/avg_edge_length.h>
 #include <igl/exact_geodesic.h>
 #include <igl/heat_geodesics.h>
+
+#include <igl/Hit.h>
+#include <igl/ray_mesh_intersect.h>
+
 #include <igl/map_vertices_to_circle.h>
 #include <igl/harmonic.h>
 #include <igl/doublearea.h>

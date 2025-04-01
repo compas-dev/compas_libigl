@@ -48,13 +48,13 @@ for vertex_idx, point in enumerate(vertices):
         viewer.scene.add(
             Line(point - pd1, point + pd1),
             linecolor=Color.black(),
-            linewidth=2
+            linewidth=20
         )
         # Minimum principal direction (black)
         viewer.scene.add(
             Line(point - pd2, point + pd2),
             linecolor=Color.black(),
-            linewidth=2
+            linewidth=20
         )
 
 
