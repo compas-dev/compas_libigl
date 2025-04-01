@@ -27,6 +27,7 @@ def trimesh_isolines(M, scalars, isovalues):
         A tuple containing:
         0. The coordinates of the polyline segments representing the isolines.
         1. The segments of the polylines.
+        2. The indices of the scalars array corresponding to the isovalues.
 
     Examples
     --------
