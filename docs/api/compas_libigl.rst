@@ -20,5 +20,4 @@ Functions
     trimesh_massmatrix
     trimesh_harmonic
     trimesh_lscm
-    trimesh_remesh_along_isoline
     quadmesh_planarize

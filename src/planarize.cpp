@@ -1,13 +1,23 @@
 #include "planarize.hpp"
 
-void function(const compas::RowMatrixXd& V, const compas::RowMatrixXi& F) {}
+
+compas::RowMatrixXd planarize_quads(compas::RowMatrixXd V, compas::RowMatrixXi F, int maxiter = 100, double threshold = 0.005) {
+  compas::RowMatrixXd Vplanar;
+
+  igl::planarize_quad_mesh(V, F, maxiter, threshold, Vplanar);
+
+  return Vplanar;
+}
+
 
 NB_MODULE(_planarize, m) {
 
     m.def(
-        "function_name",
-        &function,
-        "Description.",
+        "planarize_quads",
+        &planarize_quads,
+        "Planarize a quad mesh.",
         "V"_a,
-        "F"_a);
+        "F"_a,
+        "maxiter"_a,
+        "threshold"_a);
 }

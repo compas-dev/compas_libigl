@@ -8,8 +8,8 @@ from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
 from .parametrisation import trimesh_harmonic, trimesh_lscm
+from .planarize import quadmesh_planarize
 
-# from .planarize import quadmesh_planarize
 # from .meshing import trimesh_remesh_along_isoline
 
 
@@ -115,6 +115,6 @@ __all__ = [
     "trimesh_massmatrix",
     "trimesh_harmonic",
     "trimesh_lscm",
-    # "quadmesh_planarize",
+    "quadmesh_planarize",
     # "trimesh_remesh_along_isoline",
 ]
