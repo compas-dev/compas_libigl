@@ -20,6 +20,8 @@ option(ENABLE_PRECOMPILED_HEADERS "Enable precompiled headers for the build" ON)
 if(MSVC)
     set(CMAKE_GENERATOR_PLATFORM x64)
     add_compile_options(/Zm1200) 
+    # Disable problematic libigl features on Windows
+    add_definitions(-DIGL_NO_EXACT_GEODESIC)
 endif()
 
 # =====================================================================
