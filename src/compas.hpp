@@ -21,6 +21,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <Eigen/Geometry>
+#include <Eigen/StdVector>
 
 // libigl includes
 #include <igl/boundary_loop.h>
@@ -47,6 +48,8 @@
 #include <igl/lscm.h>
 
 #include <igl/planarize_quad_mesh.h>
+
+#include <igl/remesh_along_isoline.h>
 
 #include <igl/doublearea.h>
 #include <igl/grad.h>

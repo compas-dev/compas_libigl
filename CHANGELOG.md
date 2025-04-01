@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.3.1] 2025-04-01
+
+### Added
+
+### Changed
+
+* Pybind11 build system was updated to Nanobind.
+* Github actions workflow was updated for pypi support.
+* Documentation was updated to build without errors.
+
+### Removed
+
 
 ## [0.3.1] 2023-12-05
 

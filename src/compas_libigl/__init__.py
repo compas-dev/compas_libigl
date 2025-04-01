@@ -9,8 +9,7 @@ from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
 from .parametrisation import trimesh_harmonic, trimesh_lscm
 from .planarize import quadmesh_planarize
-
-# from .meshing import trimesh_remesh_along_isoline
+from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
 
 
 __author__ = ["tom van mele", "petras vestartas"]
@@ -91,7 +90,7 @@ __all_plugins__ = [
     "compas_libigl.massmatrix",
     "compas_libigl.parametrisation",
     "compas_libigl.planarize",
-    # "compas_libigl.meshing",
+    "compas_libigl.meshing",
 ]
 
 __all__ = [
@@ -116,5 +115,6 @@ __all__ = [
     "trimesh_harmonic",
     "trimesh_lscm",
     "quadmesh_planarize",
-    # "trimesh_remesh_along_isoline",
+    "trimesh_remesh_along_isoline",
+    "trimesh_remesh_along_isolines",
 ]

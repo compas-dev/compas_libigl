@@ -1,7 +1,7 @@
 import math
 
 import compas_libigl as igl
-from compas.colors import ColorMap
+from compas.colors import ColorMap, Color
 from compas.datastructures import Mesh
 from compas.geometry import Rotation
 from compas.geometry import Scale
@@ -24,7 +24,7 @@ mesh.transform(S * Rz * Rx)
 # Isolines
 # ==============================================================================
 
-scalars = mesh.vertices_attribute("y")
+scalars = mesh.vertices_attribute("z")
 minval = min(scalars)
 maxval = max(scalars)
 
@@ -41,7 +41,9 @@ isolines = igl.groupsort_isolines(vertices, edges, indices)
 # Visualisation
 # ==============================================================================
 
+
 viewer = Viewer()
+
 
 minval = min(scalars) + 0.01
 maxval = max(scalars) - 0.01
