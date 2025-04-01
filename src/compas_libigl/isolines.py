@@ -17,9 +17,8 @@ def trimesh_isolines(M, scalars, isovalues):
         or by a COMPAS mesh object.
     scalars : list
         A list of scalar values per vertex.
-    num_isolines : int, optional
-        Number of isolines to generate.
-        Default is 10.
+    isovalues : list
+        A list of isovalues to generate isolines for.
 
     Returns
     -------
