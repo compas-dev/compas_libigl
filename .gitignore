@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache
+.ruff_cache
+
+# Build and packaging
+_skbuild/
+_build/
+*.manifest
+*.spec
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.spyderproject
+.spyproject
+.ropeproject
+
+# Testing and coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Documentation
+docs/_build/
+/site
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+.python-version
+
+# Jupyter
+.ipynb_checkpoints
+
+# Logs and temp files
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+temp/
+local_settings.py
+
+# External dependencies
+external/
+ext/**
+!ext/PLACEHOLDER
+
+# Recipe
+recipe/**
+!recipe/sha256.py
+
+# COMPAS specific
+*.3dmbak
+*.rhl
+src/compas-viewers
+generated
+*.gz
+
+# OS
+.DS_Store
+Thumbs.db
