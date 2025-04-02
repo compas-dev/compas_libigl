@@ -1,6 +1,9 @@
 #pragma once
 
 #include "compas.hpp"
+#include <igl/remesh_along_isoline.h>
+#include <igl/facet_components.h>
+#include <Eigen/Sparse>
 
 // Function to remesh along a single isoline
 std::tuple<
