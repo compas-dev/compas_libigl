@@ -20,7 +20,8 @@ trimesh_remesh_along_isoline(
 std::tuple<
     compas::RowMatrixXd,
     compas::RowMatrixXi,
-    Eigen::VectorXd>
+    Eigen::VectorXd,
+    Eigen::VectorXi>
 trimesh_remesh_along_isolines(
     compas::RowMatrixXd V,
     compas::RowMatrixXi F,

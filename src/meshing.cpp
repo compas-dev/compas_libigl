@@ -49,46 +49,57 @@ trimesh_remesh_along_isoline(
 std::tuple<
     compas::RowMatrixXd,
     compas::RowMatrixXi,
-    Eigen::VectorXd>
+    Eigen::VectorXd,
+    Eigen::VectorXi>
 trimesh_remesh_along_isolines(
     compas::RowMatrixXd V_initial,
     compas::RowMatrixXi F_initial,
     Eigen::VectorXd S_initial,
     Eigen::VectorXd values)
 {
-    // Initialize with input mesh
-    compas::RowMatrixXd V = V_initial;
-    compas::RowMatrixXi F = F_initial;
-    Eigen::VectorXd S = S_initial;
+    // Pre-allocate all matrices with initial size
+    compas::RowMatrixXd V = std::move(V_initial);
+    compas::RowMatrixXi F = std::move(F_initial);
+    Eigen::VectorXd S = std::move(S_initial);
     
-    // Temporary variables for intermediate results
+    // Initialize face groups
+    Eigen::VectorXi face_groups = Eigen::VectorXi::Zero(F.rows());
+    
+    // Temporary variables - pre-allocated once
     compas::RowMatrixXd V_temp;
     compas::RowMatrixXi F_temp;
     Eigen::VectorXd S_temp;
-    Eigen::VectorXi J;
+    Eigen::VectorXi J, L;
     Eigen::SparseMatrix<double> BC;
-    Eigen::VectorXi L;
     
     // Process each isoline value in sequence
     for (int i = 0; i < values.size(); i++) {
-        double val = values(i);
-        
         // Remesh along current isoline
-        igl::remesh_along_isoline(V, F, S, val, V_temp, F_temp, S_temp, J, BC, L);
+        igl::remesh_along_isoline(V, F, S, values[i], V_temp, F_temp, S_temp, J, BC, L);
         
-        // Update mesh for next iteration
-        V = V_temp;
-        F = F_temp;
-        S = S_temp;
+        // Update face groups - pre-allocate new array
+        Eigen::VectorXi new_face_groups = Eigen::VectorXi::Zero(F_temp.rows());
+        
+        // Update face groups efficiently
+        for(Eigen::Index f = 0; f < F_temp.rows(); f++) {
+            if(J[f] >= 0) {
+                new_face_groups[f] = face_groups[J[f]];
+                if(L[f] == 1) {
+                    new_face_groups[f] = i + 1;  // Use iteration number + 1 as group ID
+                }
+            } else {
+                new_face_groups[f] = i + 1;
+            }
+        }
+        
+        // Efficient moves instead of copies
+        V = std::move(V_temp);
+        F = std::move(F_temp);
+        S = std::move(S_temp);
+        face_groups = std::move(new_face_groups);
     }
 
-    // Return final remeshed geometry and scalar field
-    std::tuple<
-        compas::RowMatrixXd,
-        compas::RowMatrixXi,
-        Eigen::VectorXd> result = std::make_tuple(V, F, S);
-    
-    return result;
+    return std::make_tuple(std::move(V), std::move(F), std::move(S), std::move(face_groups));
 }
 
 NB_MODULE(_meshing, m) {
@@ -104,9 +115,9 @@ NB_MODULE(_meshing, m) {
     m.def(
         "trimesh_remesh_along_isolines",
         &trimesh_remesh_along_isolines,
-        "Remesh a triangle mesh along multiple isolines in sequence.",
-        "V"_a,
-        "F"_a,
-        "S"_a,
+        "Remesh a triangle mesh along multiple isolines. Returns mesh data and face group IDs.",
+        "V1"_a,
+        "F1"_a,
+        "S1"_a,
         "values"_a);
 }
