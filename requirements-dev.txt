@@ -9,3 +9,8 @@ sphinx_compas2_theme
 twine
 wheel
 line_profiler
+scikit-build-core[pyproject] >=0.10
+twine
+wheel
+setuptools
+cibuildwheel==2.23.1
