@@ -8,4 +8,4 @@ def test_trimesh_massmatrix():
     mesh.quads_to_triangles()
     M = mesh.to_vertices_and_faces()
     mass = compas_libigl.trimesh_massmatrix(M)
-    assert len(mass) == mesh.number_of_vertices()
+    assert mass.shape[0] == mesh.number_of_vertices()  # Use shape[0] for sparse matrix length

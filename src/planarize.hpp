@@ -1,24 +1,20 @@
 #pragma once
 
 #include "compas.hpp"
-#include <igl/planarize_quad_mesh.h>
 #include <Eigen/Core>
 
 /**
- * Planarize a quad mesh by iteratively projecting faces onto their best-fit planes.
+ * Planarize a quad mesh.
  *
- * @param V The vertex matrix of the quad mesh (n x 3).
- * @param F The face matrix of the quad mesh (m x 4).
- * @param maxiter Maximum number of iterations.
- * @param threshold Convergence threshold for planarity.
- * @return Tuple of (vertices, planarity error).
+ * @param V #V x 3 matrix of vertex coordinates
+ * @param F #F x 4 matrix of quad indices
+ * @param maxiter Maximum number of iterations
+ * @param threshold Convergence threshold
+ * @return Matrix of planarized vertex coordinates
  */
-std::tuple<
-    compas::RowMatrixXd,
-    double>
-quadmesh_planarize(
+compas::RowMatrixXd
+planarize_quads(
     compas::RowMatrixXd V,
     compas::RowMatrixXi F,
-    int maxiter,
-    double threshold
-);
+    int maxiter = 100,
+    double threshold = 0.005);

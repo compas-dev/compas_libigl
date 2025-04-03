@@ -10,14 +10,14 @@ def intersection_ray_mesh(ray, M):
 
     Parameters
     ----------
-    ray : tuple of point and vector
+    ray : tuple[list[float], list[float]]
         A ray represented by a point and a direction vector.
-    M : (list, list)
+    M : tuple[list[list[float]], list[list[int]]]
         A mesh represented by a list of vertices and a list of faces.
 
     Returns
     -------
-    array
+    list[tuple[int, float, float, float]]
         The array contains a tuple per intersection of the ray with the mesh.
         Each tuple contains:
 
@@ -25,7 +25,6 @@ def intersection_ray_mesh(ray, M):
         1. the u coordinate of the intersection in the barycentric coordinates of the face
         2. the u coordinate of the intersection in the barycentric coordinates of the face
         3. the distance between the ray origin and the hit
-
     """
     point, vector = ray
     vertices, faces = M
@@ -37,6 +36,26 @@ def intersection_ray_mesh(ray, M):
 
 
 def intersection_rays_mesh(rays, M):
+    """Compute the intersection(s) between multiple rays and a mesh.
+
+    Parameters
+    ----------
+    rays : list[tuple[list[float], list[float]]]
+        List of rays, each represented by a point and a direction vector.
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a list of vertices and a list of faces.
+
+    Returns
+    -------
+    list[list[tuple[int, float, float, float]]]
+        List of intersection results, one per ray.
+        Each intersection result contains tuples with:
+
+        0. the index of the intersected face
+        1. the u coordinate of the intersection in the barycentric coordinates of the face
+        2. the u coordinate of the intersection in the barycentric coordinates of the face
+        3. the distance between the ray origin and the hit
+    """
     points, vectors = zip(*rays)
     vertices, faces = M
     P = np.asarray(points, dtype=np.float64)

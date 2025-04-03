@@ -10,19 +10,18 @@ def trimesh_harmonic(M):
 
     Parameters
     ----------
-    M : tuple
+    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
         A mesh represented by a list of vertices and a list of faces
         or by a COMPAS mesh object.
 
     Returns
     -------
-    array
+    list[list[float]]
         The u, v parameters per vertex.
 
     Notes
     -----
     ``camelhead.off`` can be downloaded from https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/camelhead.off
-
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
@@ -36,19 +35,18 @@ def trimesh_lscm(M):
 
     Parameters
     ----------
-    M : tuple
+    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
         A mesh represented by a list of vertices and a list of faces
         or by a COMPAS mesh object.
 
     Returns
     -------
-    array
+    list[list[float]]
         The u, v parameters per vertex.
 
     Notes
     -----
     ``camelhead.off`` can be downloaded from https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/camelhead.off
-
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)

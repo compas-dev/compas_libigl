@@ -19,7 +19,8 @@
  */
 std::vector<std::tuple<int, float, float, float>>
 intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direction,
-                     const compas::RowMatrixXd& V, const compas::RowMatrixXi& F);
+                     Eigen::Ref<const compas::RowMatrixXd> V, 
+                     Eigen::Ref<const compas::RowMatrixXi> F);
 
 /**
  * Compute intersections between multiple rays and a mesh.
@@ -31,7 +32,7 @@ intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direc
  * @return Vector of intersection hits per ray, each hit containing (face_id, u, v, t)
  */
 std::vector<std::vector<std::tuple<int, float, float, float>>>
-intersection_rays_mesh(const compas::RowMatrixXd& points,
-                      const compas::RowMatrixXd& directions,
-                      const compas::RowMatrixXd& V, 
-                      const compas::RowMatrixXi& F);
+intersection_rays_mesh(Eigen::Ref<const compas::RowMatrixXd> points,
+                      Eigen::Ref<const compas::RowMatrixXd> directions,
+                      Eigen::Ref<const compas::RowMatrixXd> V, 
+                      Eigen::Ref<const compas::RowMatrixXi> F);

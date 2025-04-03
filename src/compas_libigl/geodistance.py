@@ -38,11 +38,9 @@ def trimesh_geodistance(M, source, method="exact"):
     V, F = M
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
-    if method == "exact":
-        return _geodistance.trimesh_geodistance_exact(V, F, source)
-    if method == "heat":
-        return _geodistance.trimesh_geodistance_heat(V, F, source)
-    raise NotImplementedError
+    # Extract single integer from source array if needed
+    source = int(source)  # Ensure it's a scalar
+    return _geodistance.trimesh_geodistance(V, F, source, method)
 
 
 @plugin(category="trimesh")
@@ -80,8 +78,4 @@ def trimesh_geodistance_multiple(M, sources, method="exact"):
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     sources = np.asarray(sources, dtype=np.int32)
-    if method == "exact":
-        return _geodistance.trimesh_geodistance_exact_multiple(V, F, sources)
-    if method == "heat":
-        return _geodistance.trimesh_geodistance_heat_multiple(V, F, sources)
-    raise NotImplementedError
+    return _geodistance.trimesh_geodistance_multiple(V, F, sources, method)

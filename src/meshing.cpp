@@ -1,14 +1,13 @@
 #include "meshing.hpp"
-#include <igl/facet_components.h>
 
 std::tuple<
     compas::RowMatrixXd,
     compas::RowMatrixXi,
     Eigen::VectorXi>
 trimesh_remesh_along_isoline(
-    compas::RowMatrixXd V1,
-    compas::RowMatrixXi F1,
-    Eigen::VectorXd S1,
+    Eigen::Ref<const compas::RowMatrixXd> V1,
+    Eigen::Ref<const compas::RowMatrixXi> F1,
+    Eigen::Ref<const Eigen::VectorXd> S1,
     double s)
 {
     // Check initial face components
@@ -38,12 +37,7 @@ trimesh_remesh_along_isoline(
     }
 
     // Return remeshed geometry and labels
-    std::tuple<
-        compas::RowMatrixXd,
-        compas::RowMatrixXi,
-        Eigen::VectorXi> result = std::make_tuple(V2, F2, L);
-
-    return result;
+    return std::make_tuple(V2, F2, L);
 }
 
 std::tuple<
@@ -52,15 +46,15 @@ std::tuple<
     Eigen::VectorXd,
     Eigen::VectorXi>
 trimesh_remesh_along_isolines(
-    compas::RowMatrixXd V_initial,
-    compas::RowMatrixXi F_initial,
-    Eigen::VectorXd S_initial,
-    Eigen::VectorXd values)
+    Eigen::Ref<const compas::RowMatrixXd> V_initial,
+    Eigen::Ref<const compas::RowMatrixXi> F_initial,
+    Eigen::Ref<const Eigen::VectorXd> S_initial,
+    Eigen::Ref<const Eigen::VectorXd> values)
 {
     // Pre-allocate all matrices with initial size
-    compas::RowMatrixXd V = std::move(V_initial);
-    compas::RowMatrixXi F = std::move(F_initial);
-    Eigen::VectorXd S = std::move(S_initial);
+    compas::RowMatrixXd V = V_initial;
+    compas::RowMatrixXi F = F_initial;
+    Eigen::VectorXd S = S_initial;
     
     // Initialize face groups
     Eigen::VectorXi face_groups = Eigen::VectorXi::Zero(F.rows());
@@ -92,17 +86,19 @@ trimesh_remesh_along_isolines(
             }
         }
         
-        // Efficient moves instead of copies
-        V = std::move(V_temp);
-        F = std::move(F_temp);
-        S = std::move(S_temp);
-        face_groups = std::move(new_face_groups);
+        // Copy instead of move since we're using references
+        V = V_temp;
+        F = F_temp;
+        S = S_temp;
+        face_groups = new_face_groups;
     }
 
-    return std::make_tuple(std::move(V), std::move(F), std::move(S), std::move(face_groups));
+    return std::make_tuple(V, F, S, face_groups);
 }
 
 NB_MODULE(_meshing, m) {
+    m.doc() = "Mesh remeshing functions using libigl";
+
     m.def(
         "trimesh_remesh_along_isoline",
         &trimesh_remesh_along_isoline,

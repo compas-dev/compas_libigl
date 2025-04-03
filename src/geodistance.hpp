@@ -1,9 +1,26 @@
 #pragma once
 
 #include "compas.hpp"
+#include <Eigen/Core>
 #include <igl/avg_edge_length.h>
 #include <igl/exact_geodesic.h>
 #include <igl/heat_geodesics.h>
+
+/**
+ * Helper function to compute exact geodesic distances.
+ */
+Eigen::VectorXd trimesh_geodistance_exact(
+    const compas::RowMatrixXd& V,
+    const compas::RowMatrixXi& F,
+    int vid);
+
+/**
+ * Helper function to compute heat method geodesic distances.
+ */
+Eigen::VectorXd trimesh_geodistance_heat(
+    const compas::RowMatrixXd& V,
+    const compas::RowMatrixXi& F,
+    int vid);
 
 /**
  * Compute geodesic distance from a source vertex to all other vertices.
@@ -15,8 +32,8 @@
  * @return Vector of geodesic distances from source to all vertices.
  */
 Eigen::VectorXd trimesh_geodistance(
-    compas::RowMatrixXd V,
-    compas::RowMatrixXi F,
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
     int source,
     const std::string& method
 );
@@ -31,8 +48,8 @@ Eigen::VectorXd trimesh_geodistance(
  * @return Vector of minimum geodesic distances from any source to all vertices.
  */
 Eigen::VectorXd trimesh_geodistance_multiple(
-    compas::RowMatrixXd V,
-    compas::RowMatrixXi F,
-    Eigen::VectorXi sources,
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
+    Eigen::Ref<const Eigen::VectorXi> sources,
     const std::string& method
 );

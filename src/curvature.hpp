@@ -1,10 +1,9 @@
 #pragma once
 
 #include "compas.hpp"
+#include <Eigen/Core>
 #include <igl/gaussian_curvature.h>
 #include <igl/principal_curvature.h>
-
-namespace compas_libigl {
 
 /**
  * Compute the discrete gaussian curvature of a triangle mesh.
@@ -14,8 +13,8 @@ namespace compas_libigl {
  * @return A vector of gaussian curvature values per vertex.
  */
 Eigen::VectorXd trimesh_gaussian_curvature(
-    compas::RowMatrixXd V,
-    compas::RowMatrixXi F
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F
 );
 
 /**
@@ -23,18 +22,16 @@ Eigen::VectorXd trimesh_gaussian_curvature(
  *
  * @param V The vertex matrix of the triangle mesh (n x 3).
  * @param F The face matrix of the triangle mesh (m x 3).
- * @param[out] PD1 Principal direction 1 per vertex (normalized vectors).
- * @param[out] PD2 Principal direction 2 per vertex (normalized vectors).
- * @param[out] PV1 Principal curvature value 1 per vertex (maximum curvature).
- * @param[out] PV2 Principal curvature value 2 per vertex (minimum curvature).
+ * @param radius The radius of the neighborhood for curvature computation.
+ * @return A tuple of (PD1, PD2, PV1, PV2) where:
+ *         - PD1: principal direction 1 per vertex (n x 3)
+ *         - PD2: principal direction 2 per vertex (n x 3)
+ *         - PV1: principal curvature 1 per vertex (n x 1)
+ *         - PV2: principal curvature 2 per vertex (n x 1)
  */
-void trimesh_principal_curvature(
-    compas::RowMatrixXd V,
-    compas::RowMatrixXi F,
-    Eigen::MatrixXd& PD1,
-    Eigen::MatrixXd& PD2,
-    Eigen::VectorXd& PV1,
-    Eigen::VectorXd& PV2
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXd, Eigen::VectorXd, Eigen::VectorXd>
+trimesh_principal_curvature(
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
+    int radius = 5
 );
-
-} // namespace compas_libigl

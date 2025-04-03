@@ -11,7 +11,7 @@ def trimesh_gaussian_curvature(M):
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`]
+    M : tuple[list[list[float]], list[list[int]]]
         A mesh represented by a list of vertices and a list of faces.
         The vertices should be 3D points, and faces should be triangles.
 
@@ -36,7 +36,7 @@ def trimesh_principal_curvature(M):
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`]
+    M : tuple[list[list[float]], list[list[int]]]
         A mesh represented by a list of vertices and a list of faces.
         The vertices should be 3D points, and faces should be triangles.
 

@@ -13,7 +13,7 @@ def quadmesh_planarize(M, kmax=500, maxdev=0.005):
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`] | :class:`compas.datastructures.Mesh`
+    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
         A quad mesh represented by a list of vertices and a list of faces,
         or by a COMPAS mesh object.
     kmax : int, optional
@@ -25,7 +25,7 @@ def quadmesh_planarize(M, kmax=500, maxdev=0.005):
 
     Returns
     -------
-    list[:class:`list`[float]]
+    list[list[float]]
         The coordinates of the new vertices after planarization.
 
     Notes

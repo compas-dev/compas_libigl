@@ -10,15 +10,14 @@ def trimesh_massmatrix(M):
 
     Parameters
     ----------
-    M : tuple or :class:`compas.datastructures.Mesh`
+    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
         A mesh represented by a list of vertices and a list of faces
         or by a COMPAS mesh object.
 
     Returns
     -------
-    array
-        The mass per vertex.
-
+    scipy.sparse.csc_matrix
+        The mass matrix in sparse format.
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)

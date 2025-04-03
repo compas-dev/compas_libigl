@@ -4,6 +4,8 @@
 #include <igl/isolines.h>
 #include <Eigen/Core>
 
+namespace compas_libigl {
+
 /**
  * Compute isolines on a triangle mesh.
  *
@@ -15,8 +17,10 @@
  */
 std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, compas::RowMatrixXi>
 trimesh_isolines(
-    const compas::RowMatrixXd V,
-    const compas::RowMatrixXi F,
-    const Eigen::VectorXd isovalues,
-    const Eigen::VectorXd vals
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
+    Eigen::Ref<const Eigen::VectorXd> isovalues,
+    Eigen::Ref<const Eigen::VectorXd> vals
 );
+
+} // namespace compas_libigl

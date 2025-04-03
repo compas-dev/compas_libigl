@@ -1,10 +1,14 @@
 #include "parametrisation.hpp"
-
+#include <igl/boundary_loop.h>
+#include <igl/harmonic.h>
+#include <igl/lscm.h>
+#include <igl/map_vertices_to_circle.h>
+#include <Eigen/Core>
 
 Eigen::MatrixXd
 harmonic(
-    const compas::RowMatrixXd& V,
-    const compas::RowMatrixXi& F)
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F)
 {
     Eigen::MatrixXd V_uv;
 
@@ -22,11 +26,10 @@ harmonic(
     return V_uv;
 }
 
-
 Eigen::MatrixXd
 lscm(
-    const compas::RowMatrixXd& V,
-    const compas::RowMatrixXi& F)
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F)
 {
     Eigen::MatrixXd V_uv;
 
@@ -49,7 +52,6 @@ lscm(
 }
 
 NB_MODULE(_parametrisation, m) {
-
     m.def(
         "harmonic",
         &harmonic,

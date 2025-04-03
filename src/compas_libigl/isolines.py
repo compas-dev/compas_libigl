@@ -7,14 +7,12 @@ from compas_libigl import _isolines
 
 @plugin(category="trimesh")
 def trimesh_isolines(M, scalars, isovalues):
-    """Compute isolines on a triangle mesh.
-
-    Extract isolines from a triangle mesh based on scalar values assigned to its vertices.
-    The isolines are curves of constant scalar value.
+    """
+    Compute isolines on a triangle mesh.
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`] | :class:`compas.datastructures.Mesh`
+    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
         A mesh represented by a list of vertices and a list of faces,
         or by a COMPAS mesh object.
     scalars : list[float]
@@ -25,7 +23,7 @@ def trimesh_isolines(M, scalars, isovalues):
 
     Returns
     -------
-    tuple[list[:class:`list`[float]], list[:class:`list`[int]], list[int]]
+    tuple[list[list[float]], list[list[int]], list[int]]
         A tuple containing:
 
         * The coordinates of the isoline vertices
@@ -51,23 +49,21 @@ def trimesh_isolines(M, scalars, isovalues):
 
 
 def groupsort_isolines(vertices, edges, indices):
-    """Group and sort isoline edges into continuous polylines.
-
-    Takes the output of trimesh_isolines and converts the edges into a set of
-    continuous polylines, grouping them by their isovalue.
+    """
+    Group and sort isoline edges into continuous polylines.
 
     Parameters
     ----------
-    vertices : list[:class:`list`[float]]
+    vertices : list[list[float]]
         The coordinates of the isoline vertices.
-    edges : list[:class:`list`[int]]
+    edges : list[list[int]]
         The edges between vertices forming the isolines.
     indices : list[int]
         An index per edge indicating to which isoline it belongs.
 
     Returns
     -------
-    list[:class:`~compas.geometry.Polyline`]
+    list[list[:class:`compas.geometry.Polyline`]]
         A list of polyline groups, where each group corresponds to an isoline level.
         Each polyline represents a continuous segment of an isoline.
 

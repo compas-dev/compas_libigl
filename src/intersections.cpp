@@ -1,20 +1,9 @@
 #include "intersections.hpp"
 
-/**
- * Compute intersection between a single ray and a mesh.
- * 
- * @param point Origin point of the ray
- * @param direction Direction vector of the ray
- * @param V #V x 3 matrix of vertex coordinates
- * @param F #F x 3 matrix of triangle indices
- * @return Vector of intersection hits, each containing (face_id, u, v, t) where:
- *         - face_id: index of intersected face
- *         - u, v: barycentric coordinates of hit point
- *         - t: ray parameter at intersection
- */
 std::vector<std::tuple<int, float, float, float>>
 intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direction,
-                     const compas::RowMatrixXd& V, const compas::RowMatrixXi& F) {
+                     Eigen::Ref<const compas::RowMatrixXd> V, 
+                     Eigen::Ref<const compas::RowMatrixXi> F) {
     std::vector<std::tuple<int, float, float, float>> hits;
     std::vector<igl::Hit<double>> igl_hits;
 
@@ -29,20 +18,11 @@ intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direc
     return hits;
 }
 
-/**
- * Compute intersections between multiple rays and a mesh.
- * 
- * @param points #R x 3 matrix of ray origin points
- * @param directions #R x 3 matrix of ray direction vectors
- * @param V #V x 3 matrix of vertex coordinates
- * @param F #F x 3 matrix of triangle indices
- * @return Vector of intersection hits per ray, each hit containing (face_id, u, v, t)
- */
 std::vector<std::vector<std::tuple<int, float, float, float>>>
-intersection_rays_mesh(const compas::RowMatrixXd& points,
-                      const compas::RowMatrixXd& directions,
-                      const compas::RowMatrixXd& V, 
-                      const compas::RowMatrixXi& F) {
+intersection_rays_mesh(Eigen::Ref<const compas::RowMatrixXd> points,
+                      Eigen::Ref<const compas::RowMatrixXd> directions,
+                      Eigen::Ref<const compas::RowMatrixXd> V, 
+                      Eigen::Ref<const compas::RowMatrixXi> F) {
     std::vector<std::vector<std::tuple<int, float, float, float>>> hits_per_ray;
     hits_per_ray.reserve(points.rows());
 
