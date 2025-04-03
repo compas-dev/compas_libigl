@@ -19,19 +19,6 @@ def trimesh_harmonic(M):
     array
         The u, v parameters per vertex.
 
-    Examples
-    --------
-    >>> import compas_libigl as igl
-    >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get("camelhead.off"))
-    >>> mesh_uv = mesh.copy()
-    >>> mesh_uv.vertices_attribute("z", 0)
-    >>> M = mesh.to_vertices_and_faces()
-    >>> uv = igl.trimesh_harmonic(M)
-    >>> for key in mesh.vertices():
-    ...     mesh_uv.vertex_attributes(key, "xy", uv[key])
-    >>>
-
     Notes
     -----
     ``camelhead.off`` can be downloaded from https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/camelhead.off
@@ -57,19 +44,6 @@ def trimesh_lscm(M):
     -------
     array
         The u, v parameters per vertex.
-
-    Examples
-    --------
-    >>> import compas_libigl as igl
-    >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get("camelhead.off"))
-    >>> mesh_uv = mesh.copy()
-    >>> mesh_uv.vertices_attribute("z", 0)
-    >>> M = mesh.to_vertices_and_faces()
-    >>> uv = igl.trimesh_lscm(M)
-    >>> for key in mesh.vertices():
-    ...     mesh_uv.vertex_attributes(key, "xy", uv[key])
-    >>>
 
     Notes
     -----

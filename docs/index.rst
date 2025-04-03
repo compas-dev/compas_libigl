@@ -6,7 +6,7 @@ compas_libigl
 
 COMPAS Libigl provides a Python binding for `Libigl <https://libigl.github.io/>`_,
 a state-of-the-art C++ geometry processing library.
-The binding is generated with `Pybind11 <https://pybind11.readthedocs.io/en/stable/>`_ and focusses on specific functionality:
+The binding is generated with `Nanobind <https://nanobind.readthedocs.io/>`_ and focusses on specific functionality:
 
 * Geodesic distance calculation
 * Scalarfield isolines
@@ -17,6 +17,7 @@ The binding is generated with `Pybind11 <https://pybind11.readthedocs.io/en/stab
 * Boundary loops
 * Harmonic parametrisation
 * Least-squares conformal maps
+* Any other functionality
 
 
 Table of Contents
@@ -28,6 +29,7 @@ Table of Contents
 
    Introduction <self>
    installation
+   devguide
    tutorial
    examples
    api

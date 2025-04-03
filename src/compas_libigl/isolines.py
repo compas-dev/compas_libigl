@@ -7,37 +7,34 @@ from compas_libigl import _isolines
 
 @plugin(category="trimesh")
 def trimesh_isolines(M, scalars, isovalues):
-    """Compute isolines on a triangle mesh using a scalarfield of data points
-    assigned to its vertices.
+    """Compute isolines on a triangle mesh.
+
+    Extract isolines from a triangle mesh based on scalar values assigned to its vertices.
+    The isolines are curves of constant scalar value.
 
     Parameters
     ----------
-    M : tuple or :class:`compas.datastructures.Mesh`
-        A mesh represented by a list of vertices and a list of faces
+    M : tuple[:class:`list`, :class:`list`] | :class:`compas.datastructures.Mesh`
+        A mesh represented by a list of vertices and a list of faces,
         or by a COMPAS mesh object.
-    scalars : list
-        A list of scalar values per vertex.
-    isovalues : list
-        A list of isovalues to generate isolines for.
+    scalars : list[float]
+        A list of scalar values, one per vertex of the mesh.
+    isovalues : list[float]
+        The values at which to compute the isolines.
+        Each value should be within the range of the scalar field.
 
     Returns
     -------
-    tuple
+    tuple[list[:class:`list`[float]], list[:class:`list`[int]], list[int]]
         A tuple containing:
-        0. The coordinates of the polyline segments representing the isolines.
-        1. The segments of the polylines.
-        2. The indices of the scalars array corresponding to the isovalues.
 
-    Examples
-    --------
-    >>> import compas
-    >>> import compas_libigl
-    >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    >>> mesh.quads_to_triangles()
-    >>> M = mesh.to_vertices_and_faces()
-    >>> scalars = mesh.vertices_attribute("z")
-    >>> vertices, edges, index = compas_libigl.trimesh_isolines(M, scalars, 50)
+        * The coordinates of the isoline vertices
+        * The edges between these vertices forming the isolines
+        * An index per edge indicating to which isoline it belongs
+
+    Notes
+    -----
+    The input mesh should be triangulated for accurate results.
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)
@@ -54,27 +51,35 @@ def trimesh_isolines(M, scalars, isovalues):
 
 
 def groupsort_isolines(vertices, edges, indices):
-    """Group isolines edges per value level and sort edges into paths.
+    """Group and sort isoline edges into continuous polylines.
+
+    Takes the output of trimesh_isolines and converts the edges into a set of
+    continuous polylines, grouping them by their isovalue.
 
     Parameters
     ----------
-    vertices : list
-        Isoline vertices.
-    edges : list
-        Isoline vertex pairs.
-    indices : list
-        Indices into the scalars array.
+    vertices : list[:class:`list`[float]]
+        The coordinates of the isoline vertices.
+    edges : list[:class:`list`[int]]
+        The edges between vertices forming the isolines.
+    indices : list[int]
+        An index per edge indicating to which isoline it belongs.
 
     Returns
     -------
-    list
-        List of groups of polylines, where each group corresponds to an isoline level.
-    """
+    list[:class:`~compas.geometry.Polyline`]
+        A list of polyline groups, where each group corresponds to an isoline level.
+        Each polyline represents a continuous segment of an isoline.
 
+    Notes
+    -----
+    The function attempts to create the minimum number of polylines by connecting
+    edges that share vertices and have the same isovalue.
+    """
     # Group edges by their index value
     edge_groups = {}
     for i, edge in enumerate(edges):
-        idx = int(indices[i])  # Convert numpy array to integer
+        idx = indices[i].item()  # Convert numpy array element to scalar using item()
         if idx not in edge_groups:
             edge_groups[idx] = []
         edge_groups[idx].append(edge.tolist())

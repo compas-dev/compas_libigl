@@ -6,8 +6,7 @@ from compas_libigl import _massmatrix
 
 @plugin(category="trimesh")
 def trimesh_massmatrix(M):
-    """Compute massmatrix on a triangle mesh using a scalarfield of data points
-    assigned to its vertices.
+    """Compute the mass matrix of a triangle mesh.
 
     Parameters
     ----------
@@ -19,16 +18,6 @@ def trimesh_massmatrix(M):
     -------
     array
         The mass per vertex.
-
-    Examples
-    --------
-    >>> import compas
-    >>> import compas_libigl
-    >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    >>> mesh.quads_to_triangles()
-    >>> M = mesh.to_vertices_and_faces()
-    >>> mass = compas_libigl.trimesh_massmatrix(M)
 
     """
     V, F = M

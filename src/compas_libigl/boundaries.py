@@ -5,35 +5,27 @@ from compas_libigl._types_std import VectorVectorInt
 
 
 def trimesh_boundaries(M):
-    """Compute all (ordered) boundary loops of a manifold triangle mesh.
+    """Compute all ordered boundary loops of a manifold triangle mesh.
+
+    Uses libigl to extract and order the boundary loops of a triangle mesh.
+    The input mesh must be manifold for correct results.
 
     Parameters
     ----------
-    M : (list, list)
+    M : tuple[:class:`list`, :class:`list`]
         A mesh represented by a list of vertices and a list of faces.
+        The vertices should be 3D points, and faces should be triangles.
 
     Returns
     -------
-    array
+    list[list[int]]
         The ordered boundary loops of the triangle mesh.
-        Each loop is a sequence of vertex indices.
+        Each loop is a sequence of vertex indices defining a closed boundary.
 
     Notes
     -----
     The input mesh should be manifold.
-
-    Examples
-    --------
-    >>> import compas
-    >>> import compas_libigl
-    >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    >>> mesh.quads_to_triangles()
-    >>> M = mesh.to_vertices_and_faces()
-    >>> boundaries = compas_libigl.trimesh_boundaries(M)
-    >>> len(boundaries) == 1
-    True
-
+    Non-manifold meshes may produce unexpected or incorrect results.
     """
     V, F = M
     F = np.asarray(F, dtype=np.int32)

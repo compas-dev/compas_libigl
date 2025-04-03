@@ -3,7 +3,7 @@ import compas
 from ._nanobind import add, __doc__
 from .boundaries import trimesh_boundaries
 from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
-from .geodistance import trimesh_geodistance
+from .geodistance import trimesh_geodistance, trimesh_geodistance_multiple
 from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
@@ -107,6 +107,7 @@ __all__ = [
     "trimesh_gaussian_curvature",
     "trimesh_principal_curvature",
     "trimesh_geodistance",
+    "trimesh_geodistance_multiple",
     "intersection_ray_mesh",
     "intersection_rays_mesh",
     "trimesh_isolines",
