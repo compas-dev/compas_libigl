@@ -50,6 +50,6 @@ for vertex, dist in zip(mesh.vertices(), distances):
 # Highlight boundary vertices
 for vertex in boundary_vertices:
     point = Point(*mesh.vertex_attributes(vertex, "xyz"))
-    viewer.scene.add(point, pointsize=20, pointcolor=Color.red())
+    viewer.scene.add(point, pointsize=20, pointcolor=Color.black())
 
 viewer.show()

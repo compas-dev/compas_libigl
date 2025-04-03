@@ -5,7 +5,6 @@
 #include <igl/facet_components.h>
 #include <Eigen/Sparse>
 
-// Function to remesh along a single isoline
 std::tuple<
     compas::RowMatrixXd,
     compas::RowMatrixXi,
@@ -16,7 +15,6 @@ trimesh_remesh_along_isoline(
     Eigen::VectorXd S1,
     double s);
 
-// Function to remesh along multiple isolines
 std::tuple<
     compas::RowMatrixXd,
     compas::RowMatrixXi,
