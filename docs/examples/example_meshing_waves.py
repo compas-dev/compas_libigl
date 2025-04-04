@@ -1,10 +1,12 @@
-import compas_libigl as igl
-from compas.colors import ColorMap
-from compas.geometry import Rotation, Scale, Point, distance_point_point
 import math
-import numpy as np
+
+from compas.colors import ColorMap
 from compas.datastructures import Mesh
+from compas.geometry import Rotation
+from compas.geometry import Scale
 from compas_viewer import Viewer
+
+import compas_libigl as igl
 
 # Load mesh
 mesh = Mesh.from_off(igl.get_beetle())

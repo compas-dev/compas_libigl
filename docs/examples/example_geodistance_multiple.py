@@ -1,11 +1,11 @@
 import compas
-import compas_libigl as igl
-from compas.colors import Color, ColorMap
+from compas.colors import Color
+from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import Point, Scale, Rotation
+from compas.geometry import Point
 from compas_viewer import Viewer
-import math
-import numpy as np
+
+import compas_libigl as igl
 
 # ==============================================================================
 # Input

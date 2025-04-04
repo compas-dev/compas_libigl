@@ -1,9 +1,10 @@
 import compas
-import compas_libigl as igl
 import numpy as np
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
+
+import compas_libigl as igl
 
 # ==============================================================================
 # Input geometry

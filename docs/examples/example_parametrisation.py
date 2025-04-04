@@ -1,9 +1,12 @@
-import compas_libigl as igl
+import math
+
 from compas.datastructures import Mesh
-from compas.geometry import Rotation, Scale
+from compas.geometry import Rotation
+from compas.geometry import Scale
 from compas.geometry import Translation
 from compas_viewer import Viewer
-import math
+
+import compas_libigl as igl
 
 # ==============================================================================
 # Input geometry

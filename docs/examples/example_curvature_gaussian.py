@@ -1,10 +1,12 @@
 import compas
-import compas_libigl as igl
 from compas.colors import Color
 from compas.colors.colormap import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import Point, Line
+from compas.geometry import Line
+from compas.geometry import Point
 from compas_viewer import Viewer
+
+import compas_libigl as igl
 
 # ==============================================================================
 # Input geometry
@@ -52,7 +54,7 @@ for i, k in enumerate(gaussian_curvature):
 viewer = Viewer()
 
 # Add the colored mesh
-viewer.scene.add(trimesh, use_vertexcolors=True) #, vertexcolor=vertex_colors)
+viewer.scene.add(trimesh, use_vertexcolors=True)  # , vertexcolor=vertex_colors)
 
 # Add normal vectors scaled by Gaussian curvature
 normal_scale = -10

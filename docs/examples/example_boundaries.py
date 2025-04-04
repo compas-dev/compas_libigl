@@ -1,12 +1,13 @@
 import math
 
-import compas_libigl as libigl
 from compas.colors import Color
 from compas.datastructures import Mesh
 from compas.geometry import Polyline
 from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
+
+import compas_libigl as libigl
 
 # ==============================================================================
 # Input geometry

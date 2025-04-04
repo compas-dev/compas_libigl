@@ -1,12 +1,12 @@
 import compas
-import numpy as np
-import compas_libigl as igl
 from compas.colors import Color
-from compas.colors.colormap import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import Line, Point, Vector
+from compas.geometry import Line
+from compas.geometry import Point
+from compas.geometry import Vector
 from compas_viewer import Viewer
-from compas_viewer.scene import BufferGeometry
+
+import compas_libigl as igl
 
 # ==============================================================================
 # Input geometry

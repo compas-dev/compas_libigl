@@ -2,7 +2,7 @@
 Acknowledgements
 ********************************************************************************
 
-This package provides Python bindings for selected methods of libigl written by:
+This package provides Python bindings for selected methods of libigl developed by:
 * Tom van Mele, tom.v.mele@gmail.com
 * Petras Vestartas, petrasvestartas@gmail.com
 
