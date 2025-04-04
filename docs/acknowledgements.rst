@@ -2,14 +2,13 @@
 Acknowledgements
 ********************************************************************************
 
-COMPAS libigl
-=============
+This package provides Python bindings for selected methods of libigl written by:
+* Tom van Mele, tom.v.mele@gmail.com
+* Petras Vestartas, petrasvestartas@gmail.com
 
-This package provides Python bindings for selected functionality of libigl,
-a simple C++ geometry processing library. libigl is:
+Libigl is a C++ geometry processing library developed by:
 
-* Copyright (C) 2020 Alec Jacobson <alecjacobson@gmail.com>
-* Copyright (C) 2020 Daniele Panozzo <daniele.panozzo@gmail.com>
-* And others
+* Alec Jacobson, alecjacobson@gmail.com
+* Daniele Panozzo, daniele.panozzo@gmail.com
 
 The original libigl library is available at: https://github.com/libigl/libigl
