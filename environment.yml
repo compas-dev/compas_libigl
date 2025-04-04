@@ -1,13 +1,12 @@
+name: compas_libigl-dev
 channels:
   - conda-forge
+  - defaults
 dependencies:
-  - python>=3.9
-  - pip>=19.0
-  - git
-  - cmake>=3.14
-  - boost
-  - eigen=3.3
-  - pybind11
+  - python <=3.12
+  - pip
+  - cmake
   - compas
   - pip:
-      - -e .[dev]
+      - -r requirements-dev.txt
+      - .

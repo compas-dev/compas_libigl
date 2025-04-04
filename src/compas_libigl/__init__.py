@@ -1,21 +1,21 @@
 import os
 import compas
-
+from ._nanobind import add, __doc__
 from .boundaries import trimesh_boundaries
 from .curvature import trimesh_gaussian_curvature, trimesh_principal_curvature
-from .geodistance import trimesh_geodistance
+from .geodistance import trimesh_geodistance, trimesh_geodistance_multiple
 from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
-from .meshing import trimesh_remesh_along_isoline
 from .parametrisation import trimesh_harmonic, trimesh_lscm
 from .planarize import quadmesh_planarize
+from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
 
 
-__author__ = ["tom van mele"]
+__author__ = ["tom van mele", "petras vestartas"]
 __copyright__ = "Block Research Group - ETH Zurich"
 __license__ = "Mozilla Public License Version 2.0"
-__email__ = "van.mele@arch.ethz.ch"
+__email__ = "van.mele@arch.ethz.ch, petrasvestartas@gmail.com"
 __version__ = "0.3.1"
 
 
@@ -60,7 +60,7 @@ def get(filename):
     --------
     >>> import compas_libigl as igl
     >>> from compas.datastructures import Mesh
-    >>> mesh = Mesh.from_off(igl.get('bunny.off'))
+    >>> mesh = Mesh.from_off(igl.get("bunny.off"))
 
     """
     filename = filename.strip("/")
@@ -82,14 +82,15 @@ def get_armadillo():
 
 
 __all_plugins__ = [
+    "compas_libigl._nanobindcompas_libigl._boundaries",
     "compas_libigl.curvature",
     "compas_libigl.geodistance",
     "compas_libigl.intersections",
     "compas_libigl.isolines",
     "compas_libigl.massmatrix",
-    "compas_libigl.meshing",
     "compas_libigl.parametrisation",
     "compas_libigl.planarize",
+    "compas_libigl.meshing",
 ]
 
 __all__ = [
@@ -97,6 +98,8 @@ __all__ = [
     "DATA",
     "DOCS",
     "TEMP",
+    "add",
+    "__doc__",
     "get",
     "get_beetle",
     "get_armadillo",
@@ -104,13 +107,15 @@ __all__ = [
     "trimesh_gaussian_curvature",
     "trimesh_principal_curvature",
     "trimesh_geodistance",
+    "trimesh_geodistance_multiple",
     "intersection_ray_mesh",
     "intersection_rays_mesh",
     "trimesh_isolines",
     "groupsort_isolines",
     "trimesh_massmatrix",
-    "trimesh_remesh_along_isoline",
     "trimesh_harmonic",
     "trimesh_lscm",
     "quadmesh_planarize",
+    "trimesh_remesh_along_isoline",
+    "trimesh_remesh_along_isolines",
 ]
