@@ -10,9 +10,9 @@ def trimesh_massmatrix(M):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
-        A mesh represented by a list of vertices and a list of faces
-        or by a COMPAS mesh object.
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
 
     Returns
     -------

@@ -83,7 +83,11 @@ intersphinx_mapping = {
 
 # linkcode
 
-linkcode_resolve = sphinx_compas2_theme.get_linkcode_resolve(organization, package)
+import functools
+_linkcode_partial = sphinx_compas2_theme.get_linkcode_resolve(organization, package)
+
+def linkcode_resolve(domain, info):
+    return _linkcode_partial(domain, info)
 
 # extlinks
 

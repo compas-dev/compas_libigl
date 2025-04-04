@@ -13,9 +13,9 @@ def trimesh_geodistance(M, source, method="exact"):
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`]
-        A mesh represented by a list of vertices and a list of faces.
-        The vertices should be 3D points, and faces should be triangles.
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
     source : int
         The index of the source vertex.
     method : str, optional
@@ -52,9 +52,9 @@ def trimesh_geodistance_multiple(M, sources, method="exact"):
 
     Parameters
     ----------
-    M : tuple[:class:`list`, :class:`list`]
-        A mesh represented by a list of vertices and a list of faces.
-        The vertices should be 3D points, and faces should be triangles.
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
     sources : list[int]
         The indices of the source vertices.
     method : str, optional

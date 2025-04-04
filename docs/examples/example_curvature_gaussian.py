@@ -54,7 +54,7 @@ for i, k in enumerate(gaussian_curvature):
 viewer = Viewer()
 
 # Add the colored mesh
-viewer.scene.add(trimesh, use_vertexcolors=True)  # , vertexcolor=vertex_colors)
+viewer.scene.add(trimesh, use_vertexcolors=True, pointcolor=vertex_colors)
 
 # Add normal vectors scaled by Gaussian curvature
 normal_scale = -10

@@ -12,9 +12,9 @@ def trimesh_isolines(M, scalars, isovalues):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]] | :class:`compas.datastructures.Mesh`
-        A mesh represented by a list of vertices and a list of faces,
-        or by a COMPAS mesh object.
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
     scalars : list[float]
         A list of scalar values, one per vertex of the mesh.
     isovalues : list[float]
@@ -63,7 +63,7 @@ def groupsort_isolines(vertices, edges, indices):
 
     Returns
     -------
-    list[list[:class:`compas.geometry.Polyline`]]
+    list[list[compas.geometry.Polyline]]
         A list of polyline groups, where each group corresponds to an isoline level.
         Each polyline represents a continuous segment of an isoline.
 

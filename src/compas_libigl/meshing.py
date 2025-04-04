@@ -11,7 +11,8 @@ def trimesh_remesh_along_isoline(M, scalars, isovalue):
     Parameters
     ----------
     M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a list of vertices and a list of faces.
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
     scalars : list[float]
         A scalar value per vertex.
     isovalue : float
@@ -41,7 +42,8 @@ def trimesh_remesh_along_isolines(M, scalars, isovalues):
     Parameters
     ----------
     M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a list of vertices and a list of faces.
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
     scalars : list[float]
         A scalar value per vertex.
     isovalues : list[float]

@@ -13,7 +13,8 @@ def intersection_ray_mesh(ray, M):
     ray : tuple[list[float], list[float]]
         A ray represented by a point and a direction vector.
     M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a list of vertices and a list of faces.
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
 
     Returns
     -------
@@ -43,7 +44,8 @@ def intersection_rays_mesh(rays, M):
     rays : list[tuple[list[float], list[float]]]
         List of rays, each represented by a point and a direction vector.
     M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a list of vertices and a list of faces.
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
 
     Returns
     -------
