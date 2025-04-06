@@ -11,13 +11,7 @@ from .parametrisation import trimesh_harmonic, trimesh_lscm
 from .planarize import quadmesh_planarize
 from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
 
-
-__author__ = ["tom van mele", "petras vestartas"]
-__copyright__ = "Block Research Group - ETH Zurich"
-__license__ = "Mozilla Public License Version 2.0"
-__email__ = "van.mele@arch.ethz.ch, petrasvestartas@gmail.com"
 __version__ = "0.4.0"
-
 
 HERE = os.path.dirname(__file__)
 
@@ -81,8 +75,15 @@ def get_armadillo():
     return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/armadillo.obj"
 
 
+def find(name):
+    """Find a file in the data directory through recursive search."""
+    datapath = DATA
+    return compas.find(name, datapath)
+
+
 __all_plugins__ = [
-    "compas_libigl._nanobindcompas_libigl._boundaries",
+    "compas_libigl._nanobind",
+    "compas_libigl.boundaries",
     "compas_libigl.curvature",
     "compas_libigl.geodistance",
     "compas_libigl.intersections",
@@ -103,6 +104,7 @@ __all__ = [
     "get",
     "get_beetle",
     "get_armadillo",
+    "find",
     "trimesh_boundaries",
     "trimesh_gaussian_curvature",
     "trimesh_principal_curvature",
