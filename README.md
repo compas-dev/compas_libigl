@@ -45,10 +45,3 @@ Note that the functionality of the package is not directly available in Rhino, b
 ## License
 
 Libigl (and therefore also `compas_libigl`) is licensed under MPL-2.
-
-## Credits
-
-COMPAS libigl is developed by Tom Van Mele and Petras Vestartas at the Block Research Group, ETH Zurich, with additional contributions from:
-- Li Chen
-- Rafael Pastrana
-- Ziqi Wang

@@ -30,8 +30,14 @@ def get(filename):
     ----------
     filename : str
         The name of the data file.
-        The filename should be specified relative to the COMPAS data directory,
-        without leading or trailing slashes.
+        The following are available.
+
+        * boxes.obj
+        * faces.obj
+        * fink.obj
+        * hypar.obj
+        * lines.obj
+        * saddle.obj
 
     Returns
     -------
@@ -40,14 +46,17 @@ def get(filename):
 
     Notes
     -----
-    The file name should be specified relative to the package data directory
-    (``compas_libigl/data``).
+    The file name should be specified relative to the sample data folder.
+    This folder is only locally available if you installed :mod:`compas_libigl` from source,
+    or if you are working directly with the source.
+    In all other cases, the function will get the corresponding files direcly from
+    the GitHub repo.
 
     Examples
     --------
-    >>> import os
-    >>> from compas_libigl import get
-    >>> get('tubemesh.json')
+    >>> import compas_libigl as igl
+    >>> from compas.datastructures import Mesh
+    >>> mesh = Mesh.from_off(igl.get("bunny.off"))
 
     """
     filename = filename.strip("/")
@@ -56,21 +65,20 @@ def get(filename):
 
     if os.path.exists(localpath):
         return localpath
+    else:
+        return "https://github.com/BlockResearchGroup/compas_libigl/raw/master/data/{}".format(filename)
 
-    return None
+
+def get_beetle():
+    return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/beetle.off"
 
 
-def find(name):
-    """Find a file in the data directory through recursive search.
-
-    """
-    datapath = DATA
-    return compas.find(name, datapath)
+def get_armadillo():
+    return "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/armadillo.obj"
 
 
 __all_plugins__ = [
-    "compas_libigl._nanobind",
-    "compas_libigl.boundaries",
+    "compas_libigl._nanobindcompas_libigl._boundaries",
     "compas_libigl.curvature",
     "compas_libigl.geodistance",
     "compas_libigl.intersections",
@@ -89,7 +97,8 @@ __all__ = [
     "add",
     "__doc__",
     "get",
-    "find",
+    "get_beetle",
+    "get_armadillo",
     "trimesh_boundaries",
     "trimesh_gaussian_curvature",
     "trimesh_principal_curvature",
