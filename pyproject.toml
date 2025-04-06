@@ -8,7 +8,7 @@ description = "libigl wrapper for COMPAS."
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "COMPAS libigl authors", email = "petrasvestartas@gmail.com" }
+    { name = "COMPAS libigl authors", email = "tom.v.mele@gmail.com" }
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License"

@@ -15,7 +15,7 @@ from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
 __author__ = "See AUTHORS.md for more information about COMPAS libigl authors."
 __copyright__ = "Block Research Group - ETH Zurich"
 __license__ = "Mozilla Public License Version 2.0"
-__email__ = "petrasvestartas@gmail.com"
+__email__ = "tom.v.mele@gmail.com"
 __version__ = "0.4.0"
 
 
