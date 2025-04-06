@@ -8,7 +8,15 @@ description = "libigl wrapper for COMPAS."
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "COMPAS libigl authors", email = "tom.v.mele@gmail.com" }
+    { name = "Tom Van Mele", email = "tom.v.mele@gmail.com" },
+    { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
+    { name = "Li Chen", email = "leochen1990@gmail.com" },
+    { name = "Rafael Pastrana", email = "pastrana@arch.ethz.ch" },
+    { name = "Ziqi Wang", email = "qiqiustc@gmail.com" }
+]
+maintainers = [
+    { name = "Tom Van Mele", email = "tom.v.mele@gmail.com" },
+    { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" }
 ]
 classifiers = [
     "License :: OSI Approved :: BSD License"
