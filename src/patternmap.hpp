@@ -3,8 +3,6 @@
 #include "compas.hpp"
 
 #include <Eigen/Dense>
-#include <vector>
-#include <iostream>
 
 // #include <igl/polygon_mesh_to_triangle_mesh.h>
 #include <igl/polygons_to_triangles.h>
@@ -14,33 +12,27 @@
 #include <igl/boundary_loop.h>
 #include <igl/AABB.h>
 #include <igl/edges.h>
-#include <algorithm>
-
-using std::vector;
-using Eigen::MatrixXd;
-using Eigen::MatrixXi;
-using Eigen::Vector3d;
 
 class iglMesh {
 public:
 
-    MatrixXd V_;
+    Eigen::MatrixXd V_;
 
-    vector<vector<int>> faces_; //polygonal Mesh
-    MatrixXi F_; //triangle Mesh
+    std::vector<std::vector<int>> faces_; //polygonal Mesh
+    Eigen::MatrixXi F_; //triangle Mesh
 
-    MatrixXd UV_; //uv
+    Eigen::MatrixXd UV_; //uv
 public:
 
     iglMesh(){};
 
-    void loadMesh(vector<vector<double>> &_vertices, vector<vector<int>>& _faces);
+    void loadMesh(std::vector<std::vector<double>> &_vertices, std::vector<std::vector<int>>& _faces);
 
-    vector<vector<double>> getVertices();
+    std::vector<std::vector<double>> getVertices();
 
-    vector<vector<double>> getUVs();
+    std::vector<std::vector<double>> getUVs();
 
-    vector<vector<int>> getFaces();
+    std::vector<std::vector<int>> getFaces();
 
 public:
 

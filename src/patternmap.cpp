@@ -1,7 +1,6 @@
 #include "patternmap.hpp"
 
-
-void iglMesh::loadMesh(vector<vector<double>> &_vertices, vector<vector<int>> &_faces)
+void iglMesh::loadMesh(std::vector<std::vector<double>> &_vertices, std::vector<std::vector<int>> &_faces)
 {
     //read vertices' coordinates
     V_ = Eigen::MatrixXd::Zero(_vertices.size() , 3);
@@ -40,8 +39,8 @@ void iglMesh::cleanMesh()
     igl::polygons_to_triangles(I_eigen, P, F_, J);
 
     //remove duplicate
-    MatrixXd SV;
-    MatrixXi SF;
+    Eigen::MatrixXd SV;
+    Eigen::MatrixXi SF;
     Eigen::VectorXi SVI, SVJ;
     igl::remove_duplicate_vertices(V_, F_, 1e-6f, SV, SVI, SVJ, SF);
     F_ = SF;
@@ -56,7 +55,7 @@ void iglMesh::cleanMesh()
     }
 
 
-    vector<bool> inList; inList.resize(V_.rows(), false);
+    std::vector<bool> inList; inList.resize(V_.rows(), false);
     for(int id = 0; id < faces_.size(); id++)
     {
         for(int jd = 0; jd < faces_[id].size(); jd++)
@@ -66,7 +65,7 @@ void iglMesh::cleanMesh()
     }
 
     int count = 0;
-    vector<int> newIndex;
+    std::vector<int> newIndex;
     for(int id = 0; id < inList.size(); id++){
         if(inList[id]) {
             newIndex.push_back(count++);
@@ -76,7 +75,7 @@ void iglMesh::cleanMesh()
         }
     }
 
-    SV = MatrixXd(count, 3);
+    SV = Eigen::MatrixXd(count, 3);
     for(int id = 0; id < inList.size(); id++){
         if(inList[id]){
             SV.row(newIndex[id]) = V_.row(id);
@@ -96,28 +95,28 @@ void iglMesh::cleanMesh()
 
 }
 
-vector<vector<double>> iglMesh::getVertices()
+std::vector<std::vector<double>> iglMesh::getVertices()
 {
     //write vertices
-    vector<vector<double>> vertices;
+    std::vector<std::vector<double>> vertices;
     for(int id = 0; id < V_.rows(); id++){
-        vector<double> pos;
+        std::vector<double> pos;
         pos.push_back(V_(id, 0));pos.push_back(V_(id, 1));pos.push_back(V_(id, 2));
         vertices.push_back(pos);
     }
     return vertices;
 }
 
-vector<vector<int>> iglMesh::getFaces() {
+std::vector<std::vector<int>> iglMesh::getFaces() {
     return faces_;
 }
 
-vector<vector<double>> iglMesh::getUVs()
+std::vector<std::vector<double>> iglMesh::getUVs()
 {
     //write vertices
-    vector<vector<double>> uvs;
+    std::vector<std::vector<double>> uvs;
     for(int id = 0; id < UV_.rows(); id++){
-        vector<double> pos;
+        std::vector<double> pos;
         pos.push_back(UV_(id, 0));pos.push_back(UV_(id, 1)); pos.push_back(0);
         uvs.push_back(pos);
     }
@@ -148,8 +147,8 @@ void iglMesh::parametrization_lscm()
     Eigen::VectorXi bnd,b(2);
     igl::boundary_loop(F_,bnd);
     b(0) = bnd(0);
-    b(1) = bnd(((int)round(bnd.size() / 2)));
-    MatrixXd bc(2,2);
+    b(1) = bnd(((int)std::round(bnd.size() / 2)));
+    Eigen::MatrixXd bc(2,2);
     bc<<0,0,1,0;
     igl::lscm(V_,F_,b,bc,UV_);
 
@@ -198,7 +197,7 @@ void iglMesh::mapMesh3D_simple(iglMesh &baseMesh)
         parametrization_simple();
     }
 
-    vector<bool> inMesh;
+    std::vector<bool> inMesh;
     int count = 0;
     for(int id = 0; id < baseMesh.V_.rows(); id++)
     {
@@ -217,7 +216,7 @@ void iglMesh::mapMesh3D_simple(iglMesh &baseMesh)
         }
     }
 
-    for(auto it = baseMesh.faces_.begin(); it != baseMesh.faces_.end();)
+    for(std::vector<std::vector<int>>::iterator it = baseMesh.faces_.begin(); it != baseMesh.faces_.end();)
     {
         bool all_in_refMesh = true;
         for(int jd = 0; jd < (*it).size(); jd++)
@@ -246,12 +245,12 @@ void iglMesh::mapMesh3D_AABB(iglMesh &baseMesh)
         parametrization_lscm();
     }
 
-    igl::AABB<MatrixXd, 2> tree;
+    igl::AABB<Eigen::MatrixXd, 2> tree;
     tree.init(UV_, F_);
 
-    vector<bool> inMesh;
+    std::vector<bool> inMesh;
     baseMesh.parametrization_simple();
-    MatrixXd C;
+    Eigen::MatrixXd C;
     Eigen::VectorXi I;
     Eigen::VectorXd sqrD;
     tree.squared_distance(UV_, F_, baseMesh.UV_, sqrD, I, C);
@@ -274,7 +273,7 @@ void iglMesh::mapMesh3D_AABB(iglMesh &baseMesh)
         }
     }
 
-    for(vector<vector<int>>::iterator it = baseMesh.faces_.begin(); it != baseMesh.faces_.end();)
+    for(std::vector<std::vector<int>>::iterator it = baseMesh.faces_.begin(); it != baseMesh.faces_.end();)
     {
         bool all_in_refMesh = true;
         for(int jd = 0; jd < (*it).size(); jd++)
@@ -301,9 +300,9 @@ void iglMesh::getTriFace(int faceID, Eigen::MatrixXd &V, Eigen::MatrixXd &A, Eig
 {
     if(0 <= faceID && faceID < F_.rows())
     {
-        A = MatrixXd(1, 3);
-        B = MatrixXd(1, 3);
-        C = MatrixXd(1, 3);
+        A = Eigen::MatrixXd(1, 3);
+        B = Eigen::MatrixXd(1, 3);
+        C = Eigen::MatrixXd(1, 3);
         if(V.cols() == 2)
         {
             A << V(F_(faceID, 0), 0), V(F_(faceID, 0), 1), 0;
@@ -323,11 +322,11 @@ void iglMesh::getTriFace(int faceID, Eigen::MatrixXd &V, Eigen::MatrixXd &A, Eig
 iglMesh iglMesh::saveWireFrame(double thickness, int cylinder_pts)
 {
 
-    MatrixXi E;
+    Eigen::MatrixXi E;
     igl::edges(F_, E);
 
 
-    vector<vector<int>> vv;
+    std::vector<std::vector<int>> vv;
     vv.resize(V_.rows());
     for(int id = 0; id < faces_.size(); id++){
         for(int jd = 0; jd < faces_[id].size(); jd++){
@@ -338,30 +337,30 @@ iglMesh iglMesh::saveWireFrame(double thickness, int cylinder_pts)
         }
     }
 
-    vector<vector<double>> vers;
-    vector<vector<int>> faces;
+    std::vector<std::vector<double>> vers;
+    std::vector<std::vector<int>> faces;
     for(int id = 0; id < E.rows(); id++)
     {
         int sta = E(id, 0);
         int end = E(id, 1);
-        Vector3d staPt = V_.row(sta);
-        Vector3d endPt = V_.row(end);
+        Eigen::Vector3d staPt = V_.row(sta);
+        Eigen::Vector3d endPt = V_.row(end);
 
         if(std::any_of(vv[sta].begin(), vv[sta].end(), [=](int a){return a == end;}))
         {
-            Vector3d z_axis = endPt - staPt; z_axis /= (z_axis).norm();
-            Vector3d x_axis = Vector3d(0, 1, 0).cross(z_axis);
-            if(x_axis.norm() < 1e-4) x_axis = Vector3d(1, 0, 0).cross(z_axis); x_axis /= z_axis.norm();
-            Vector3d y_axis = z_axis.cross(x_axis); y_axis /= y_axis.norm();
+            Eigen::Vector3d z_axis = endPt - staPt; z_axis /= (z_axis).norm();
+            Eigen::Vector3d x_axis = Eigen::Vector3d(0, 1, 0).cross(z_axis);
+            if(x_axis.norm() < 1e-4) x_axis = Eigen::Vector3d(1, 0, 0).cross(z_axis); x_axis /= z_axis.norm();
+            Eigen::Vector3d y_axis = z_axis.cross(x_axis); y_axis /= y_axis.norm();
 
             for(int id = 0; id < cylinder_pts; id++)
             {
                 float angle0 = 2 * 3.1415926/cylinder_pts * id;
                 float angle1 = 2 * 3.1415926/cylinder_pts * (id + 1);
-                Vector3d v_sta0 = staPt + x_axis * thickness * cos(angle0) + y_axis * thickness * sin(angle0);
-                Vector3d v_sta1 = staPt + x_axis * thickness * cos(angle1) + y_axis * thickness * sin(angle1);
-                Vector3d v_end0 = v_sta0 + (endPt - staPt);
-                Vector3d v_end1 = v_sta1 + (endPt - staPt);
+                Eigen::Vector3d v_sta0 = staPt + x_axis * thickness * std::cos(angle0) + y_axis * thickness * std::sin(angle0);
+                Eigen::Vector3d v_sta1 = staPt + x_axis * thickness * std::cos(angle1) + y_axis * thickness * std::sin(angle1);
+                Eigen::Vector3d v_end0 = v_sta0 + (endPt - staPt);
+                Eigen::Vector3d v_end1 = v_sta1 + (endPt - staPt);
                 int f = vers.size();
                 vers.push_back({v_sta0(0),v_sta0(1), v_sta0(2)});
                 vers.push_back({v_sta1(0),v_sta1(1), v_sta1(2)});
