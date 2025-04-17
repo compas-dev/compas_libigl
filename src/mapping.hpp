@@ -55,7 +55,7 @@ bool map_point3d_simple(
  * @param f The face matrix of the target mesh.
  * @param uv The UV coordinates of the target mesh.
  * @param pattern_v The vertex matrix of the pattern mesh to be mapped.
- * @param pattern_f The face matrix of the pattern mesh.
+ * @param pattern_f The face vector of vectors of int.
  * @param pattern_uv The UV coordinates of the pattern mesh.
  * @return Vector of vectors representing the polygonal faces of the mapped pattern mesh.
  */
@@ -64,7 +64,7 @@ std::vector<std::vector<int>> map_mesh(
     Eigen::Ref<const compas::RowMatrixXi> f, 
     Eigen::Ref<const compas::RowMatrixXd> uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    Eigen::Ref<const compas::RowMatrixXi> pattern_f, 
+    const std::vector<std::vector<int>>& pattern_f  , 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv);
 
 
@@ -76,11 +76,11 @@ std::vector<std::vector<int>> map_mesh(
  * @param target_v #V x 3 matrix of target mesh vertex coordinates
  * @param target_f #F x 3 matrix of target mesh triangle indices
  * @param pattern_v #V x 3 matrix of pattern mesh vertex coordinates
- * @param pattern_f #F x 3 matrix of pattern mesh triangle indices
+ * @param pattern_f vector of vectors of int of pattern mesh triangle indices
  * @return A vector of face indices representing polygons in the mapped mesh
  */
 std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    Eigen::Ref<const compas::RowMatrixXi> pattern_f);
+    const std::vector<std::vector<int>>& pattern_f);

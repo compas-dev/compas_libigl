@@ -4,7 +4,8 @@ from compas_libigl import _mapping
 
 
 def map_mesh(target_mesh, pattern_mesh):
-    """Map a 2D pattern mesh onto a 3D target.
+    """
+    Map a 2D pattern mesh onto a 3D target.
 
     Parameters
     ----------
@@ -34,10 +35,9 @@ def map_mesh(target_mesh, pattern_mesh):
     v_numpy = np.array(v, dtype=np.float64)
     f_numpy = np.array(f, dtype=np.int32)
     pattern_v_numpy = np.array(pv, dtype=np.float64)
-    pattern_f_numpy = np.array(pf, dtype=np.int32)
 
     # Perform the mapping
-    pattern_f_numpy_cleaned = _mapping.map_mesh_with_automatic_parameterization(v_numpy, f_numpy, pattern_v_numpy, pattern_f_numpy)
+    pattern_f_numpy_cleaned = _mapping.map_mesh_with_automatic_parameterization(v_numpy, f_numpy, pattern_v_numpy, pf)
 
     # Return the result as a tuple
     return pattern_v_numpy, pattern_f_numpy_cleaned

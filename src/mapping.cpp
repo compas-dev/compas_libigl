@@ -69,7 +69,7 @@ std::vector<std::vector<int>> map_mesh(
     Eigen::Ref<const compas::RowMatrixXd> uv,
     
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    Eigen::Ref<const compas::RowMatrixXi> pattern_f, 
+    const std::vector<std::vector<int>>& pattern_f, 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv)
 {
 
@@ -90,7 +90,7 @@ std::vector<std::vector<int>> map_mesh(
     
     for(int id = 0; id < pattern_uv.rows(); id++)
     {
-        if(std::fabs(sqrD[id]) < 1e-5)
+        if(std::fabs(sqrD[id]) < 1e-5) // Tolerance
         {
             compas::RowMatrixXd A, B, C;
             Eigen::MatrixXd P(1, 3);
@@ -116,11 +116,11 @@ std::vector<std::vector<int>> map_mesh(
 
     // Convert pattern faces to std::vector<std::vector<int>> format for processing
     std::vector<std::vector<int>> pattern_polygonal_faces;
-    for (int i = 0; i < pattern_f.rows(); i++) {
+    for (int i = 0; i < pattern_f.size(); i++) {
         std::vector<int> face;
         // Handle any number of vertices per face, assuming -1 indicates end of face in some formats
-        for (int j = 0; j < pattern_f.cols(); j++) {
-            int vertex_idx = pattern_f(i, j);
+        for (int j = 0; j < pattern_f[i].size(); j++) {
+            int vertex_idx = pattern_f[i][j];
             // Some formats use -1 to mark end of face
             if (vertex_idx == -1) break;
             face.push_back(vertex_idx);
@@ -154,17 +154,32 @@ std::vector<std::vector<int>> map_mesh(
     }
 
 
-    compas::RowMatrixXd pattern_v_cleaned ;
-    compas::RowMatrixXi pattern_f_cleaned;
-
     return pattern_polygonal_faces;
+}
+
+void rescale(Eigen::MatrixXd &V_uv)
+{
+    // Find min and max values for normalization
+    Eigen::Vector2d min_coeff = V_uv.colwise().minCoeff();
+    Eigen::Vector2d max_coeff = V_uv.colwise().maxCoeff();
+    
+    // Compute the size of the bounding box
+    Eigen::Vector2d size = max_coeff - min_coeff;
+    
+    // Translate UV coordinates so minimum is at the origin
+    V_uv.col(0) = V_uv.col(0).array() - min_coeff(0);
+    V_uv.col(1) = V_uv.col(1).array() - min_coeff(1);
+    
+    // Scale to fit in a 0-1 box while maintaining aspect ratio
+    double scale_factor = 1.0 / std::max(size(0), size(1));
+    V_uv *= scale_factor;
 }
 
 std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    Eigen::Ref<const compas::RowMatrixXi> pattern_f)
+    const std::vector<std::vector<int>>& pattern_f)
 {
     // Compute target mesh UV parameterization using LSCM
     Eigen::MatrixXd target_uv;
@@ -184,39 +199,47 @@ std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
     // LSCM parametrization
     igl::lscm(target_v, target_f, fixed, fixed_uv, target_uv);
     
-    // Rescale target UV coordinates
-    // Find min and max values for normalization
-    Eigen::Vector2d min_coeff = target_uv.colwise().minCoeff();
-    Eigen::Vector2d max_coeff = target_uv.colwise().maxCoeff();
-    
-    // Compute the size of the bounding box
-    Eigen::Vector2d size = max_coeff - min_coeff;
-    
-    // Translate UV coordinates so minimum is at the origin
-    target_uv.col(0) = target_uv.col(0).array() - min_coeff(0);
-    target_uv.col(1) = target_uv.col(1).array() - min_coeff(1);
-    
-    // Scale to fit in a 0-1 box while maintaining aspect ratio
-    double scale_factor = 1.0 / std::max(size(0), size(1));
-    target_uv *= scale_factor;
+    rescale(target_uv);
     
     // Compute pattern mesh UV parameterization using simple method
-    Eigen::MatrixXd pattern_uv = pattern_v.leftCols(2);  // Use the first two columns (X and Y coordinates)
+    // Eigen::MatrixXd pattern_uv = pattern_v.leftCols(2);  // Use the first two columns (X and Y coordinates)
+
+    Eigen::MatrixXd pattern_uv;
+    pattern_uv.setZero();
+    pattern_uv = pattern_v.leftCols(2);
     
-    // Rescale pattern UV coordinates
-    min_coeff = pattern_uv.colwise().minCoeff();
-    max_coeff = pattern_uv.colwise().maxCoeff();
-    
-    size = max_coeff - min_coeff;
-    
-    pattern_uv.col(0) = pattern_uv.col(0).array() - min_coeff(0);
-    pattern_uv.col(1) = pattern_uv.col(1).array() - min_coeff(1);
-    
-    scale_factor = 1.0 / std::max(size(0), size(1));
-    pattern_uv *= scale_factor;
+    // rescale(pattern_uv);
     
     // Now perform the mapping using the computed UV parameterizations
     return map_mesh(target_v, target_f, target_uv, pattern_v, pattern_f, pattern_uv);
+}
+
+Eigen::MatrixXd parametrization_check(
+    Eigen::Ref<const compas::RowMatrixXd> target_v, 
+    Eigen::Ref<const compas::RowMatrixXi> target_f)
+{
+    // Compute target mesh UV parameterization using LSCM
+    Eigen::MatrixXd target_uv;
+    
+    // Find the open boundary
+    Eigen::VectorXi B;
+    igl::boundary_loop(target_f, B);
+
+    // Fix two points on the boundary
+    Eigen::VectorXi fixed(2, 1);
+    fixed(0) = B(0);
+    fixed(1) = B(B.size() / 2);
+
+    Eigen::MatrixXd fixed_uv(2, 2);
+    fixed_uv << 0, 0, 1, 0;
+
+    // LSCM parametrization
+    igl::lscm(target_v, target_f, fixed, fixed_uv, target_uv);
+    
+    rescale(target_uv);
+
+    return target_uv;
+
 }
 
 NB_MODULE(_mapping, m)
@@ -240,4 +263,11 @@ NB_MODULE(_mapping, m)
         "target_f"_a,
         "pattern_v"_a,
         "pattern_f"_a);
+
+    m.def(
+        "parametrization_check",
+        &parametrization_check,
+        "Compute target mesh UV parameterization using LSCM.",
+        "target_v"_a,
+        "target_f"_a);
 }

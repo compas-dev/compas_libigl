@@ -1,8 +1,8 @@
+from compas.colors import Color
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
 from tessagon.adaptors.list_adaptor import ListAdaptor
 from tessagon.types.hex_tessagon import HexTessagon
-from compas.colors import Color
 
 import compas_libigl as igl
 
@@ -26,8 +26,8 @@ v, f = mesh.to_vertices_and_faces()
 
 options = {
     "function": lambda u, v: [u, v, 0],
-    "u_range": [0, 1.0],
-    "v_range": [0, 1.0],
+    "u_range": [-0.255, 1.33],
+    "v_range": [-0.34, 1.33],
     "u_num": 16,
     "v_num": 10,
     "u_cyclic": False,
@@ -38,15 +38,6 @@ tessagon = HexTessagon(**options)
 tessagon_mesh = tessagon.create_mesh()
 pv = tessagon_mesh["vert_list"]
 pf = tessagon_mesh["face_list"]
-
-# ==============================================================================
-# Place the pattern mesh at the bottom left corner of the mesh
-# ==============================================================================
-
-pattern2d = Mesh.from_vertices_and_faces(pv, pf)
-c = pattern2d.aabb().corner(0)
-pattern2d.translate([-c[0], -c[1], -c[2]])
-pv, pf = pattern2d.to_vertices_and_faces()
 
 # ==============================================================================
 # Mapping: 3D Mesh, 2D Pattern, UV
@@ -61,7 +52,7 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
 viewer = Viewer()
 viewer.scene.add(mesh, name="mesh", show_faces=False, linecolor=Color.grey(), opacity=0.2)
-viewer.scene.add(pattern2d, name="pattern2d")
+viewer.scene.add(Mesh.from_vertices_and_faces(pv, pf), name="pattern2d")
 viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())
 
 # To see where the pattern is mapped:
