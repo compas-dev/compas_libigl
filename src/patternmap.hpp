@@ -46,9 +46,6 @@ public:
 
     void mapMesh3D_AABB(iglMesh &baseMesh);
 
-public:
-
-    iglMesh saveWireFrame(double thickness, int cylinder_pts);
 
 private:
 

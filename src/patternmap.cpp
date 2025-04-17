@@ -17,26 +17,33 @@ void iglMesh::loadMesh(std::vector<std::vector<double>> &_vertices, std::vector<
 
 void iglMesh::cleanMesh()
 {
-
-    //get triangle face
-    // Convert vector<vector<int>> to Eigen matrix format required by polygons_to_triangles
-    Eigen::MatrixXi P(faces_.size(), 1);  // P stores polygon offsets
-    std::vector<int> I;  // I stores all vertex indices
+    // Convert std::vector<std::vector<int>> to the format expected by polygons_to_triangles
+    Eigen::VectorXi I;    // Vectorized list of polygon corner indices
+    Eigen::VectorXi C;    // Cumulative polygon sizes
+    Eigen::MatrixXi F;    // Triangle faces (output)
+    Eigen::VectorXi J;    // Index map (output)
     
-    int offset = 0;
-    for (size_t i = 0; i < faces_.size(); i++) {
-        P(i, 0) = offset;
-        for (size_t j = 0; j < faces_[i].size(); j++) {
-            I.push_back(faces_[i][j]);
-        }
-        offset += faces_[i].size();
+    // Calculate total number of indices across all polygons
+    int total_indices = 0;
+    for (const auto& face : faces_) {
+        total_indices += face.size();
     }
     
-    Eigen::VectorXi I_eigen = Eigen::Map<Eigen::VectorXi>(I.data(), I.size());
-    Eigen::VectorXi J;  // Mapping from triangle to source face
+    // Initialize I with all indices and C with cumulative counts
+    I.resize(total_indices);
+    C.resize(faces_.size() + 1);
     
-    // Now call polygons_to_triangles with correct parameters
-    igl::polygons_to_triangles(I_eigen, P, F_, J);
+    int idx = 0;
+    C(0) = 0;
+    for (int i = 0; i < faces_.size(); i++) {
+        for (int j = 0; j < faces_[i].size(); j++) {
+            I(idx++) = faces_[i][j];
+        }
+        C(i+1) = C(i) + faces_[i].size();
+    }
+    
+    // Convert polygons to triangles
+    igl::polygons_to_triangles(I, C, F_, J);
 
     //remove duplicate
     Eigen::MatrixXd SV;
@@ -91,8 +98,29 @@ void iglMesh::cleanMesh()
     }
     V_ = SV;
 
+    // Convert std::vector<std::vector<int>> to the format expected by polygons_to_triangles again
+    // Recalculate because faces_ has been updated
+    total_indices = 0;
+    for (const auto& face : faces_) {
+        total_indices += face.size();
+    }
+    
+    I.resize(total_indices);
+    C.resize(faces_.size() + 1);
+    
+    idx = 0;
+    C(0) = 0;
+    for (int i = 0; i < faces_.size(); i++) {
+        for (int j = 0; j < faces_[i].size(); j++) {
+            I(idx++) = faces_[i][j];
+        }
+        C(i+1) = C(i) + faces_[i].size();
+    }
+    
+    // Convert polygons to triangles
+    igl::polygons_to_triangles(I, C, F_, J);
+    
     return;
-
 }
 
 std::vector<std::vector<double>> iglMesh::getVertices()
@@ -311,72 +339,33 @@ void iglMesh::getTriFace(int faceID, Eigen::MatrixXd &V, Eigen::MatrixXd &A, Eig
         }
         else if(V.cols() == 3){
             A << V(F_(faceID, 0), 0), V(F_(faceID, 0), 1), V(F_(faceID, 0), 2);
-            B << V(F_(faceID, 1), 0), V(F_(faceID, 1), 1), V(F_(faceID, 0), 2);
-            C << V(F_(faceID, 2), 0), V(F_(faceID, 2), 1), V(F_(faceID, 0), 2);
+            B << V(F_(faceID, 1), 0), V(F_(faceID, 1), 1), V(F_(faceID, 1), 2);
+            C << V(F_(faceID, 2), 0), V(F_(faceID, 2), 1), V(F_(faceID, 2), 2);
         }
     }
 
     return;
 }
 
-iglMesh iglMesh::saveWireFrame(double thickness, int cylinder_pts)
-{
 
-    Eigen::MatrixXi E;
-    igl::edges(F_, E);
-
-
-    std::vector<std::vector<int>> vv;
-    vv.resize(V_.rows());
-    for(int id = 0; id < faces_.size(); id++){
-        for(int jd = 0; jd < faces_[id].size(); jd++){
-            int prev = (jd - 1 + faces_[id].size()) % faces_[id].size();
-            int next = (jd + 1) % faces_[id].size();
-            vv[faces_[id][jd]].push_back(faces_[id][prev]);
-            vv[faces_[id][jd]].push_back(faces_[id][next]);
-        }
-    }
-
-    std::vector<std::vector<double>> vers;
-    std::vector<std::vector<int>> faces;
-    for(int id = 0; id < E.rows(); id++)
-    {
-        int sta = E(id, 0);
-        int end = E(id, 1);
-        Eigen::Vector3d staPt = V_.row(sta);
-        Eigen::Vector3d endPt = V_.row(end);
-
-        if(std::any_of(vv[sta].begin(), vv[sta].end(), [=](int a){return a == end;}))
-        {
-            Eigen::Vector3d z_axis = endPt - staPt; z_axis /= (z_axis).norm();
-            Eigen::Vector3d x_axis = Eigen::Vector3d(0, 1, 0).cross(z_axis);
-            if(x_axis.norm() < 1e-4) x_axis = Eigen::Vector3d(1, 0, 0).cross(z_axis); x_axis /= z_axis.norm();
-            Eigen::Vector3d y_axis = z_axis.cross(x_axis); y_axis /= y_axis.norm();
-
-            for(int id = 0; id < cylinder_pts; id++)
-            {
-                float angle0 = 2 * 3.1415926/cylinder_pts * id;
-                float angle1 = 2 * 3.1415926/cylinder_pts * (id + 1);
-                Eigen::Vector3d v_sta0 = staPt + x_axis * thickness * std::cos(angle0) + y_axis * thickness * std::sin(angle0);
-                Eigen::Vector3d v_sta1 = staPt + x_axis * thickness * std::cos(angle1) + y_axis * thickness * std::sin(angle1);
-                Eigen::Vector3d v_end0 = v_sta0 + (endPt - staPt);
-                Eigen::Vector3d v_end1 = v_sta1 + (endPt - staPt);
-                int f = vers.size();
-                vers.push_back({v_sta0(0),v_sta0(1), v_sta0(2)});
-                vers.push_back({v_sta1(0),v_sta1(1), v_sta1(2)});
-                vers.push_back({v_end1(0),v_end1(1), v_end1(2)});
-                vers.push_back({v_end0(0),v_end0(1), v_end0(2)});
-                faces.push_back({f, f + 1, f + 2, f + 3});
-            }
-        }
-    }
-
-    iglMesh mesh;
-    mesh.loadMesh(vers, faces);
-    return mesh;
-}
 
 
 NB_MODULE(_patternmap, m) {
+
+    // Create a factory function to create iglMesh instances
+    m.def("createMesh", []() {
+        return iglMesh();
+    }, "Create a new iglMesh instance");
     
+    // Bind the iglMesh class
+    nb::class_<iglMesh>(m, "iglMesh")
+        .def(nb::init<>())
+        .def("loadMesh", &iglMesh::loadMesh, "Load mesh from vertices and faces")
+        .def("parametrization_simple", &iglMesh::parametrization_simple, "Simple parameterization")
+        .def("parametrization_lscm", &iglMesh::parametrization_lscm, "LSCM parameterization")
+        .def("mapMesh3D_simple", &iglMesh::mapMesh3D_simple, "Map mesh in 3D using simple method")
+        .def("mapMesh3D_AABB", &iglMesh::mapMesh3D_AABB, "Map mesh in 3D using AABB tree")
+        .def("getUVs", &iglMesh::getUVs, "Get UV coordinates")
+        .def("getVertices", &iglMesh::getVertices, "Get vertices")
+        .def("getFaces", &iglMesh::getFaces, "Get faces");
 }

@@ -7,7 +7,8 @@ from .geodistance import trimesh_geodistance, trimesh_geodistance_multiple
 from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
-from .parametrisation import trimesh_harmonic, trimesh_lscm
+from .parametrisation import trimesh_harmonic, trimesh_lscm, trimesh_simple
+from .mapping import trimesh_map_simple, trimesh_map_aabb
 from .planarize import quadmesh_planarize
 from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
 
@@ -91,6 +92,7 @@ __all_plugins__ = [
     "compas_libigl.parametrisation",
     "compas_libigl.planarize",
     "compas_libigl.meshing",
+    "compas_libigl.mapping",
 ]
 
 __all__ = [
@@ -115,6 +117,9 @@ __all__ = [
     "trimesh_massmatrix",
     "trimesh_harmonic",
     "trimesh_lscm",
+    "trimesh_simple",
+    "trimesh_map_simple",
+    "trimesh_map_aabb",
     "quadmesh_planarize",
     "trimesh_remesh_along_isoline",
     "trimesh_remesh_along_isolines",

@@ -51,6 +51,28 @@ lscm(
     return V_uv;
 }
 
+Eigen::MatrixXd
+simple(
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F)
+{
+    // Create UV coordinates matrix from XY coordinates
+    Eigen::MatrixXd V_uv = V.leftCols(2);  // Use the first two columns (X and Y coordinates)
+    
+    // Find min and max values for normalization
+    Eigen::Vector2d min_coeff = V_uv.colwise().minCoeff();
+    Eigen::Vector2d max_coeff = V_uv.colwise().maxCoeff();
+    
+    // Normalize to range [0,1]
+    for(int id = 0; id < V_uv.rows(); id++)
+    {
+        V_uv(id, 0) = (V_uv(id, 0) - min_coeff(0)) / (max_coeff(0) - min_coeff(0));
+        V_uv(id, 1) = (V_uv(id, 1) - min_coeff(1)) / (max_coeff(1) - min_coeff(1));
+    }
+    
+    return V_uv;
+}
+
 NB_MODULE(_parametrisation, m) {
     m.def(
         "harmonic",
@@ -63,6 +85,13 @@ NB_MODULE(_parametrisation, m) {
         "lscm",
         &lscm,
         "Compute the least-squares conformal map of a triangle mesh.",
+        "V"_a,
+        "F"_a);
+        
+    m.def(
+        "simple",
+        &simple,
+        "Compute a simple parameterization using normalized XY coordinates.",
         "V"_a,
         "F"_a);
 }
