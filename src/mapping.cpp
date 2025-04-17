@@ -160,21 +160,84 @@ std::vector<std::vector<int>> map_mesh(
     return pattern_polygonal_faces;
 }
 
-// Create the nanobind module
-NB_MODULE(_mapping, m) {
-    // Bind std::vector<std::vector<int>> type for Python interoperability
-    nb::bind_vector<std::vector<int>>(m, "VectorInt");
-    nb::bind_vector<std::vector<std::vector<int>>>(m, "VectorVectorInt");
+std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
+    Eigen::Ref<const compas::RowMatrixXd> target_v, 
+    Eigen::Ref<const compas::RowMatrixXi> target_f, 
+    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
+    Eigen::Ref<const compas::RowMatrixXi> pattern_f)
+{
+    // Compute target mesh UV parameterization using LSCM
+    Eigen::MatrixXd target_uv;
     
+    // Find the open boundary
+    Eigen::VectorXi B;
+    igl::boundary_loop(target_f, B);
+
+    // Fix two points on the boundary
+    Eigen::VectorXi fixed(2, 1);
+    fixed(0) = B(0);
+    fixed(1) = B(B.size() / 2);
+
+    Eigen::MatrixXd fixed_uv(2, 2);
+    fixed_uv << 0, 0, 1, 0;
+
+    // LSCM parametrization
+    igl::lscm(target_v, target_f, fixed, fixed_uv, target_uv);
+    
+    // Rescale target UV coordinates
+    // Find min and max values for normalization
+    Eigen::Vector2d min_coeff = target_uv.colwise().minCoeff();
+    Eigen::Vector2d max_coeff = target_uv.colwise().maxCoeff();
+    
+    // Compute the size of the bounding box
+    Eigen::Vector2d size = max_coeff - min_coeff;
+    
+    // Translate UV coordinates so minimum is at the origin
+    target_uv.col(0) = target_uv.col(0).array() - min_coeff(0);
+    target_uv.col(1) = target_uv.col(1).array() - min_coeff(1);
+    
+    // Scale to fit in a 0-1 box while maintaining aspect ratio
+    double scale_factor = 1.0 / std::max(size(0), size(1));
+    target_uv *= scale_factor;
+    
+    // Compute pattern mesh UV parameterization using simple method
+    Eigen::MatrixXd pattern_uv = pattern_v.leftCols(2);  // Use the first two columns (X and Y coordinates)
+    
+    // Rescale pattern UV coordinates
+    min_coeff = pattern_uv.colwise().minCoeff();
+    max_coeff = pattern_uv.colwise().maxCoeff();
+    
+    size = max_coeff - min_coeff;
+    
+    pattern_uv.col(0) = pattern_uv.col(0).array() - min_coeff(0);
+    pattern_uv.col(1) = pattern_uv.col(1).array() - min_coeff(1);
+    
+    scale_factor = 1.0 / std::max(size(0), size(1));
+    pattern_uv *= scale_factor;
+    
+    // Now perform the mapping using the computed UV parameterizations
+    return map_mesh(target_v, target_f, target_uv, pattern_v, pattern_f, pattern_uv);
+}
+
+NB_MODULE(_mapping, m)
+{
     m.def(
         "map_mesh",
         &map_mesh,
-        "Map a 2D pattern mesh onto a 3D target mesh using simple UV parameterization",
-        "v"_a,
-        "f"_a,
-        "uv"_a,
+        "Map a 2D pattern mesh onto a 3D target mesh.",
+        "target_v"_a,
+        "target_f"_a,
+        "target_uv"_a,
         "pattern_v"_a,
         "pattern_f"_a,
-        "pattern_uv"_a
-    );
+        "pattern_uv"_a);
+        
+    m.def(
+        "map_mesh_with_automatic_parameterization",
+        &map_mesh_with_automatic_parameterization,
+        "Map a 2D pattern mesh onto a 3D target mesh with automatic parameterization.",
+        "target_v"_a,
+        "target_f"_a,
+        "pattern_v"_a,
+        "pattern_f"_a);
 }

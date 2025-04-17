@@ -66,3 +66,21 @@ std::vector<std::vector<int>> map_mesh(
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     Eigen::Ref<const compas::RowMatrixXi> pattern_f, 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv);
+
+
+/**
+ * Map a 2D pattern mesh onto a 3D target mesh with automatic parameterization, mesh is always mapped to 1x1 unit.
+ * This function automatically computes the UV parameterization for both meshes
+ * and then performs mapping, eliminating the need for separate parameterization steps.
+ * 
+ * @param target_v #V x 3 matrix of target mesh vertex coordinates
+ * @param target_f #F x 3 matrix of target mesh triangle indices
+ * @param pattern_v #V x 3 matrix of pattern mesh vertex coordinates
+ * @param pattern_f #F x 3 matrix of pattern mesh triangle indices
+ * @return A vector of face indices representing polygons in the mapped mesh
+ */
+std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
+    Eigen::Ref<const compas::RowMatrixXd> target_v, 
+    Eigen::Ref<const compas::RowMatrixXi> target_f, 
+    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
+    Eigen::Ref<const compas::RowMatrixXi> pattern_f);

@@ -31,8 +31,6 @@ lscm_uv = igl.trimesh_lscm(mesh.to_vertices_and_faces())
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])
 
-mesh_lscm.transform(Scale.from_factors([3, 3, 3]))
-
 # ==============================================================================
 # Visualization
 # ==============================================================================

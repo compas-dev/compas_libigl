@@ -5,6 +5,24 @@
 #include <igl/map_vertices_to_circle.h>
 #include <Eigen/Core>
 
+void rescale(Eigen::MatrixXd &V_uv)
+{
+    // Find min and max values for normalization
+    Eigen::Vector2d min_coeff = V_uv.colwise().minCoeff();
+    Eigen::Vector2d max_coeff = V_uv.colwise().maxCoeff();
+    
+    // Compute the size of the bounding box
+    Eigen::Vector2d size = max_coeff - min_coeff;
+    
+    // Translate UV coordinates so minimum is at the origin
+    V_uv.col(0) = V_uv.col(0).array() - min_coeff(0);
+    V_uv.col(1) = V_uv.col(1).array() - min_coeff(1);
+    
+    // Scale to fit in a 0-1 box while maintaining aspect ratio
+    double scale_factor = 1.0 / std::max(size(0), size(1));
+    V_uv *= scale_factor;
+}
+
 Eigen::MatrixXd
 harmonic(
     Eigen::Ref<const compas::RowMatrixXd> V,
@@ -22,6 +40,8 @@ harmonic(
 
     // Harmonic parametrization for the internal vertices
     igl::harmonic(V, F, B, B_uv, 1, V_uv);
+
+    rescale(V_uv);
 
     return V_uv;
 }
@@ -47,6 +67,8 @@ lscm(
 
     // LSCM parametrization
     igl::lscm(V, F, fixed, fixed_uv, V_uv);
+    
+    rescale(V_uv);
 
     return V_uv;
 }
@@ -59,17 +81,8 @@ simple(
     // Create UV coordinates matrix from XY coordinates
     Eigen::MatrixXd V_uv = V.leftCols(2);  // Use the first two columns (X and Y coordinates)
     
-    // Find min and max values for normalization
-    Eigen::Vector2d min_coeff = V_uv.colwise().minCoeff();
-    Eigen::Vector2d max_coeff = V_uv.colwise().maxCoeff();
-    
-    // Normalize to range [0,1]
-    for(int id = 0; id < V_uv.rows(); id++)
-    {
-        V_uv(id, 0) = (V_uv(id, 0) - min_coeff(0)) / (max_coeff(0) - min_coeff(0));
-        V_uv(id, 1) = (V_uv(id, 1) - min_coeff(1)) / (max_coeff(1) - min_coeff(1));
-    }
-    
+    rescale(V_uv);
+
     return V_uv;
 }
 

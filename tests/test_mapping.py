@@ -27,12 +27,9 @@ def test_map_mesh():
     pv = tessagon_mesh["vert_list"]
     pf = tessagon_mesh["face_list"]
 
-    # Create UV parameterization
-    uv = igl.trimesh_lscm((v, f))
-    p_uv = igl.trimesh_simple((pv, pf))
-
     # Map pattern onto target mesh
-    mesh_mapped = igl.map_mesh(v, f, uv, pv, pf, p_uv)
+    mv, mf = igl.map_mesh((v, f), (pv, pf))
+    mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
     # Verify the result is a valid mesh
     assert mesh_mapped is not None
