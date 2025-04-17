@@ -8,9 +8,9 @@ from .intersections import intersection_ray_mesh, intersection_rays_mesh
 from .isolines import trimesh_isolines, groupsort_isolines
 from .massmatrix import trimesh_massmatrix
 from .parametrisation import trimesh_harmonic, trimesh_lscm, trimesh_simple
-from .mapping import trimesh_map_simple, trimesh_map_aabb
 from .planarize import quadmesh_planarize
 from .meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
+from .mapping import map_mesh
 
 
 __author__ = ["tom van mele", "petras vestartas"]
@@ -123,4 +123,5 @@ __all__ = [
     "quadmesh_planarize",
     "trimesh_remesh_along_isoline",
     "trimesh_remesh_along_isolines",
+    "map_mesh",
 ]

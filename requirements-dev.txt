@@ -14,3 +14,4 @@ twine
 wheel
 setuptools
 cibuildwheel==2.23.1
+tessagon

@@ -25,6 +25,7 @@ def trimesh_harmonic(M):
     F = np.asarray(F, dtype=np.int32)
     return _parametrisation.harmonic(V, F)
 
+
 @plugin(category="trimesh")
 def trimesh_lscm(M):
     """Compute the least squares conformal map of a triangle mesh.
@@ -45,7 +46,6 @@ def trimesh_lscm(M):
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     return _parametrisation.lscm(V, F)
-
 
 
 @plugin(category="trimesh")

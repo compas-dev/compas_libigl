@@ -11,14 +11,17 @@
 #include <algorithm>
 #include <Eigen/Core>
 
-// Private methods
-
-void cleanMesh(
-    const compas::RowMatrixXd& V_in, 
-    const compas::RowMatrixXi& F_in, 
-    std::vector<std::vector<int>>& faces_);
-
-void getTriFace(
+/**
+ * Helper function to extract triangle vertices at a specific face index.
+ *
+ * @param F_ The face matrix of the triangle mesh.
+ * @param faceID Index of the face to extract.
+ * @param V The vertex matrix.
+ * @param A Output parameter for the first vertex of the triangle.
+ * @param B Output parameter for the second vertex of the triangle.
+ * @param C Output parameter for the third vertex of the triangle.
+ */
+void get_triface(
     const compas::RowMatrixXi& F_, 
     int faceID, 
     const compas::RowMatrixXd& V, 
@@ -26,70 +29,40 @@ void getTriFace(
     compas::RowMatrixXd& B, 
     compas::RowMatrixXd& C);
 
-bool mapPoint3D_simple(
+/**
+ * Map a point to a mesh using barycentric coordinates.
+ *
+ * @param F_ The face matrix of the triangle mesh.
+ * @param UV_ The UV coordinates matrix.
+ * @param pt The 3D point to map.
+ * @param barycentric Output parameter for the barycentric coordinates.
+ * @param faceID Output parameter for the face index.
+ * @return True if the point was successfully mapped, false otherwise.
+ */
+bool map_point3d_simple(
     const compas::RowMatrixXi& F_, 
     const compas::RowMatrixXd& UV_, 
     const Eigen::Vector3d& pt, 
     Eigen::Vector3d& barycentric, 
     int& faceID);
 
-    // Eigen::Ref<const compas::RowMatrixXd> V,
-    // Eigen::Ref<const compas::RowMatrixXi> F)
-
-void mapMesh3D_AABB(
+/**
+ * Map a 2D pattern mesh onto a 3D target mesh using AABB tree-based mapping.
+ * This function maps each vertex of the pattern mesh to the target mesh using
+ * barycentric interpolation based on the UV parameterization of the target mesh.
+ *
+ * @param v The vertex matrix of the target mesh.
+ * @param f The face matrix of the target mesh.
+ * @param uv The UV coordinates of the target mesh.
+ * @param pattern_v The vertex matrix of the pattern mesh to be mapped.
+ * @param pattern_f The face matrix of the pattern mesh.
+ * @param pattern_uv The UV coordinates of the pattern mesh.
+ * @return Vector of vectors representing the polygonal faces of the mapped pattern mesh.
+ */
+std::vector<std::vector<int>> map_mesh(
     Eigen::Ref<const compas::RowMatrixXd> v, 
     Eigen::Ref<const compas::RowMatrixXi> f, 
     Eigen::Ref<const compas::RowMatrixXd> uv,
-    Eigen::Ref<compas::RowMatrixXd>  pattern_v, 
+    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     Eigen::Ref<const compas::RowMatrixXi> pattern_f, 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv, 
-    std::vector<std::vector<int>>& pattern_polygonal_faces);
-
-
-class iglMesh {
-    public:
-    
-        compas::RowMatrixXd V_;
-    
-        std::vector<std::vector<int>> faces_; //polygonal Mesh
-        compas::RowMatrixXi F_; //triangle Mesh
-    
-        compas::RowMatrixXd UV_; //uv
-    public:
-    
-        iglMesh(){};
-    
-    public:
-    
-        void mapMesh3D_simple(iglMesh &baseMesh);
-    
-        
-    
-       
-    
-    
-    private:
-        
-    
-        
-    };
-
-
-// namespace nb = nanobind;
-
-// // Helper function to get triangle vertices at a specific face index
-// void getTriFace(
-//     const Eigen::Ref<const compas::RowMatrixXd> V,
-//     const Eigen::Ref<const compas::RowMatrixXi> F,
-//     int faceID,
-//     Eigen::Ref<const compas::RowMatrixXd> A,
-//     Eigen::Ref<const compas::RowMatrixXd> B,
-//     Eigen::Ref<const compas::RowMatrixXd> C);
-
-// // Map a single point to a mesh using barycentric coordinates
-// bool mapPoint3D_simple(
-//     const Eigen::RowVector3d& pt, 
-//     const Eigen::Ref<const compas::RowMatrixXd> V_uv,
-//     const Eigen::Ref<const compas::RowMatrixXi> F,
-//     Eigen::RowVector3d& l, 
-//     int& faceID);
+    Eigen::Ref<const compas::RowMatrixXd> pattern_uv);
