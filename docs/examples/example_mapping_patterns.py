@@ -12,7 +12,6 @@ from tessagon.types.dodeca_tessagon import DodecaTessagon
 from tessagon.types.floret_tessagon import FloretTessagon
 from tessagon.types.hex_big_tri_tessagon import HexBigTriTessagon
 
-# Import all tessagon types
 from tessagon.types.hex_tessagon import HexTessagon
 from tessagon.types.hex_tri_tessagon import HexTriTessagon
 from tessagon.types.octo_tessagon import OctoTessagon
@@ -26,7 +25,6 @@ from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
 import compas_libigl as igl
 
-# Dictionary of tessagon classes
 TESSAGON_TYPES = {
     1: ("Hex", HexTessagon),
     2: ("Tri", TriTessagon),
@@ -100,11 +98,9 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 # Viewer
 # ==============================================================================
 
-
 config = Config()
 config.camera.target = [2, 2, 0.25]
 config.camera.position = [5, 2, 1.5]
-# config.camera.scale = 100
 
 viewer = Viewer(config=config)
 viewer.scene.add(mesh, name="mesh", show_faces=False, linecolor=Color.grey(), opacity=0.2)

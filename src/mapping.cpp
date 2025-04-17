@@ -201,8 +201,6 @@ std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
     
     rescale(target_uv);
     
-    // Compute pattern mesh UV parameterization using simple method
-    // Eigen::MatrixXd pattern_uv = pattern_v.leftCols(2);  // Use the first two columns (X and Y coordinates)
 
     Eigen::MatrixXd pattern_uv;
     pattern_uv.setZero();
@@ -214,46 +212,8 @@ std::vector<std::vector<int>> map_mesh_with_automatic_parameterization(
     return map_mesh(target_v, target_f, target_uv, pattern_v, pattern_f, pattern_uv);
 }
 
-Eigen::MatrixXd parametrization_check(
-    Eigen::Ref<const compas::RowMatrixXd> target_v, 
-    Eigen::Ref<const compas::RowMatrixXi> target_f)
-{
-    // Compute target mesh UV parameterization using LSCM
-    Eigen::MatrixXd target_uv;
-    
-    // Find the open boundary
-    Eigen::VectorXi B;
-    igl::boundary_loop(target_f, B);
-
-    // Fix two points on the boundary
-    Eigen::VectorXi fixed(2, 1);
-    fixed(0) = B(0);
-    fixed(1) = B(B.size() / 2);
-
-    Eigen::MatrixXd fixed_uv(2, 2);
-    fixed_uv << 0, 0, 1, 0;
-
-    // LSCM parametrization
-    igl::lscm(target_v, target_f, fixed, fixed_uv, target_uv);
-    
-    rescale(target_uv);
-
-    return target_uv;
-
-}
-
 NB_MODULE(_mapping, m)
 {
-    m.def(
-        "map_mesh",
-        &map_mesh,
-        "Map a 2D pattern mesh onto a 3D target mesh.",
-        "target_v"_a,
-        "target_f"_a,
-        "target_uv"_a,
-        "pattern_v"_a,
-        "pattern_f"_a,
-        "pattern_uv"_a);
         
     m.def(
         "map_mesh_with_automatic_parameterization",
@@ -263,11 +223,4 @@ NB_MODULE(_mapping, m)
         "target_f"_a,
         "pattern_v"_a,
         "pattern_f"_a);
-
-    m.def(
-        "parametrization_check",
-        &parametrization_check,
-        "Compute target mesh UV parameterization using LSCM.",
-        "target_v"_a,
-        "target_f"_a);
 }

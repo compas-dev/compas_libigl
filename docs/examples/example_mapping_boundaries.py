@@ -4,6 +4,7 @@ from compas.colors import Color
 from compas.datastructures import Mesh
 from compas.geometry import Polygon
 from compas_viewer import Viewer
+from compas_viewer.config import Config
 from tessagon.adaptors.list_adaptor import ListAdaptor
 from tessagon.types.hex_tessagon import HexTessagon
 
@@ -112,12 +113,14 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 # Viewer
 # ==============================================================================
 
-viewer = Viewer()
+config = Config()
+config.camera.target = [2, 2, 0.25]
+config.camera.position = [5, 2, 1.5]
+
+viewer = Viewer(config=config)
 viewer.scene.add(mesh, name="mesh", show_faces=False, linecolor=Color.grey(), opacity=0.2)
 viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())
 viewer.scene.add(rotated_mesh, linecolor=Color.red(), linewidth=3)
-# viewer.scene.add(polygons, linecolor=Color.red(), linewidth=3)
 viewer.scene.add(intersections, linecolor=Color.red(), linewidth=3)
-
 viewer.scene.add(mesh_flattened, name="mesh_flattened0")
 viewer.show()
