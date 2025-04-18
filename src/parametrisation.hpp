@@ -4,6 +4,13 @@
 #include <Eigen/Core>
 
 /**
+ * Rescale UV coordinates to fit in a 0-1 box while maintaining aspect ratio.
+ * 
+ * @param V_uv #V x 2 matrix of UV coordinates
+ */
+void rescale(Eigen::MatrixXd &V_uv);
+
+/**
  * Compute the harmonic parametrization of a triangle mesh.
  *
  * @param V #V x 3 matrix of vertex coordinates

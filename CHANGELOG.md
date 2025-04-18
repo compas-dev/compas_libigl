@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Add mesh_map using barycentric coordinates.
+* Add tessagon for mesh_map example.
+
 ### Changed
 
 ### Removed

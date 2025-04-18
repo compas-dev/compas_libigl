@@ -25,8 +25,8 @@ Functions
     trimesh_isolines
     groupsort_isolines
     trimesh_massmatrix
-    trimesh_harmonic
-    trimesh_lscm
+    trimesh_harmonic_mapping
+    trimesh_lsc_mapping
     quadmesh_planarize
     trimesh_remesh_along_isoline
     trimesh_remesh_along_isolines
