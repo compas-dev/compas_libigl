@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="../../_static/compas.ico" type="image/x-icon">
-    <title>trimesh_boundaries &#8212; COMPAS Libigl</title>
+    <title>trimesh_lsc_mapping &#8212; COMPAS Libigl</title>
   
   
   
@@ -51,15 +51,15 @@
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/compas_libigl.trimesh_boundaries';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/compas_libigl.trimesh_lsc_mapping';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/compas-dev/compas_libigl/gh-pages/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
         </script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="trimesh_gaussian_curvature" href="compas_libigl.trimesh_gaussian_curvature.html" />
-    <link rel="prev" title="intersection_rays_mesh" href="compas_libigl.intersection_rays_mesh.html" />
+    <link rel="next" title="quadmesh_planarize" href="compas_libigl.quadmesh_planarize.html" />
+    <link rel="prev" title="trimesh_harmonic_mapping" href="compas_libigl.trimesh_harmonic_mapping.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -524,7 +524,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.get_armadillo.html">get_armadillo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.intersection_rays_mesh.html">intersection_rays_mesh</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">trimesh_boundaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_boundaries.html">trimesh_boundaries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_gaussian_curvature.html">trimesh_gaussian_curvature</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_principal_curvature.html">trimesh_principal_curvature</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_geodistance.html">trimesh_geodistance</a></li>
@@ -533,7 +533,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.groupsort_isolines.html">groupsort_isolines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_massmatrix.html">trimesh_massmatrix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_harmonic_mapping.html">trimesh_harmonic_mapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_lsc_mapping.html">trimesh_lsc_mapping</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">trimesh_lsc_mapping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.quadmesh_planarize.html">quadmesh_planarize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compas_libigl.trimesh_remesh_along_isolines.html">trimesh_remesh_along_isolines</a></li>
@@ -592,7 +592,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../compas_libigl.html" class="nav-link">compas_libigl</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">trimesh_boundaries</li>
+    <li class="breadcrumb-item active" aria-current="page">trimesh_lsc_mapping</li>
   </ul>
 </nav>
 </div>
@@ -609,14 +609,12 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="trimesh-boundaries">
-<h1>trimesh_boundaries</h1>
+  <section id="trimesh-lsc-mapping">
+<h1>trimesh_lsc_mapping</h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="compas_libigl.trimesh_boundaries">
-<span class="sig-name descname"><span class="pre">trimesh_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/f33be59/src/compas_libigl/boundaries.py#L7"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Compute all ordered boundary loops of a manifold triangle mesh.</p>
-<p>Uses libigl to extract and order the boundary loops of a triangle mesh.
-The input mesh must be manifold for correct results.</p>
+<dt class="sig sig-object py" id="compas_libigl.trimesh_lsc_mapping">
+<span class="sig-name descname"><span class="pre">trimesh_lsc_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/f33be59/src/compas_libigl/parametrisation.py#L29"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute the least squares conformal map of a triangle mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -627,15 +625,11 @@ where vertices are 3D points and faces are triangles</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>list[list[int]]</dt><dd><p>The ordered boundary loops of the triangle mesh.
-Each loop is a sequence of vertex indices defining a closed boundary.</p>
+<dt>list[list[float]]</dt><dd><p>The u, v parameters per vertex.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The input mesh should be manifold.
-Non-manifold meshes may produce unexpected or incorrect results.</p>
 </dd></dl>
 
 </section>
@@ -661,7 +655,7 @@ Non-manifold meshes may produce unexpected or incorrect results.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compas_libigl.trimesh_boundaries"><code class="docutils literal notranslate"><span class="pre">trimesh_boundaries()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compas_libigl.trimesh_lsc_mapping"><code class="docutils literal notranslate"><span class="pre">trimesh_lsc_mapping()</span></code></a></li>
 </ul>
   </nav></div>
 
