@@ -1,6 +1,5 @@
 import compas
 import compas_libigl as igl
-import numpy as np
 from compas.datastructures import Mesh
 
 
@@ -16,7 +15,7 @@ def test_map_mesh():
     # Use a smaller central region of the UV space
     u_range = [0.2, 0.8]  # Avoid edges of UV space
     v_range = [0.2, 0.8]  # Avoid edges of UV space
-    
+
     # Generate grid vertices
     pv = []
     for j in range(v_num + 1):
@@ -24,7 +23,7 @@ def test_map_mesh():
         for i in range(u_num + 1):
             u_param = u_range[0] + i * (u_range[1] - u_range[0]) / u_num
             pv.append([u_param, v_param, 0])
-    
+
     # Create faces (triangulated quads)
     pf = []
     for j in range(v_num):
@@ -34,7 +33,7 @@ def test_map_mesh():
             v1 = j * (u_num + 1) + i + 1
             v2 = (j + 1) * (u_num + 1) + i + 1
             v3 = (j + 1) * (u_num + 1) + i
-            
+
             # Split quad into two triangles
             pf.append([v0, v1, v2])
             pf.append([v0, v2, v3])
