@@ -5,7 +5,7 @@ from compas_libigl import _parametrisation
 
 
 @plugin(category="trimesh")
-def trimesh_harmonic(M):
+def trimesh_harmonic_mapping(M):
     """Compute the harmonic parametrisation of a triangle mesh within a fixed circular boundary.
 
     Parameters
@@ -27,7 +27,7 @@ def trimesh_harmonic(M):
 
 
 @plugin(category="trimesh")
-def trimesh_lscm(M):
+def trimesh_lsc_mapping(M):
     """Compute the least squares conformal map of a triangle mesh.
 
     Parameters

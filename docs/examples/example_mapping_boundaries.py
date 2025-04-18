@@ -28,7 +28,7 @@ v, f = mesh.to_vertices_and_faces()
 # ==============================================================================
 
 # To see where the pattern is mapped:
-uv = igl.trimesh_lscm((v, f))
+uv = igl.trimesh_lsc_mapping((v, f))
 mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])
