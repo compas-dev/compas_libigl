@@ -73,19 +73,6 @@ lscm(
     return V_uv;
 }
 
-Eigen::MatrixXd
-simple(
-    Eigen::Ref<const compas::RowMatrixXd> V,
-    Eigen::Ref<const compas::RowMatrixXi> F)
-{
-    // Create UV coordinates matrix from XY coordinates
-    Eigen::MatrixXd V_uv = V.leftCols(2);  // Use the first two columns (X and Y coordinates)
-    
-    rescale(V_uv);
-
-    return V_uv;
-}
-
 NB_MODULE(_parametrisation, m) {
     m.def(
         "harmonic",
@@ -100,11 +87,5 @@ NB_MODULE(_parametrisation, m) {
         "Compute the least-squares conformal map of a triangle mesh.",
         "V"_a,
         "F"_a);
-        
-    m.def(
-        "simple",
-        &simple,
-        "Compute a simple parameterization using normalized XY coordinates.",
-        "V"_a,
-        "F"_a);
+
 }
