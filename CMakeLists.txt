@@ -47,20 +47,15 @@ if(EXISTS "${EIGEN_DIR}")
   message(STATUS "Using existing Eigen from ${EIGEN_DIR}")
   set(eigen_SOURCE_DIR "${EIGEN_DIR}")
   set(eigen_BINARY_DIR "${FETCHCONTENT_BASE_DIR}/eigen-build")
-  FetchContent_Declare(
-    eigen
-    URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
-    SOURCE_DIR "${eigen_SOURCE_DIR}"
-    BINARY_DIR "${eigen_BINARY_DIR}"
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
-else()
-  FetchContent_Declare(
-    eigen
-    URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
 endif()
+
+FetchContent_Declare(
+  eigen
+  URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+  SOURCE_DIR "${eigen_SOURCE_DIR}"
+  BINARY_DIR "${eigen_BINARY_DIR}"
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
 FetchContent_MakeAvailable(eigen)
 
 # === libigl ===
@@ -70,20 +65,15 @@ if(EXISTS "${LIBIGL_DIR}")
   message(STATUS "Using existing libigl from ${LIBIGL_DIR}")
   set(libigl_SOURCE_DIR "${LIBIGL_DIR}")
   set(libigl_BINARY_DIR "${FETCHCONTENT_BASE_DIR}/libigl-build")
-  FetchContent_Declare(
-    libigl
-    GIT_REPOSITORY https://github.com/libigl/libigl.git
-    GIT_TAG main
-    SOURCE_DIR "${libigl_SOURCE_DIR}"
-    BINARY_DIR "${libigl_BINARY_DIR}"
-  )
-else()
-  FetchContent_Declare(
-    libigl
-    GIT_REPOSITORY https://github.com/libigl/libigl.git
-    GIT_TAG main
-  )
 endif()
+
+FetchContent_Declare(
+  libigl
+  GIT_REPOSITORY https://github.com/libigl/libigl.git
+  GIT_TAG main
+  SOURCE_DIR "${libigl_SOURCE_DIR}"
+  BINARY_DIR "${libigl_BINARY_DIR}"
+)
 FetchContent_MakeAvailable(libigl)
 
 # === Clipper2 ===
@@ -93,20 +83,15 @@ if(EXISTS "${CLIPPER2_DIR}")
   message(STATUS "Using existing Clipper2 from ${CLIPPER2_DIR}")
   set(clipper2_SOURCE_DIR "${CLIPPER2_DIR}")
   set(clipper2_BINARY_DIR "${FETCHCONTENT_BASE_DIR}/clipper2-build")
-  FetchContent_Declare(
-    clipper2
-    URL https://github.com/AngusJohnson/Clipper2/releases/download/Clipper2_1.5.3/Clipper2_1.5.3.zip
-    SOURCE_DIR "${clipper2_SOURCE_DIR}"
-    BINARY_DIR "${clipper2_BINARY_DIR}"
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
-else()
-  FetchContent_Declare(
-    clipper2
-    URL https://github.com/AngusJohnson/Clipper2/releases/download/Clipper2_1.5.3/Clipper2_1.5.3.zip
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
 endif()
+
+FetchContent_Declare(
+  clipper2
+  URL https://github.com/AngusJohnson/Clipper2/releases/download/Clipper2_1.5.3/Clipper2_1.5.3.zip
+  SOURCE_DIR "${clipper2_SOURCE_DIR}"
+  BINARY_DIR "${clipper2_BINARY_DIR}"
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
 FetchContent_MakeAvailable(clipper2)
 
 # Build Clipper2 as a static library
@@ -115,6 +100,14 @@ file(GLOB CLIPPER2_SRC "${clipper2_SOURCE_DIR}/CPP/Clipper2Lib/src/*.cpp")
 add_library(clipper2_static STATIC ${CLIPPER2_SRC})
 target_include_directories(clipper2_static PUBLIC "${clipper2_SOURCE_DIR}/CPP/Clipper2Lib/include")
 set_target_properties(clipper2_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# Install clipper2 static lib and headers if not already installed
+set(CLIPPER2_HEADERS_DEST "${CMAKE_INSTALL_PREFIX}/include/clipper2")
+if(NOT EXISTS "${CLIPPER2_HEADERS_DEST}")
+  message(STATUS "Installing Clipper2 headers and library")
+  install(TARGETS clipper2_static ARCHIVE DESTINATION lib)
+  install(DIRECTORY "${clipper2_SOURCE_DIR}/CPP/Clipper2Lib/include/clipper2" DESTINATION include)
+endif()
 
 # === Include paths ===
 set(EIGEN_INCLUDE_DIR ${eigen_SOURCE_DIR})
@@ -169,7 +162,3 @@ add_nanobind_module(_meshing src/meshing.cpp)
 add_nanobind_module(_parametrisation src/parametrisation.cpp)
 add_nanobind_module(_planarize src/planarize.cpp)
 add_nanobind_module(_mapping src/mapping.cpp)
-
-# === Install clipper2 static lib and headers ===
-install(TARGETS clipper2_static ARCHIVE DESTINATION lib)
-install(DIRECTORY "${clipper2_SOURCE_DIR}/CPP/Clipper2Lib/include/clipper2" DESTINATION include)
