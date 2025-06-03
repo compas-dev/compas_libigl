@@ -5,7 +5,7 @@ from compas.datastructures import Mesh
 from compas.geometry import Point
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.geodistance import trimesh_geodistance_multiple
 
 # ==============================================================================
 # Input
@@ -28,7 +28,7 @@ boundary_vertices = list(trimesh.vertices_on_boundary())
 # ==============================================================================
 
 # Calculate geodesic distances using the new multiple source points function
-distances = igl.trimesh_geodistance_multiple(trimesh.to_vertices_and_faces(), boundary_vertices, method="exact")
+distances = trimesh_geodistance_multiple(trimesh.to_vertices_and_faces(), boundary_vertices, method="exact")
 
 # ==============================================================================
 # Visualization

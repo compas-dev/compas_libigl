@@ -4,7 +4,7 @@ from compas.colors import ColorMap
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.massmatrix import trimesh_massmatrix
 
 # ==============================================================================
 # Input geometry
@@ -19,7 +19,7 @@ trimesh.quads_to_triangles()
 # Mass matrix
 # ==============================================================================
 
-mass = igl.trimesh_massmatrix(trimesh.to_vertices_and_faces())
+mass = trimesh_massmatrix(trimesh.to_vertices_and_faces())
 # Convert sparse diagonal to dense array
 mass_diag = np.array(mass.diagonal())
 

@@ -5,13 +5,16 @@ from compas_viewer.config import Config
 from tessagon.adaptors.list_adaptor import ListAdaptor
 from tessagon.types.hex_tessagon import HexTessagon
 
-import compas_libigl as igl
+from compas_libigl.mapping import map_mesh
+from compas_libigl.parametrisation import trimesh_lsc_mapping
+
+from pathlib import Path
 
 # ==============================================================================
 # Input geometry: 3D Mesh
 # ==============================================================================
+mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
 
-mesh = Mesh.from_obj("data/minimal_surface.obj")
 for key, attr in mesh.vertices(True):
     y = attr["y"]
     attr["y"] = -attr["z"]
@@ -44,7 +47,7 @@ pf = tessagon_mesh["face_list"]
 # Mapping: 3D Mesh, 2D Pattern, UV
 # ==============================================================================
 
-mv, mf = igl.map_mesh((v, f), (pv, pf))
+mv, mf = map_mesh((v, f), (pv, pf))
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
 # ==============================================================================
@@ -61,7 +64,7 @@ viewer.scene.add(Mesh.from_vertices_and_faces(pv, pf), name="pattern2d")
 viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())
 
 # To see where the pattern is mapped:
-uv = igl.trimesh_lsc_mapping((v, f))
+uv = trimesh_lsc_mapping((v, f))
 mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])

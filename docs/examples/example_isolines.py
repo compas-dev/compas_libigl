@@ -6,13 +6,14 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.isolines import trimesh_isolines, groupsort_isolines
+
+from pathlib import Path
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
-
-mesh = Mesh.from_off(igl.get_beetle())
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 
 Rx = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 Rz = Rotation.from_axis_and_angle([0, 0, 1], math.radians(90))
@@ -32,9 +33,9 @@ maxval = max(scalars)
 num_isolines = 100
 isovalues = [minval + i * (maxval - minval) / (num_isolines - 1) for i in range(num_isolines)]
 
-vertices, edges, indices = igl.trimesh_isolines(mesh.to_vertices_and_faces(), scalars, isovalues)
+vertices, edges, indices = trimesh_isolines(mesh.to_vertices_and_faces(), scalars, isovalues)
 
-isolines = igl.groupsort_isolines(vertices, edges, indices)
+isolines = groupsort_isolines(vertices, edges, indices)
 
 
 # ==============================================================================

@@ -13,4 +13,5 @@ scikit-build-core[pyproject] >=0.10
 twine
 wheel
 setuptools
+nanobind
 cibuildwheel==2.23.1

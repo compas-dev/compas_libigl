@@ -6,10 +6,12 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.meshing import trimesh_remesh_along_isolines
+
+from pathlib import Path
 
 # Load mesh
-mesh = Mesh.from_off(igl.get_beetle())
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 R = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 S = Scale.from_factors([10, 10, 10])
 mesh.transform(S * R)
@@ -23,7 +25,7 @@ num_isolines = 4
 isovalues = [min_val + i * (max_val - min_val) / num_isolines for i in range(1, num_isolines + 1)]
 
 # Split mesh along isolines
-V, F, S, G = igl.trimesh_remesh_along_isolines(mesh.to_vertices_and_faces(), scalar_values, isovalues)
+V, F, S, G = trimesh_remesh_along_isolines(mesh.to_vertices_and_faces(), scalar_values, isovalues)
 
 # Visualize each piece in a different color
 color_map = ColorMap.from_mpl("viridis")

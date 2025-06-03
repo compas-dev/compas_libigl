@@ -3,52 +3,61 @@ cmake_minimum_required(VERSION 3.15...3.26)
 project(compas_libigl LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(ENABLE_PRECOMPILED_HEADERS "Enable precompiled headers" OFF)
+option(MULTITHREADED_COMPILATION "Enable multi-threaded compilation (Ninja only)" ON)
+
+# Set build options
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+# Specify the compiler standard flag
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_BUILD_TYPE Release)
 
-# =====================================================================
-# Set this flag to ON for developing to reduce build time.
-# Set this flag to OFF for publishing for file size reduction.
-# =====================================================================
-option(ENABLE_PRECOMPILED_HEADERS "Enable precompiled headers for the build" ON)
-
-# =====================================================================
-# Set maximum heap size for MSVC
-# =====================================================================
-
-if(MSVC)
-    set(CMAKE_GENERATOR_PLATFORM x64)
-    add_compile_options(/Zm1200) 
-endif()
-
-# =====================================================================
-# Build size reduction.
-# =====================================================================
-
-if (NOT ENABLE_PRECOMPILED_HEADERS)
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-    if(MSVC)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O1") # Optimize for size on MSVC
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Os") # Optimize for size on GCC/Clang
+# Set the use of a pre-compile header
+if(MULTITHREADED_COMPILATION)
+  include(ProcessorCount)
+  ProcessorCount(N)
+  if(NOT N EQUAL 0)
+    message(STATUS "Using ${N} build jobs.")
+    set(CMAKE_PARALLEL_LEVEL ${N})
+    if(CMAKE_GENERATOR MATCHES "^Ninja")
+      set(CMAKE_JOB_POOL_COMPILE compile)
+      set(CMAKE_JOB_POOL_LINK link)
+      set(CMAKE_JOB_POOLS
+        "compile=${N}"
+        "link=2")
     endif()
+  endif()
 endif()
 
-# =====================================================================
-# Dependencies
-# =====================================================================
-include(ExternalProject)
+if(UNIX AND NOT APPLE)
+  # Install to share/bin|lib
+  if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX
+        "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}"
+        CACHE PATH "Install prefix" FORCE)
+  endif()
+endif()
 
-# Define source directories for external dependencies
-set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
+include(ExternalProject)
+include(CMakeDependentOption)
+
+# Create directories to store external dependencies
+if(NOT DEFINED EXTERNAL_DIR)
+    set(EXTERNAL_DIR "${CMAKE_SOURCE_DIR}/external")
+endif()
+file(MAKE_DIRECTORY ${EXTERNAL_DIR})
+
+# Set source directories for external dependencies
 set(EIGEN_SOURCE_DIR "${EXTERNAL_DIR}/eigen")
 set(LIBIGL_SOURCE_DIR "${EXTERNAL_DIR}/libigl")
-
-# Create directories if they don't exist
-file(MAKE_DIRECTORY ${EXTERNAL_DIR})
-file(MAKE_DIRECTORY ${EIGEN_SOURCE_DIR})
-file(MAKE_DIRECTORY ${LIBIGL_SOURCE_DIR})
+set(CLIPPER2_SOURCE_DIR "${EXTERNAL_DIR}/clipper2")
 
 # Download Eigen first
 if(NOT EXISTS "${EIGEN_SOURCE_DIR}/Eigen")
@@ -86,6 +95,65 @@ if(NOT EXISTS "${LIBIGL_SOURCE_DIR}/include/igl")
     )
 endif()
 
+# ------------------------------------------------------------------------------
+# Clipper2 (static library)
+# ------------------------------------------------------------------------------
+
+# Define paths for Clipper2
+set(CLIPPER2_LIB_DIR "${CMAKE_BINARY_DIR}/clipper2_static_lib")
+file(MAKE_DIRECTORY ${CLIPPER2_LIB_DIR})
+set(CLIPPER2_STATIC_LIB "${CLIPPER2_LIB_DIR}/libClipper2.a")
+set(CLIPPER2_INCLUDE_DIR "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/include")
+
+# Only download Clipper2 if source directory doesn't exist
+if(NOT EXISTS "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/include/clipper2")
+    message(STATUS "Downloading clipper2...")
+    ExternalProject_Add(
+        clipper2_download
+        PREFIX ${EXTERNAL_DIR}
+        URL https://github.com/AngusJohnson/Clipper2/releases/download/Clipper2_1.5.3/Clipper2_1.5.3.zip
+        SOURCE_DIR "${CLIPPER2_SOURCE_DIR}"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+        LOG_DOWNLOAD ON
+        UPDATE_COMMAND ""
+        PATCH_COMMAND ""
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+endif()
+
+# Only build Clipper2 if the static library doesn't exist
+if(NOT EXISTS "${CLIPPER2_STATIC_LIB}")
+    # Custom command to build the Clipper2 static library
+    add_custom_command(
+        OUTPUT ${CLIPPER2_STATIC_LIB}
+        COMMAND ${CMAKE_CXX_COMPILER} -c -fPIC 
+            "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/src/clipper.engine.cpp" 
+            "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/src/clipper.offset.cpp" 
+            "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/src/clipper.rectclip.cpp" 
+            -I"${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/include"
+        COMMAND ${CMAKE_AR} cr "${CLIPPER2_STATIC_LIB}" clipper.engine.o clipper.offset.o clipper.rectclip.o
+        COMMAND ${CMAKE_RANLIB} "${CLIPPER2_STATIC_LIB}"
+        WORKING_DIRECTORY ${CLIPPER2_LIB_DIR}
+        COMMENT "Building Clipper2 static library"
+    )
+
+    # Custom target to trigger the Clipper2 build
+    add_custom_target(clipper2_build ALL DEPENDS ${CLIPPER2_STATIC_LIB})
+    
+    # Make clipper2_build depend on the downloads
+    if(TARGET clipper2_download)
+        add_dependencies(clipper2_build clipper2_download)
+    endif()
+    add_dependencies(clipper2_build external_downloads)
+else()
+    # If the static library already exists, create a dummy target
+    add_custom_target(clipper2_build)
+endif()
+
+# No additional target needed as clipper2_build is already defined by ExternalProject_Add
+
 # Create a custom target for all external dependencies
 add_custom_target(external_downloads ALL)
 if(TARGET eigen_download)
@@ -94,10 +162,14 @@ endif()
 if(TARGET libigl_download)
     add_dependencies(external_downloads libigl_download)
 endif()
+if(TARGET clipper2_download)
+    add_dependencies(external_downloads clipper2_download)
+endif()
 
 # Add include directories for external dependencies
 set(EIGEN_INCLUDE_DIR "${EIGEN_SOURCE_DIR}")
 set(LIBIGL_INCLUDE_DIR "${LIBIGL_SOURCE_DIR}/include")
+set(CLIPPER2_INCLUDE_DIR "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/include")
 
 if (NOT SKBUILD)
   message(WARNING "\
@@ -114,7 +186,6 @@ if (NOT SKBUILD)
   in your environment once and use the following command that avoids
   a costly creation of a new virtual environment at every compilation:
   =====================================================================
-   $ pip install nanobind scikit-build-core[pyproject]
    $ pip install --no-build-isolation -ve .
   =====================================================================
   You may optionally add -Ceditable.rebuild=true to auto-rebuild when
@@ -136,6 +207,7 @@ if (ENABLE_PRECOMPILED_HEADERS)
     target_include_directories(compas_pch INTERFACE
         ${EIGEN_INCLUDE_DIR}
         ${LIBIGL_INCLUDE_DIR}
+        ${CLIPPER2_INCLUDE_DIR}
     )
 endif()
 
@@ -143,8 +215,8 @@ endif()
 function(add_nanobind_module module_name source_file)
     nanobind_add_module(${module_name} STABLE_ABI NB_STATIC ${source_file})
 
-    # Ensure external dependencies are downloaded first
-    add_dependencies(${module_name} external_downloads)
+    # Ensure external dependencies are downloaded and built first
+    add_dependencies(${module_name} external_downloads clipper2_build)
 
     # Add include directories and link PCH if enabled
     if (ENABLE_PRECOMPILED_HEADERS)
@@ -153,10 +225,13 @@ function(add_nanobind_module module_name source_file)
         target_include_directories(${module_name} SYSTEM PRIVATE
             ${EIGEN_INCLUDE_DIR}
             ${LIBIGL_INCLUDE_DIR}
+            ${CLIPPER2_INCLUDE_DIR}
         )
     endif()
 
-    target_link_libraries(${module_name} PRIVATE Threads::Threads)
+    # Link Clipper2 directly using the static library path
+    target_link_libraries(${module_name} PRIVATE Threads::Threads ${CLIPPER2_STATIC_LIB})
+    
     install(TARGETS ${module_name} LIBRARY DESTINATION compas_libigl)
 endfunction()
 
@@ -173,3 +248,11 @@ add_nanobind_module(_meshing src/meshing.cpp)
 add_nanobind_module(_parametrisation src/parametrisation.cpp)
 add_nanobind_module(_planarize src/planarize.cpp)
 add_nanobind_module(_mapping src/mapping.cpp)
+
+# Install the Clipper2 static library
+install(FILES "${CLIPPER2_STATIC_LIB}" 
+        DESTINATION lib)
+
+# Install Clipper2 headers
+install(DIRECTORY "${CLIPPER2_SOURCE_DIR}/CPP/Clipper2Lib/include/clipper2" 
+        DESTINATION include)

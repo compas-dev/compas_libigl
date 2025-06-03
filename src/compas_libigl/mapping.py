@@ -1,9 +1,10 @@
 import numpy as np
 
 from compas_libigl import _mapping
+from compas_libigl._types_std import VectorVectorInt
 
 
-def map_mesh(target_mesh, pattern_mesh):
+def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True):
     """
     Map a 2D pattern mesh onto a 3D target.
 
@@ -15,6 +16,8 @@ def map_mesh(target_mesh, pattern_mesh):
             The vertices of the target mesh.
         faces : list[list[int]]
             The triangle faces of the target mesh.
+        clip_boundaries : bool
+            Whether to clip the pattern mesh to the boundaries of the target mesh.
     pattern_mesh : tuple
         A tuple of (vertices, faces) representing the pattern mesh.
         vertices : list[list[float]]
@@ -37,7 +40,7 @@ def map_mesh(target_mesh, pattern_mesh):
     pattern_v_numpy = np.array(pv, dtype=np.float64)
 
     # Perform the mapping
-    pattern_f_numpy_cleaned = _mapping.map_mesh_with_automatic_parameterization(v_numpy, f_numpy, pattern_v_numpy, pf)
+    pattern_v_numpy_copy, pattern_f_numpy_cleaned = _mapping.map_mesh_with_automatic_parameterization(v_numpy, f_numpy, pattern_v_numpy, pf, clip_boundaries)
 
     # Return the result as a tuple
-    return pattern_v_numpy, pattern_f_numpy_cleaned
+    return pattern_v_numpy_copy, pattern_f_numpy_cleaned

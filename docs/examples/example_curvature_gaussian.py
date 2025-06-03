@@ -6,12 +6,11 @@ from compas.geometry import Line
 from compas.geometry import Point
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.curvature import trimesh_gaussian_curvature
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
-
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 trimesh = mesh.copy()
 trimesh.quads_to_triangles()
@@ -21,7 +20,7 @@ trimesh.quads_to_triangles()
 # ==============================================================================
 
 vertices, faces = trimesh.to_vertices_and_faces()
-gaussian_curvature = igl.trimesh_gaussian_curvature((vertices, faces))
+gaussian_curvature = trimesh_gaussian_curvature((vertices, faces))
 
 # Get non-boundary vertex indices
 non_boundary_vertices = [i for i in range(len(vertices)) if not trimesh.is_vertex_on_boundary(i)]

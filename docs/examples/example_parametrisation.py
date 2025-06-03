@@ -6,13 +6,14 @@ from compas.geometry import Scale
 from compas.geometry import Translation
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.parametrisation import trimesh_lsc_mapping
+
+from pathlib import Path
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
-
-mesh = Mesh.from_off(igl.get("camelhead.off"))
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "camelhead.off")
 R0 = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 R1 = Rotation.from_axis_and_angle([0, 1, 0], math.radians(90))
 mesh.transform(R0 * R1)
@@ -26,7 +27,7 @@ mesh_lscm.vertices_attribute("z", 0)
 # ==============================================================================
 
 # lscm_uv = igl.trimesh_harmonic_mapping(mesh.to_vertices_and_faces())
-lscm_uv = igl.trimesh_lsc_mapping(mesh.to_vertices_and_faces())
+lscm_uv = trimesh_lsc_mapping(mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])
