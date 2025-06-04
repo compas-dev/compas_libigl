@@ -30,8 +30,6 @@ distance = trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="
 cmap = ColorMap.from_color(Color.red())
 
 viewer = Viewer(width=1600, height=900)
-# viewer.view.camera.position = [1, -6, 2]
-# viewer.view.camera.look_at([1, 1, 1])
 
 viewer.scene.add(mesh, show_points=False)
 

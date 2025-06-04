@@ -11,6 +11,7 @@ from compas_libigl.curvature import trimesh_gaussian_curvature
 # ==============================================================================
 # Input geometry
 # ==============================================================================
+
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 trimesh = mesh.copy()
 trimesh.quads_to_triangles()

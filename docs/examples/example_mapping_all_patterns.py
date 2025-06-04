@@ -1,4 +1,6 @@
 from itertools import filterfalse
+from pathlib import Path
+
 from compas.colors import Color
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
@@ -12,7 +14,6 @@ from tessagon.types.dissected_triangle_tessagon import DissectedTriangleTessagon
 from tessagon.types.dodeca_tessagon import DodecaTessagon
 from tessagon.types.floret_tessagon import FloretTessagon
 from tessagon.types.hex_big_tri_tessagon import HexBigTriTessagon
-
 from tessagon.types.hex_tessagon import HexTessagon
 from tessagon.types.hex_tri_tessagon import HexTriTessagon
 from tessagon.types.octo_tessagon import OctoTessagon
@@ -26,9 +27,6 @@ from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
 from compas_libigl.mapping import map_mesh
 from compas_libigl.parametrisation import trimesh_lsc_mapping
-
-from pathlib import Path
-
 
 TESSAGON_TYPES = {
     1: ("Hex", HexTessagon),
@@ -68,13 +66,12 @@ mesh.translate([2, 2, 0.5])
 
 v, f = mesh.to_vertices_and_faces()
 
-
 # ==============================================================================
 # Input geometry: 2D Pattern creation using Tessagon library, can be other mesh.
 # ==============================================================================
 
 options = {
-    "function": lambda u, v: [u*1, v*1, 0],
+    "function": lambda u, v: [u * 1, v * 1, 0],
     "u_range": [-0.25, 1.25],
     "v_range": [-0.25, 1.25],
     "u_num": 20,
@@ -99,7 +96,9 @@ pf = tessagon_mesh["face_list"]
 
 mv, mf = map_mesh((v, f), (pv, pf), clip_boundaries=True, tolerance=1e-6)
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
+
 print(len(mv))
+
 # ==============================================================================
 # Viewer
 # ==============================================================================

@@ -16,7 +16,6 @@ mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 trimesh = mesh.copy()
 trimesh.quads_to_triangles()
 
-
 # ==============================================================================
 # Get boundary vertices as source points
 # ==============================================================================

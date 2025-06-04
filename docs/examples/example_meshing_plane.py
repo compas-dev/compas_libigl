@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 
 from compas.colors import Color
 from compas.datastructures import Mesh
@@ -8,8 +9,6 @@ from compas.geometry import Scale
 from compas_viewer import Viewer
 
 from compas_libigl.meshing import trimesh_remesh_along_isoline
-
-from pathlib import Path
 
 # Load and transform mesh
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")

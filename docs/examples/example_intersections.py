@@ -68,8 +68,6 @@ for ray, hits in zip(rays, hits_per_ray):
 # ==============================================================================
 
 viewer = Viewer(width=1600, height=900)
-# viewer.view.camera.position = [1, -6, 2]
-# viewer.view.camera.look_at([1, 1, 1])
 
 viewer.scene.add(mesh, opacity=0.7, show_points=False)
 

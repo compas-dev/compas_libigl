@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 
 from compas.datastructures import Mesh
 from compas.geometry import Rotation
@@ -8,11 +9,10 @@ from compas_viewer import Viewer
 
 from compas_libigl.parametrisation import trimesh_lsc_mapping
 
-from pathlib import Path
-
 # ==============================================================================
 # Input geometry
 # ==============================================================================
+
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "camelhead.off")
 R0 = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 R1 = Rotation.from_axis_and_angle([0, 1, 0], math.radians(90))

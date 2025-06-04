@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
@@ -7,10 +8,8 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-from compas_libigl.meshing import trimesh_remesh_along_isolines
 from compas_libigl.geodistance import trimesh_geodistance_multiple
-
-from pathlib import Path
+from compas_libigl.meshing import trimesh_remesh_along_isolines
 
 # ==============================================================================
 # Input geometry

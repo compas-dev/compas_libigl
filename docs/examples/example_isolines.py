@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
@@ -6,13 +7,13 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-from compas_libigl.isolines import trimesh_isolines, groupsort_isolines
-
-from pathlib import Path
+from compas_libigl.isolines import groupsort_isolines
+from compas_libigl.isolines import trimesh_isolines
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
+
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 
 Rx = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
@@ -37,14 +38,11 @@ vertices, edges, indices = trimesh_isolines(mesh.to_vertices_and_faces(), scalar
 
 isolines = groupsort_isolines(vertices, edges, indices)
 
-
 # ==============================================================================
 # Visualisation
 # ==============================================================================
 
-
 viewer = Viewer()
-
 
 minval = min(scalars) + 0.01
 maxval = max(scalars) - 0.01

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from compas.colors import Color
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
@@ -8,11 +10,10 @@ from tessagon.types.hex_tessagon import HexTessagon
 from compas_libigl.mapping import map_mesh
 from compas_libigl.parametrisation import trimesh_lsc_mapping
 
-from pathlib import Path
-
 # ==============================================================================
 # Input geometry: 3D Mesh
 # ==============================================================================
+
 mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
 
 for key, attr in mesh.vertices(True):
@@ -23,13 +24,12 @@ mesh.translate([2, 2, 0.5])
 
 v, f = mesh.to_vertices_and_faces()
 
-
 # ==============================================================================
 # Input geometry: 2D Pattern creation using Tessagon library, can be other mesh.
 # ==============================================================================
 
 options = {
-    "function": lambda u, v: [u*1, v*1, 0],
+    "function": lambda u, v: [u * 1, v * 1, 0],
     "u_range": [-0.255, 1.33],
     "v_range": [-0.34, 1.33],
     "u_num": 16,

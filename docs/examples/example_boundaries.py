@@ -1,4 +1,5 @@
 import math
+from pathlib import Path
 
 from compas.colors import Color
 from compas.datastructures import Mesh
@@ -9,11 +10,10 @@ from compas_viewer import Viewer
 
 from compas_libigl.boundaries import trimesh_boundaries
 
-from pathlib import Path
-
 # ==============================================================================
 # Input geometry
 # ==============================================================================
+
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 
 Rx = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
