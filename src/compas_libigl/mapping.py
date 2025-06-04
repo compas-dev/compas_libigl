@@ -21,6 +21,8 @@ from tessagon.types.weave_tessagon import WeaveTessagon
 from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
 from compas_libigl import _mapping
+from compas_libigl._types_std import VectorBool  # noqa: F401
+from compas_libigl._types_std import VectorInt  # noqa: F401
 from compas_libigl._types_std import VectorVectorInt  # noqa: F401
 
 
@@ -50,7 +52,7 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, tolerance=1e-6):
     Returns
     -------
     tuple
-        A tuple containing (vertices, faces) of the mapped pattern mesh.
+        A tuple containing: mesh vertices, normals, grouping of polygons (to form holes), boundary flags.
     """
     # Unpack mesh tuples
     v, f = target_mesh
@@ -62,10 +64,12 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, tolerance=1e-6):
     pattern_v_numpy = np.array(pv, dtype=np.float64)
 
     # Perform the mapping
-    pattern_v_numpy_copy, pattern_f_numpy_cleaned = _mapping.map_mesh_with_automatic_parameterization(v_numpy, f_numpy, pattern_v_numpy, pf, clip_boundaries, tolerance)
+    pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups = _mapping.map_mesh_with_automatic_parameterization(
+        v_numpy, f_numpy, pattern_v_numpy, pf, clip_boundaries, tolerance
+    )
 
     # Return the result as a tuple
-    return pattern_v_numpy_copy, pattern_f_numpy_cleaned
+    return pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups
 
 
 def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16):
@@ -151,6 +155,6 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     pf = tessagon_mesh["face_list"]
 
     v, f = mesh.to_vertices_and_faces()
-    mv, mf = map_mesh((v, f), (pv, pf), clip_boundaries=clip_boundaries, tolerance=tolerance)
+    mapped_vertices, mapped_faces, mapped_normals, mapped_is_boundary, mapped_groups = map_mesh((v, f), (pv, pf), clip_boundaries=clip_boundaries, tolerance=tolerance)
 
-    return Mesh.from_vertices_and_faces(mv, mf)
+    return Mesh.from_vertices_and_faces(mapped_vertices, mapped_faces)

@@ -1,10 +1,5 @@
 #include "mapping.hpp"
-#include <unordered_map>
-#include <vector>
-#include <cmath>
-#include <tuple>
-#include <iomanip>
-#include <iostream>
+
 
 // Custom hash function for tuple
 struct TupleHash {
@@ -36,8 +31,10 @@ std::vector<std::vector<int>> map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXd> uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f, 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv)
+    Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
+    Eigen::Ref<compas::RowMatrixXd> pattern_normals)
 {
+
     // Use regular MatrixXd to avoid type conflicts with AABB functions
     Eigen::MatrixXd V_uv = uv;
     Eigen::MatrixXi F_faces = f;
@@ -52,6 +49,19 @@ std::vector<std::vector<int>> map_mesh_cropped(
     
     // Find closest points on the mesh for all pattern vertices
     tree.squared_distance(V_uv, F_faces, pattern_uv_eigen, sqrD, I, C);
+
+    // Compute per-vertex normals for the target mesh
+    Eigen::MatrixXd v_normals;
+    igl::per_vertex_normals(v, f, v_normals);
+    
+    // Ensure normals matrix has correct dimensions
+    if (pattern_normals.rows() != pattern_v.rows()) {
+        // Resize normals matrix to match pattern vertices
+        pattern_normals.resize(pattern_v.rows(), 3);
+    }
+    
+    // Always compute normals
+    bool compute_normals = true;
        
     // Map each pattern vertex to 3D using barycentric coordinates
     for(int id = 0; id < pattern_uv.rows(); id++)
@@ -87,7 +97,29 @@ std::vector<std::vector<int>> map_mesh_cropped(
         
         // Update pattern vertex position through barycentric interpolation
         pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
+        
+        // If normals are requested, interpolate them using the same barycentric coordinates
+        if (compute_normals) {
+            // Get vertex normals for the triangle vertices
+            Eigen::MatrixXd NA(1, 3), NB(1, 3), NC(1, 3);
+            NA << v_normals(f(faceID, 0), 0), v_normals(f(faceID, 0), 1), v_normals(f(faceID, 0), 2);
+            NB << v_normals(f(faceID, 1), 0), v_normals(f(faceID, 1), 1), v_normals(f(faceID, 1), 2);
+            NC << v_normals(f(faceID, 2), 0), v_normals(f(faceID, 2), 1), v_normals(f(faceID, 2), 2);
+            
+            // Interpolate normal using barycentric coordinates
+            Eigen::MatrixXd interpolated_normal = NA * L(0, 0) + NB * L(0, 1) + NC * L(0, 2);
+            
+            // Normalize the interpolated normal
+            double norm = interpolated_normal.norm();
+            if (norm > 1e-10) { // Avoid division by very small numbers
+                interpolated_normal /= norm;
+            }
+            
+            pattern_normals.row(id) = interpolated_normal;
+        }
     }
+
+
     
     
     return pattern_f;
@@ -132,7 +164,7 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
 }
 
 
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper (
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
     Eigen::Ref<const compas::RowMatrixXd> flattned_target_uv,
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     
@@ -224,13 +256,26 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
             }
         }
 
+        // Rare case, but polygon can be bigger than a hole:
+        bool is_hole_in_polygon = false;
+        for (size_t i = 1; i < boundary.size(); i++) {    
+            Clipper2Lib::PathD path = boundary[i];
+            for (const auto& corner : path) {
+                auto result = Clipper2Lib::PointInPolygon(corner, paths[0]);
+                if (result != Clipper2Lib::PointInPolygonResult::IsOutside) {
+                    is_hole_in_polygon = true;
+                    break;
+                }
+            }
+        }
+
         // Fully enclosed polygons are added to the keep list
         // Other polygons edges are intersected with the boundary
-        // patterns_to_cut.push_back(paths);
-        if (num_corners_in_polygon == paths[0].size()){
+
+        if (num_corners_in_polygon == paths[0].size() && !is_hole_in_polygon){
             patterns_to_keep.push_back(paths);
         }else if (clip_boundaries){
-            if (paths_intersect(paths, boundary)){
+            if (paths_intersect(paths, boundary) || is_hole_in_polygon){
                 patterns_to_cut.push_back(paths);
             }
         }
@@ -252,6 +297,11 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
     std::vector<std::array<double, 3>> unique_points;
     std::unordered_map<std::tuple<int64_t, int64_t>, std::vector<int>, TupleHash> grid_map;
     std::vector<std::vector<int>> faces;
+    std::vector<int> groups;
+    std::vector<bool> is_boundary; 
+    faces.reserve(solutions.size() + patterns_to_keep.size());
+    groups.reserve(solutions.size() + patterns_to_keep.size());
+    is_boundary.reserve(solutions.size() + patterns_to_keep.size());
     
     auto find_or_add_point = [&](double x, double y) -> int {
         double z = 0.0;
@@ -270,6 +320,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
         return new_index;
     };
 
+    int group_id = 0;
     for (const auto &solution : solutions) {
         for (const auto& path : solution) {
             std::vector<int> face;
@@ -278,7 +329,10 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
                 face.push_back(idx);
             }
             faces.push_back(face);
+            groups.push_back(group_id);
+            is_boundary.push_back(true);
         }
+        group_id++;
     }
     
     for (const auto &subject : patterns_to_keep) {
@@ -289,7 +343,10 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
                 face.push_back(idx);
             }
             faces.push_back(face);
+            groups.push_back(group_id);
+            is_boundary.push_back(false);
         }
+        group_id++;
     }
 
     compas::RowMatrixXd vertices(unique_points.size(), 3);
@@ -299,63 +356,11 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
         vertices(i, 2) = 0.0;
     }
 
-    
-
-    // //solutions = patterns_to_cut;
-
-    // // Count total points
-    // size_t total_points = 0;
-    // for (const auto &solution : solutions) 
-    //     for (const auto &path : solution) 
-    //         total_points += path.size();
-
-    // for (const auto &subject : patterns_to_keep) 
-    //     for (const auto &path : subject) 
-    //         total_points += path.size();
-
-
-    // // We'll count the total points and then initialize our output matrices
-    // // These will be populated later
-    // std::vector<std::vector<int>> faces;
-    // faces.reserve(total_points); // This is an overestimation, but ensures capacity
-    
-    // size_t point_index = 0; // Reset point index
-
-    // compas::RowMatrixXd vertices(total_points, 3);
-
-    // for (const auto &solution : solutions){
-    //     for (const auto& path : solution) {
-    //         std::vector<int> face;
-    //         for (const auto& point : path) {
-    //             vertices(point_index, 0) = point.x;
-    //             vertices(point_index, 1) = point.y;
-    //             vertices(point_index, 2) = 0;
-    //             face.push_back(point_index);
-    //             point_index++;
-    //         }
-    //         faces.push_back(face);
-    //     }
-    // }
-
-    // for (const auto &subject : patterns_to_keep){
-    //     for (const auto& path : subject) {
-    //         std::vector<int> face;
-    //         for (const auto& point : path) {
-    //             vertices(point_index, 0) = point.x;
-    //             vertices(point_index, 1) = point.y;
-    //             vertices(point_index, 2) = 0; // Set z-coordinate to 0
-    //             face.push_back(point_index);
-    //             point_index++;
-    //         }
-    //         faces.push_back(face);
-    //     }
-    // }
-
-    return std::make_tuple(vertices, faces);
+    return std::make_tuple(vertices, faces, is_boundary, groups);
 
 }
 
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_automatic_parameterization(
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
@@ -393,7 +398,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
     target_uv *= scale_factor;
 
     // Clip the pattern
-    auto [clipped_pattern_v, clipped_pattern_f] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, tolerance);
+    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, tolerance);
 
     // return std::make_tuple(clipped_pattern_v, clipped_pattern_f); // Comment this out to see 2d cropped pattern
 
@@ -401,16 +406,22 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
     clipped_pattern_uv.setZero();
     clipped_pattern_uv = clipped_pattern_v.leftCols(2);
 
+    // Initialize normals matrix for pattern vertices
+    compas::RowMatrixXd pattern_normals;
+    pattern_normals.resize(clipped_pattern_v.rows(), 3);
+    
+    // Map the mesh with normal mapping
     auto result = map_mesh_cropped(
         target_v, 
         target_f,
         target_uv,
         clipped_pattern_v,
         clipped_pattern_f,
-        clipped_pattern_uv);
+        clipped_pattern_uv,
+        pattern_normals);
 
 
-    return std::make_tuple(clipped_pattern_v, result);
+    return std::make_tuple(clipped_pattern_v, result, pattern_normals, clipped_pattern_is_boundary, clipped_pattern_groups);
 
 }
 
@@ -421,11 +432,11 @@ NB_MODULE(_mapping, m)
     m.def(
         "map_mesh_with_automatic_parameterization",
         &map_mesh_with_automatic_parameterization,
-        "Map a 2D pattern mesh onto a 3D target mesh with automatic parameterization.",
+        "Map a 2D pattern mesh onto a 3D target mesh with automatic parameterization, returning vertices, faces and normal vectors.",
         "target_v"_a,
         "target_f"_a,
-        "target_uv"_a,
-        "target_fixed_vid"_a,
+        "pattern_v"_a,
+        "pattern_f"_a,
         "clip_boundaries"_a,
         "tolerance"_a);
 }
