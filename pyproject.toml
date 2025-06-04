@@ -9,15 +9,29 @@ readme = "README.md"
 requires-python = ">=3.9"
 authors = [
     { name = "tom van mele", email = "tom.v.mele@gmail.com" },
-    { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" }
+    { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
 ]
-classifiers = [
-    "License :: OSI Approved :: BSD License"
-]
-dynamic = ["version"]
+classifiers = ["License :: OSI Approved :: BSD License"]
+dynamic = ['dependencies', 'optional-dependencies', 'version']
 
 [project.urls]
 Homepage = "https://compas.dev/compas_libigl/latest/"
+
+# ============================================================================
+# setuptools config
+# ============================================================================
+
+# [tool.setuptools]
+# package-dir = { "" = "src" }
+# include-package-data = true
+# zip-safe = false
+
+[tool.setuptools.dynamic]
+dependencies = { file = "requirements.txt" }
+optional-dependencies = { dev = { file = "requirements-dev.txt" } }
+
+# [tool.setuptools.packages.find]
+# where = ["src"]
 
 # ============================================================================
 # pytest configuration
@@ -36,21 +50,21 @@ norecursedirs = [
     ".tox",
     ".env",
     ".pytest_cache",
-    ".ruff_cache"
+    ".ruff_cache",
 ]
 addopts = [
     "-ra",
     "--strict-markers",
     "--doctest-glob=*.rst",
     "--tb=short",
-    "--import-mode=importlib"
+    "--import-mode=importlib",
 ]
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
     "ALLOW_UNICODE",
     "ALLOW_BYTES",
-    "NUMBER"
+    "NUMBER",
 ]
 
 # ============================================================================
@@ -60,7 +74,7 @@ doctest_optionflags = [
 [tool.scikit-build]
 minimum-version = "build-system.requires"
 build-dir = "build/{wheel_tag}"
-wheel.py-api = "cp312"  # Build all Python currently supported versions
+wheel.py-api = "cp312"                    # Build all Python currently supported versions
 cmake.version = ">=3.15"
 cmake.build-type = "Release"
 
