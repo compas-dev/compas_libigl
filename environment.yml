@@ -6,8 +6,8 @@ dependencies:
   - python <=3.12
   - pip
   - cmake
-  - compas
-  - tessagon
+  - compas 
   - pip:
+      - tessagon
       - -r requirements-dev.txt
       - .
