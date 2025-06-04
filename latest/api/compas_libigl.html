@@ -58,7 +58,7 @@
         </script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="License" href="../license.html" />
+    <link rel="next" title="trimesh_boundaries" href="generated/compas_libigl.boundaries.trimesh_boundaries.html" />
     <link rel="prev" title="API Reference" href="../api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -517,7 +517,26 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../api.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">compas_libigl</a></li>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">compas_libigl</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.boundaries.trimesh_boundaries.html">trimesh_boundaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.curvature.trimesh_gaussian_curvature.html">trimesh_gaussian_curvature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.curvature.trimesh_principal_curvature.html">trimesh_principal_curvature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.geodistance.trimesh_geodistance.html">trimesh_geodistance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.geodistance.trimesh_geodistance_multiple.html">trimesh_geodistance_multiple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.intersections.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.intersections.intersection_rays_mesh.html">intersection_rays_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.isolines.trimesh_isolines.html">trimesh_isolines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.isolines.groupsort_isolines.html">groupsort_isolines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.mapping.map_mesh.html">map_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.mapping.map_pattern_to_mesh.html">map_pattern_to_mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.massmatrix.trimesh_massmatrix.html">trimesh_massmatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.meshing.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.meshing.trimesh_remesh_along_isolines.html">trimesh_remesh_along_isolines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.parametrisation.trimesh_harmonic_mapping.html">trimesh_harmonic_mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.parametrisation.trimesh_lsc_mapping.html">trimesh_lsc_mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/compas_libigl.planarize.quadmesh_planarize.html">quadmesh_planarize</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -587,10 +606,124 @@ document.write(`
                   
   <section id="compas-libigl">
 <h1>compas_libigl</h1>
-<section id="functions">
-<h2>Functions</h2>
+<section id="boundaries">
+<h2>Boundaries</h2>
 <table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.boundaries.trimesh_boundaries.html" title="compas_libigl.boundaries.trimesh_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.boundaries.trimesh_boundaries</span></code></a></p></td>
+<td><p>Compute all ordered boundary loops of a manifold triangle mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="curvature">
+<h2>Curvature</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.curvature.trimesh_gaussian_curvature.html" title="compas_libigl.curvature.trimesh_gaussian_curvature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.curvature.trimesh_gaussian_curvature</span></code></a></p></td>
+<td><p>Compute the discrete gaussian curvature of a triangle mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.curvature.trimesh_principal_curvature.html" title="compas_libigl.curvature.trimesh_principal_curvature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.curvature.trimesh_principal_curvature</span></code></a></p></td>
+<td><p>Compute the principal curvatures and directions of a triangle mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="geodesic-distance">
+<h2>Geodesic Distance</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.geodistance.trimesh_geodistance.html" title="compas_libigl.geodistance.trimesh_geodistance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.geodistance.trimesh_geodistance</span></code></a></p></td>
+<td><p>Compute the geodesic distance from a source point to all vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.geodistance.trimesh_geodistance_multiple.html" title="compas_libigl.geodistance.trimesh_geodistance_multiple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.geodistance.trimesh_geodistance_multiple</span></code></a></p></td>
+<td><p>Compute the geodesic distance from multiple source points.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="intersections">
+<h2>Intersections</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.intersections.intersection_ray_mesh.html" title="compas_libigl.intersections.intersection_ray_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.intersections.intersection_ray_mesh</span></code></a></p></td>
+<td><p>Compute the intersection(s) between a ray and a mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.intersections.intersection_rays_mesh.html" title="compas_libigl.intersections.intersection_rays_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.intersections.intersection_rays_mesh</span></code></a></p></td>
+<td><p>Compute the intersection(s) between multiple rays and a mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="isolines">
+<h2>Isolines</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.isolines.trimesh_isolines.html" title="compas_libigl.isolines.trimesh_isolines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.isolines.trimesh_isolines</span></code></a></p></td>
+<td><p>Compute isolines on a triangle mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.isolines.groupsort_isolines.html" title="compas_libigl.isolines.groupsort_isolines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.isolines.groupsort_isolines</span></code></a></p></td>
+<td><p>Group and sort isoline edges into continuous polylines.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mapping">
+<h2>Mapping</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.mapping.map_mesh.html" title="compas_libigl.mapping.map_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.mapping.map_mesh</span></code></a></p></td>
+<td><p>Map a 2D pattern mesh onto a 3D target.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.mapping.map_pattern_to_mesh.html" title="compas_libigl.mapping.map_pattern_to_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.mapping.map_pattern_to_mesh</span></code></a></p></td>
+<td><p>Map a 2D pattern mesh onto a 3D target.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mass-matrix">
+<h2>Mass Matrix</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.massmatrix.trimesh_massmatrix.html" title="compas_libigl.massmatrix.trimesh_massmatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.massmatrix.trimesh_massmatrix</span></code></a></p></td>
+<td><p>Compute the mass matrix of a triangle mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="meshing">
+<h2>Meshing</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.meshing.trimesh_remesh_along_isoline.html" title="compas_libigl.meshing.trimesh_remesh_along_isoline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.meshing.trimesh_remesh_along_isoline</span></code></a></p></td>
+<td><p>Remesh a triangle mesh along an isoline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.meshing.trimesh_remesh_along_isolines.html" title="compas_libigl.meshing.trimesh_remesh_along_isolines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.meshing.trimesh_remesh_along_isolines</span></code></a></p></td>
+<td><p>Remesh a triangle mesh along multiple isolines.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="parametrisation">
+<h2>Parametrisation</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.parametrisation.trimesh_harmonic_mapping.html" title="compas_libigl.parametrisation.trimesh_harmonic_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.parametrisation.trimesh_harmonic_mapping</span></code></a></p></td>
+<td><p>Compute the harmonic parametrisation of a triangle mesh within a fixed circular boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_libigl.parametrisation.trimesh_lsc_mapping.html" title="compas_libigl.parametrisation.trimesh_lsc_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.parametrisation.trimesh_lsc_mapping</span></code></a></p></td>
+<td><p>Compute the least squares conformal map of a triangle mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="planarization">
+<h2>Planarization</h2>
+<table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_libigl.planarize.quadmesh_planarize.html" title="compas_libigl.planarize.quadmesh_planarize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compas_libigl.planarize.quadmesh_planarize</span></code></a></p></td>
+<td><p>Planarize the faces of a quad mesh.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -617,7 +750,16 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundaries">Boundaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curvature">Curvature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geodesic-distance">Geodesic Distance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intersections">Intersections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isolines">Isolines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping">Mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mass-matrix">Mass Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshing">Meshing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametrisation">Parametrisation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#planarization">Planarization</a></li>
 </ul>
   </nav></div>
 
