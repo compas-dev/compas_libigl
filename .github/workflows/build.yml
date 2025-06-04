@@ -65,9 +65,6 @@ jobs:
       - name: Install cibuildwheel
         run: pipx install cibuildwheel==2.23.1
 
-      - name: Install tessagon
-        run: pipx install tessagon
-
       - name: Build wheels
         run: cibuildwheel --output-dir wheelhouse .
 
