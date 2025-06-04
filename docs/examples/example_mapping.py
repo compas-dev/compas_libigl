@@ -29,7 +29,7 @@ v, f = mesh.to_vertices_and_faces()
 # ==============================================================================
 
 options = {
-    "function": lambda u, v: [u, v, 0],
+    "function": lambda u, v: [u*1, v*1, 0],
     "u_range": [-0.255, 1.33],
     "v_range": [-0.34, 1.33],
     "u_num": 16,

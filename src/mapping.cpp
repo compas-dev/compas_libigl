@@ -1,161 +1,4 @@
 #include "mapping.hpp"
-#include <iomanip>  
-
-void get_triface(
-    const compas::RowMatrixXi& F_,
-    int faceID, 
-    const compas::RowMatrixXd& V, 
-    compas::RowMatrixXd& A, 
-    compas::RowMatrixXd& B, 
-    compas::RowMatrixXd& C)
-{
-    if(0 <= faceID && faceID < F_.rows())
-    {
-        A = compas::RowMatrixXd(1, 3);
-        B = compas::RowMatrixXd(1, 3);
-        C = compas::RowMatrixXd(1, 3);
-        if(V.cols() == 2)
-        {
-            A << V(F_(faceID, 0), 0), V(F_(faceID, 0), 1), 0;
-            B << V(F_(faceID, 1), 0), V(F_(faceID, 1), 1), 0;
-            C << V(F_(faceID, 2), 0), V(F_(faceID, 2), 1), 0;
-        }
-        else if(V.cols() == 3){
-            A << V(F_(faceID, 0), 0), V(F_(faceID, 0), 1), V(F_(faceID, 0), 2);
-            B << V(F_(faceID, 1), 0), V(F_(faceID, 1), 1), V(F_(faceID, 1), 2);
-            C << V(F_(faceID, 2), 0), V(F_(faceID, 2), 1), V(F_(faceID, 2), 2);
-        }
-    }
-
-    return;
-}
-
-bool map_point3d_simple(
-    const compas::RowMatrixXi& F_, 
-    const compas::RowMatrixXd& UV_, 
-    const Eigen::Vector3d& pt, 
-    Eigen::Vector3d& l, 
-    int& faceID)
-{
-    if(UV_.isZero())
-    {
-        return false;
-    }
-    else{
-        compas::RowMatrixXd P(1, 3), L(1, 3);
-        P << pt(0), pt(1), pt(2);
-        for(int id = 0; id < F_.rows(); id++)
-        {
-            compas::RowMatrixXd A, B, C;
-            get_triface(F_, id, UV_, A, B, C);
-            igl::barycentric_coordinates(P, A, B, C, L);
-            if(L.minCoeff() < -1e-5 || L.maxCoeff() > 1 + 1e-5){
-                continue;
-            }
-            else{
-                l = Eigen::Vector3d(L(0, 0), L(0, 1), L(0, 2));
-                faceID = id;
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-std::vector<std::vector<int>> map_mesh(
-    Eigen::Ref<const compas::RowMatrixXd> v, 
-    Eigen::Ref<const compas::RowMatrixXi> f, 
-    Eigen::Ref<const compas::RowMatrixXd> uv,
-    
-    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f, 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv)
-{
-
-    // Use regular MatrixXd to avoid type conflicts with AABB functions
-    Eigen::MatrixXd V_uv = uv;
-    Eigen::MatrixXi F_faces = f;
-    
-    igl::AABB<Eigen::MatrixXd, 2> tree;
-    tree.init(V_uv, F_faces);
-
-    std::vector<bool> inMesh;
-    Eigen::MatrixXd C;
-    Eigen::VectorXi I;
-    Eigen::VectorXd sqrD;
-    Eigen::MatrixXd pattern_uv_eigen = pattern_uv;
-    
-    tree.squared_distance(V_uv, F_faces, pattern_uv_eigen, sqrD, I, C);
-    
-    for(int id = 0; id < pattern_uv.rows(); id++)
-    {
-        if(std::fabs(sqrD[id]) < 1e-5) // Tolerance
-        {
-            compas::RowMatrixXd A, B, C;
-            Eigen::MatrixXd P(1, 3);
-            P << pattern_uv(id, 0), pattern_uv(id, 1), 0;
-            compas::RowMatrixXd UV_A, UV_B, UV_C;
-            get_triface(f, I(id), uv, UV_A, UV_B, UV_C);
-            Eigen::MatrixXd L;
-            igl::barycentric_coordinates(P, UV_A, UV_B, UV_C, L);
-
-            inMesh.push_back(true);
-            
-            // Get 3D points for interpolation
-            get_triface(f, I(id), v, A, B, C);
-            // Update pattern vertex position through barycentric interpolation
-            pattern_v.row(id) = A.row(0) * L(0, 0) + B.row(0) * L(0, 1) + C.row(0) * L(0, 2);
-        }
-        else{
-            inMesh.push_back(false);
-        }
-    }
-
-    // Filter out faces with vertices outside the target mesh
-
-    // Convert pattern faces to std::vector<std::vector<int>> format for processing
-    std::vector<std::vector<int>> pattern_polygonal_faces;
-    for (int i = 0; i < pattern_f.size(); i++) {
-        std::vector<int> face;
-        // Handle any number of vertices per face, assuming -1 indicates end of face in some formats
-        for (int j = 0; j < pattern_f[i].size(); j++) {
-            int vertex_idx = pattern_f[i][j];
-            // Some formats use -1 to mark end of face
-            if (vertex_idx == -1) break;
-            face.push_back(vertex_idx);
-        }
-        
-        // Only add faces with at least 3 vertices
-        if (face.size() >= 3) {
-            pattern_polygonal_faces.push_back(face);
-        }
-    }
-
-    for(std::vector<std::vector<int>>::iterator it = pattern_polygonal_faces.begin(); it != pattern_polygonal_faces.end();)
-    {
-        bool all_in_refMesh = true;
-        // iterate vertices
-        for(int jd = 0; jd < (*it).size(); jd++)
-        {
-            int vid = (*it)[jd];
-            if(inMesh[vid] == false){
-                all_in_refMesh = false;
-                break;
-            }
-        }
-        // After checking all vertices of the face, if all_in_refMesh is false (meaning at least one vertex is outside):
-        if(!all_in_refMesh){
-            it = pattern_polygonal_faces.erase(it);
-        }
-        else{
-            it++;
-        }
-    }
-
-
-    return pattern_polygonal_faces;
-}
 
 std::vector<std::vector<int>> map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXd> v, 
@@ -165,7 +8,6 @@ std::vector<std::vector<int>> map_mesh_cropped(
     const std::vector<std::vector<int>>& pattern_f, 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv)
 {
-
     // Use regular MatrixXd to avoid type conflicts with AABB functions
     Eigen::MatrixXd V_uv = uv;
     Eigen::MatrixXi F_faces = f;
@@ -181,52 +23,51 @@ std::vector<std::vector<int>> map_mesh_cropped(
     // Find closest points on the mesh for all pattern vertices
     tree.squared_distance(V_uv, F_faces, pattern_uv_eigen, sqrD, I, C);
     
+    // Time how long the barycentric mapping takes
+    auto bary_start = std::chrono::high_resolution_clock::now();
+    
     // Map each pattern vertex to 3D using barycentric coordinates
     for(int id = 0; id < pattern_uv.rows(); id++)
     {
+        // Prepare point for barycentric coordinate calculation
         Eigen::MatrixXd P(1, 3);
         P << pattern_uv(id, 0), pattern_uv(id, 1), 0;
         
-        // Get UV coordinates of the target face
-        compas::RowMatrixXd UV_A, UV_B, UV_C;
-        get_triface(f, I(id), uv, UV_A, UV_B, UV_C);
+        // Inline get_triface for UV coordinates
+        int faceID = I(id);
+        Eigen::MatrixXd UV_A(1, 3), UV_B(1, 3), UV_C(1, 3);
+        
+        if(0 <= faceID && faceID < f.rows()) {
+            // UV coordinates
+            UV_A << uv(f(faceID, 0), 0), uv(f(faceID, 0), 1), 0;
+            UV_B << uv(f(faceID, 1), 0), uv(f(faceID, 1), 1), 0;
+            UV_C << uv(f(faceID, 2), 0), uv(f(faceID, 2), 1), 0;
+        }
         
         // Calculate barycentric coordinates
         Eigen::MatrixXd L;
         igl::barycentric_coordinates(P, UV_A, UV_B, UV_C, L);
         
-        // Get 3D points of the target face
-        compas::RowMatrixXd A, B, C;
-        get_triface(f, I(id), v, A, B, C);
+        // Inline get_triface for 3D vertex positions
+        Eigen::MatrixXd A(1, 3), B(1, 3), C(1, 3);
+        
+        if(0 <= faceID && faceID < f.rows()) {
+            // 3D coordinates
+            A << v(f(faceID, 0), 0), v(f(faceID, 0), 1), v(f(faceID, 0), 2);
+            B << v(f(faceID, 1), 0), v(f(faceID, 1), 1), v(f(faceID, 1), 2);
+            C << v(f(faceID, 2), 0), v(f(faceID, 2), 1), v(f(faceID, 2), 2);
+        }
         
         // Update pattern vertex position through barycentric interpolation
-        pattern_v.row(id) = A.row(0) * L(0, 0) + B.row(0) * L(0, 1) + C.row(0) * L(0, 2);
-
+        pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
     }
+    
     
     return pattern_f;
 }
 
-void rescale(Eigen::MatrixXd &V_uv)
-{
-    // Find min and max values for normalization
-    Eigen::Vector2d min_coeff = V_uv.colwise().minCoeff();
-    Eigen::Vector2d max_coeff = V_uv.colwise().maxCoeff();
-    
-    // Compute the size of the bounding box
-    Eigen::Vector2d size = max_coeff - min_coeff;
-    
-    // Translate UV coordinates so minimum is at the origin
-    V_uv.col(0) = V_uv.col(0).array() - min_coeff(0);
-    V_uv.col(1) = V_uv.col(1).array() - min_coeff(1);
-    
-    // Scale to fit in a 0-1 box while maintaining aspect ratio
-    double scale_factor = 1.0 / std::max(size(0), size(1));
-    V_uv *= scale_factor;
-}
-
 // Check if any segment of path1 intersects with any segment of path2
-bool PathIntersect(const Clipper2Lib::PathD& path1, const Clipper2Lib::PathD& path2, double scale) {
+bool path_intersect(const Clipper2Lib::PathD& path1, const Clipper2Lib::PathD& path2, double scale) {
     // Check each segment of path1 against each segment of path2
     for (size_t i = 0; i < path1.size(); i++) {
         const Clipper2Lib::PointD& p1a = path1[i];
@@ -252,11 +93,11 @@ bool PathIntersect(const Clipper2Lib::PathD& path1, const Clipper2Lib::PathD& pa
 
 
 // For checking PathsD (collection of paths)
-bool PathsIntersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::PathsD& paths2, double scale) {
+bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::PathsD& paths2, double scale) {
     // Check all combinations of paths
     for (const auto& path1 : paths1) {
         for (const auto& path2 : paths2) {
-            if (PathIntersect(path1, path2, scale))
+            if (path_intersect(path1, path2, scale))
                 return true;
         }
     }
@@ -269,7 +110,8 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     
     Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f
+    const std::vector<std::vector<int>>& pattern_f,
+    bool clip_boundaries
 )   
 {
  
@@ -321,21 +163,21 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
             continue;
 
         // Check if Elements are inside the boundary
-        Clipper2Lib::PointD corners[] = {
-            {pattern_bounds.left, pattern_bounds.top},      // Top-left
-            {pattern_bounds.right, pattern_bounds.top},     // Top-right
-            {pattern_bounds.right, pattern_bounds.bottom},  // Bottom-right
-            {pattern_bounds.left, pattern_bounds.bottom}    // Bottom-left
-        };
+        // Clipper2Lib::PointD corners[] = {
+        //     {pattern_bounds.left, pattern_bounds.top},      // Top-left
+        //     {pattern_bounds.right, pattern_bounds.top},     // Top-right
+        //     {pattern_bounds.right, pattern_bounds.bottom},  // Bottom-right
+        //     {pattern_bounds.left, pattern_bounds.bottom}    // Bottom-left
+        // };
 
         bool is_rect_inside_polygon = false;
         size_t num_corners_in_polygon = 0;
-        for (const auto& corner : corners) {
+        for (const auto& corner : paths[0]) {
             auto result = Clipper2Lib::PointInPolygon(corner, boundary[0]);
 
             if (result != Clipper2Lib::PointInPolygonResult::IsOutside) {
                 is_rect_inside_polygon = true;
-                bool has_collision = PathsIntersect(paths, boundary);
+                bool has_collision = paths_intersect(paths, boundary);
 
 
                 
@@ -356,12 +198,15 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
 
         // Fully enclosed polygons are added to the keep list
         // Other polygons edges are intersected with the boundary
-        if (num_corners_in_polygon == 4){
+        // patterns_to_cut.push_back(paths);
+        if (num_corners_in_polygon == paths[0].size()){
             patterns_to_keep.push_back(paths);
-        } 
-        else if (PathsIntersect(paths, boundary)){
-            patterns_to_cut.push_back(paths);
+        }else if (clip_boundaries){
+            if (paths_intersect(paths, boundary)){
+                patterns_to_cut.push_back(paths);
+            }
         }
+
 
 
     }
@@ -425,9 +270,6 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
         }
     }
 
-    // vertices = pattern_v;
-    // faces = pattern_f;
-
     return std::make_tuple(vertices, faces);
 
 }
@@ -458,54 +300,36 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
 
     // LSCM parametrization
     igl::lscm(target_v, target_f, fixed, fixed_uv, target_uv);
-    rescale(target_uv);
+
+    // Rescale
+    Eigen::Vector2d min_coeff = target_uv.colwise().minCoeff(); // Find min and max values for normalization
+    Eigen::Vector2d max_coeff = target_uv.colwise().maxCoeff();
+    Eigen::Vector2d size = max_coeff - min_coeff; // Compute the size of the bounding box    
+    target_uv.col(0) = target_uv.col(0).array() - min_coeff(0); // Translate UV coordinates so minimum is at the origin
+    target_uv.col(1) = target_uv.col(1).array() - min_coeff(1);
+    double scale_factor = 1.0 / std::max(size(0), size(1)); // Scale to fit in a 0-1 box while maintaining aspect ratio
+    target_uv *= scale_factor;
+
+    // Clip the pattern
+    auto [clipped_pattern_v, clipped_pattern_f] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries);
+
+    // return std::make_tuple(clipped_pattern_v, clipped_pattern_f); // Comment this out to see 2d cropped pattern
+
+    Eigen::MatrixXd clipped_pattern_uv;
+    clipped_pattern_uv.setZero();
+    clipped_pattern_uv = clipped_pattern_v.leftCols(2);
+
+    auto result = map_mesh_cropped(
+        target_v, 
+        target_f,
+        target_uv,
+        clipped_pattern_v,
+        clipped_pattern_f,
+        clipped_pattern_uv);
 
 
-    // Choose whether to use clipped pattern or original pattern
-    // For debugging, we're using the original pattern vertices and faces
-    if (clip_boundaries) { // Set to false to use clipped pattern
+    return std::make_tuple(clipped_pattern_v, result);
 
-        // Clip the pattern
-        auto [clipped_pattern_v, clipped_pattern_f] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f);
-
-        //return std::make_tuple(clipped_pattern_v, clipped_pattern_f);
-
-        Eigen::MatrixXd clipped_pattern_uv;
-        clipped_pattern_uv.setZero();
-        clipped_pattern_uv = clipped_pattern_v.leftCols(2);
-
-        auto result = map_mesh_cropped(
-            target_v, 
-            target_f,
-            target_uv,
-            clipped_pattern_v,
-            clipped_pattern_f,
-            clipped_pattern_uv);
-
-
-        return std::make_tuple(clipped_pattern_v, result);
-
-
-    } else {
-
-        Eigen::MatrixXd pattern_uv;
-        pattern_uv.setZero();
-        pattern_uv = pattern_v.leftCols(2);
-
-        compas::RowMatrixXd pattern_v_copy = pattern_v;
-
-        auto result = map_mesh(
-            target_v, 
-            target_f,
-            target_uv,
-            pattern_v_copy,
-            pattern_f,
-            pattern_uv);
-
-
-        return std::make_tuple(pattern_v_copy, result);
-
-    }
 }
 
 
