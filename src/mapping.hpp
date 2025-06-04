@@ -12,11 +12,19 @@
 #include <Eigen/Core>
 #include <clipper2/clipper.h>
 #include <igl/boundary_loop.h>
+#include <unordered_map>
+#include <vector>
+#include <cmath>
+#include <tuple>
+#include <iomanip>
+#include <iostream>
+#include <igl/per_vertex_normals.h>
 
 /**
  * Map a 2D already croppedpattern mesh onto a 3D target mesh using AABB tree-based mapping.
  * This function maps each vertex of the pattern mesh to the target mesh using
  * barycentric interpolation based on the UV parameterization of the target mesh.
+ * Computes normal vectors through barycentric interpolation.
  *
  * @param v The vertex matrix of the target mesh.
  * @param f The face matrix of the target mesh.
@@ -24,6 +32,7 @@
  * @param pattern_v The vertex matrix of the pattern mesh to be mapped.
  * @param pattern_f The face vector of vectors of int.
  * @param pattern_uv The UV coordinates of the pattern mesh.
+ * @param pattern_normals Output matrix for interpolated normal vectors.
  * @return Vector of vectors representing the polygonal faces of the mapped pattern mesh.
  */
 std::vector<std::vector<int>> map_mesh_cropped(
@@ -31,8 +40,9 @@ std::vector<std::vector<int>> map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXi> f, 
     Eigen::Ref<const compas::RowMatrixXd> uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f  , 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv);
+    const std::vector<std::vector<int>>& pattern_f, 
+    Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
+    Eigen::Ref<compas::RowMatrixXd> pattern_normals);
 
 /**
  * Check if two paths intersect.
@@ -65,7 +75,7 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
  * @param tolerance The tolerance for point comparison, to remove duplicates.
  * @return A tuple of the clipped pattern mesh vertex coordinates and face indices.
  */
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper (
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
     Eigen::Ref<const compas::RowMatrixXd> flattned_target_uv,
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     
@@ -85,9 +95,9 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
  * @param pattern_v #V x 3 matrix of pattern mesh vertex coordinates
  * @param pattern_f vector of vectors of int of pattern mesh triangle indices
  * @param clip_boundaries whether to clip the pattern mesh to the boundaries of the target mesh
- * @return A tuple of pattern_v and face indices representing polygons in the mapped mesh
+ * @return A tuple containing the mapped pattern vertices, faces, and vertex normal vectors.
  */
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_automatic_parameterization(
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 

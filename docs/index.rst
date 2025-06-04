@@ -2,6 +2,10 @@
 compas_libigl
 ********************************************************************************
 
+.. figure:: /_images/example_mapping_boundaries.png
+     :figclass: figure
+     :class: figure-img img-fluid
+
 .. rst-class:: lead
 
 COMPAS Libigl provides a Python binding for `Libigl <https://libigl.github.io/>`_,

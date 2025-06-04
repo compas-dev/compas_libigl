@@ -18,7 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added map_pattern_to_mesh function.
+
 ### Changed
+
+- Changed map_mesh pattern to output more detailed information about the mapping: vertices, faces, normals, boundaries, group indices.
+- Changed examples and test to use new map_mesh function.
 
 ### Removed
 

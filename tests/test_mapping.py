@@ -39,7 +39,7 @@ def test_map_mesh():
             pf.append([v0, v2, v3])
 
     # Map pattern onto target mesh
-    mv, mf = map_mesh((v, f), (pv, pf))
+    mv, mf, mn, mb, mg = map_mesh((v, f), (pv, pf))
     mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
     # Verify the result is a valid mesh
