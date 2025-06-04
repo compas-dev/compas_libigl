@@ -22,10 +22,7 @@ std::vector<std::vector<int>> map_mesh_cropped(
     
     // Find closest points on the mesh for all pattern vertices
     tree.squared_distance(V_uv, F_faces, pattern_uv_eigen, sqrD, I, C);
-    
-    // Time how long the barycentric mapping takes
-    auto bary_start = std::chrono::high_resolution_clock::now();
-    
+       
     // Map each pattern vertex to 3D using barycentric coordinates
     for(int id = 0; id < pattern_uv.rows(); id++)
     {
