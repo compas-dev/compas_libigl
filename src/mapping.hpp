@@ -62,6 +62,7 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
  * @param pattern_v The pattern mesh vertex coordinates.
  * @param pattern_f The pattern mesh face indices.
  * @param clip_boundaries Whether to clip the pattern mesh to the boundaries of the target mesh.
+ * @param tolerance The tolerance for point comparison, to remove duplicates.
  * @return A tuple of the clipped pattern mesh vertex coordinates and face indices.
  */
 std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper (
@@ -70,7 +71,8 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
     
     Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
-    bool clip_boundaries
+    bool clip_boundaries,
+    double tolerance = 1e-6
 )  ;    
 
 /**
@@ -90,4 +92,6 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
-    bool clip_boundaries);
+    bool clip_boundaries,
+    double tolerance = 1e-6
+);

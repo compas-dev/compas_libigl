@@ -15,12 +15,10 @@ struct TupleHash {
     }
 };
 
-constexpr double TOLERANCE = 1e-6;
-
-std::tuple<int64_t, int64_t> grid_key(double x, double y) {
+std::tuple<int64_t, int64_t> grid_key(double x, double y, double tolerance) {
     return {
-        static_cast<int64_t>(std::floor(x / TOLERANCE)),
-        static_cast<int64_t>(std::floor(y / TOLERANCE))
+        static_cast<int64_t>(std::floor(x / tolerance)),
+        static_cast<int64_t>(std::floor(y / tolerance))
     };
 }
 
@@ -140,7 +138,8 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
     
     Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
-    bool clip_boundaries
+    bool clip_boundaries,
+    double tolerance
 )   
 {
  
@@ -256,12 +255,12 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
     
     auto find_or_add_point = [&](double x, double y) -> int {
         double z = 0.0;
-        auto key = grid_key(x, y);
+        auto key = grid_key(x, y, tolerance);
         auto& bucket = grid_map[key];
     
         for (int idx : bucket) {
             const auto& pt = unique_points[idx];
-            if (is_same_point(pt[0], pt[1], pt[2], x, y, z, TOLERANCE))
+            if (is_same_point(pt[0], pt[1], pt[2], x, y, z, tolerance))
                 return idx;
         }
     
@@ -361,7 +360,8 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
-    bool clip_boundaries)
+    bool clip_boundaries,
+    double tolerance)
 {
 
 
@@ -393,7 +393,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> map_mesh_with_aut
     target_uv *= scale_factor;
 
     // Clip the pattern
-    auto [clipped_pattern_v, clipped_pattern_f] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries);
+    auto [clipped_pattern_v, clipped_pattern_f] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, tolerance);
 
     // return std::make_tuple(clipped_pattern_v, clipped_pattern_f); // Comment this out to see 2d cropped pattern
 
@@ -426,5 +426,6 @@ NB_MODULE(_mapping, m)
         "target_f"_a,
         "target_uv"_a,
         "target_fixed_vid"_a,
-        "clip_boundaries"_a = true);
+        "clip_boundaries"_a,
+        "tolerance"_a);
 }

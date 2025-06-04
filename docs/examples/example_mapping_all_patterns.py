@@ -97,9 +97,9 @@ pf = tessagon_mesh["face_list"]
 # Mapping: 3D Mesh, 2D Pattern, UV
 # ==============================================================================
 
-mv, mf = map_mesh((v, f), (pv, pf), clip_boundaries=True)
+mv, mf = map_mesh((v, f), (pv, pf), clip_boundaries=True, tolerance=1e-6)
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
-
+print(len(mv))
 # ==============================================================================
 # Viewer
 # ==============================================================================
