@@ -513,28 +513,7 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/compas_libigl.html">compas_libigl</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.add.html">add</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get.html">get</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get_beetle.html">get_beetle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get_armadillo.html">get_armadillo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.intersection_rays_mesh.html">intersection_rays_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_boundaries.html">trimesh_boundaries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_gaussian_curvature.html">trimesh_gaussian_curvature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_principal_curvature.html">trimesh_principal_curvature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_geodistance.html">trimesh_geodistance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_geodistance_multiple.html">trimesh_geodistance_multiple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_isolines.html">trimesh_isolines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.groupsort_isolines.html">groupsort_isolines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_massmatrix.html">trimesh_massmatrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_harmonic_mapping.html">trimesh_harmonic_mapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_lsc_mapping.html">trimesh_lsc_mapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.quadmesh_planarize.html">quadmesh_planarize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_remesh_along_isolines.html">trimesh_remesh_along_isolines</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/compas_libigl.html">compas_libigl</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -616,13 +595,14 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scale</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">compas_libigl</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">libigl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.boundaries</span><span class="w"> </span><span class="kn">import</span> <span class="n">trimesh_boundaries</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
 <span class="c1"># ==============================================================================</span>
-
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_off</span><span class="p">(</span><span class="n">libigl</span><span class="o">.</span><span class="n">get_beetle</span><span class="p">())</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_off</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;beetle.off&quot;</span><span class="p">)</span>
 
 <span class="n">Rx</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_axis_and_angle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
 <span class="n">Rz</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_axis_and_angle</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
@@ -634,16 +614,13 @@ document.write(`
 <span class="c1"># Boundaries</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">boundaries</span> <span class="o">=</span> <span class="n">libigl</span><span class="o">.</span><span class="n">trimesh_boundaries</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">())</span>
+<span class="n">boundaries</span> <span class="o">=</span> <span class="n">trimesh_boundaries</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">())</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Visualize</span>
 <span class="c1"># ==============================================================================</span>
 
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="c1"># viewer.view.camera.position = [8, -7, 1]</span>
-<span class="c1"># viewer.view.camera.look_at([1, 0, 0])</span>
-
 
 <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">boundaries</span><span class="p">:</span>
     <span class="n">vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>

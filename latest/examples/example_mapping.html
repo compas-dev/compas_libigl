@@ -513,28 +513,7 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/compas_libigl.html">compas_libigl</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.add.html">add</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get.html">get</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get_beetle.html">get_beetle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.get_armadillo.html">get_armadillo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.intersection_ray_mesh.html">intersection_ray_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.intersection_rays_mesh.html">intersection_rays_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_boundaries.html">trimesh_boundaries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_gaussian_curvature.html">trimesh_gaussian_curvature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_principal_curvature.html">trimesh_principal_curvature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_geodistance.html">trimesh_geodistance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_geodistance_multiple.html">trimesh_geodistance_multiple</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_isolines.html">trimesh_isolines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.groupsort_isolines.html">groupsort_isolines</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_massmatrix.html">trimesh_massmatrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_harmonic_mapping.html">trimesh_harmonic_mapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_lsc_mapping.html">trimesh_lsc_mapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.quadmesh_planarize.html">quadmesh_planarize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_remesh_along_isoline.html">trimesh_remesh_along_isoline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/generated/compas_libigl.trimesh_remesh_along_isolines.html">trimesh_remesh_along_isolines</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/compas_libigl.html">compas_libigl</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -607,125 +586,6 @@ document.write(`
 <figure class="figure align-default">
 <img alt="../_images/example_mapping_patterns.png" class="figure-img img-fluid" src="../_images/example_mapping_patterns.png" />
 </figure>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Color</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas.datastructures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.adaptors.list_adaptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListAdaptor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.brick_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">BrickTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.dissected_hex_quad_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">DissectedHexQuadTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.dissected_hex_tri_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">DissectedHexTriTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.dissected_square_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">DissectedSquareTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.dissected_triangle_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">DissectedTriangleTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.dodeca_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">DodecaTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.floret_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">FloretTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.hex_big_tri_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexBigTriTessagon</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.hex_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.hex_tri_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexTriTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.octo_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">OctoTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.pythagorean_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythagoreanTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.rhombus_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">RhombusTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.square_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">SquareTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.square_tri_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">SquareTriTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.tri_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">TriTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.weave_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeaveTessagon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.zig_zag_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZigZagTessagon</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">compas_libigl</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">igl</span>
-
-<span class="n">TESSAGON_TYPES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Hex&quot;</span><span class="p">,</span> <span class="n">HexTessagon</span><span class="p">),</span>
-    <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Tri&quot;</span><span class="p">,</span> <span class="n">TriTessagon</span><span class="p">),</span>
-    <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Octo&quot;</span><span class="p">,</span> <span class="n">OctoTessagon</span><span class="p">),</span>
-    <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Square&quot;</span><span class="p">,</span> <span class="n">SquareTessagon</span><span class="p">),</span>
-    <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Rhombus&quot;</span><span class="p">,</span> <span class="n">RhombusTessagon</span><span class="p">),</span>
-    <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;HexTri&quot;</span><span class="p">,</span> <span class="n">HexTriTessagon</span><span class="p">),</span>
-    <span class="mi">7</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;DissectedSquare&quot;</span><span class="p">,</span> <span class="n">DissectedSquareTessagon</span><span class="p">),</span>
-    <span class="mi">8</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;DissectedTriangle&quot;</span><span class="p">,</span> <span class="n">DissectedTriangleTessagon</span><span class="p">),</span>
-    <span class="mi">9</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;DissectedHexQuad&quot;</span><span class="p">,</span> <span class="n">DissectedHexQuadTessagon</span><span class="p">),</span>
-    <span class="mi">10</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;DissectedHexTri&quot;</span><span class="p">,</span> <span class="n">DissectedHexTriTessagon</span><span class="p">),</span>
-    <span class="mi">11</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Floret&quot;</span><span class="p">,</span> <span class="n">FloretTessagon</span><span class="p">),</span>
-    <span class="mi">12</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Pythagorean&quot;</span><span class="p">,</span> <span class="n">PythagoreanTessagon</span><span class="p">),</span>
-    <span class="mi">13</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Brick&quot;</span><span class="p">,</span> <span class="n">BrickTessagon</span><span class="p">),</span>
-    <span class="mi">14</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Weave&quot;</span><span class="p">,</span> <span class="n">WeaveTessagon</span><span class="p">),</span>
-    <span class="mi">15</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;ZigZag&quot;</span><span class="p">,</span> <span class="n">ZigZagTessagon</span><span class="p">),</span>
-    <span class="mi">16</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;HexBigTri&quot;</span><span class="p">,</span> <span class="n">HexBigTriTessagon</span><span class="p">),</span>
-    <span class="mi">17</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Dodeca&quot;</span><span class="p">,</span> <span class="n">DodecaTessagon</span><span class="p">),</span>
-    <span class="mi">18</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;SquareTri&quot;</span><span class="p">,</span> <span class="n">SquareTriTessagon</span><span class="p">),</span>
-<span class="p">}</span>
-
-<span class="c1"># Pattern selection - change this value to use a different pattern</span>
-<span class="n">PATTERN_TYPE</span> <span class="o">=</span> <span class="mi">15</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Input geometry: 3D Mesh</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="s2">&quot;data/minimal_surface.obj&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
-    <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">attr</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
-    <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
-<span class="n">mesh</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
-
-<span class="n">v</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">()</span>
-
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Input geometry: 2D Pattern creation using Tessagon library, can be other mesh.</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;u_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">],</span>
-    <span class="s2">&quot;v_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">],</span>
-    <span class="s2">&quot;u_num&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="s2">&quot;v_num&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="s2">&quot;u_cyclic&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;v_cyclic&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;adaptor_class&quot;</span><span class="p">:</span> <span class="n">ListAdaptor</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="c1"># Get pattern name and class based on selected pattern type</span>
-<span class="n">pattern_name</span><span class="p">,</span> <span class="n">pattern_class</span> <span class="o">=</span> <span class="n">TESSAGON_TYPES</span><span class="p">[</span><span class="n">PATTERN_TYPE</span><span class="p">]</span>
-
-<span class="c1"># Create the selected tessagon pattern</span>
-<span class="n">tessagon</span> <span class="o">=</span> <span class="n">pattern_class</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>
-<span class="n">tessagon_mesh</span> <span class="o">=</span> <span class="n">tessagon</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
-<span class="n">pv</span> <span class="o">=</span> <span class="n">tessagon_mesh</span><span class="p">[</span><span class="s2">&quot;vert_list&quot;</span><span class="p">]</span>
-<span class="n">pf</span> <span class="o">=</span> <span class="n">tessagon_mesh</span><span class="p">[</span><span class="s2">&quot;face_list&quot;</span><span class="p">]</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Mapping: 3D Mesh, 2D Pattern, UV</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">mv</span><span class="p">,</span> <span class="n">mf</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">map_mesh</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">))</span>
-<span class="n">mesh_mapped</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">mf</span><span class="p">)</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Viewer</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
-<span class="n">config</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
-
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">grey</span><span class="p">(),</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pattern2d&quot;</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_mapped</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_mapped&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
-
-<span class="c1"># To see where the pattern is mapped:</span>
-<span class="n">uv</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">trimesh_lsc_mapping</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
-<span class="n">mesh_flattened</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()):</span>
-    <span class="n">mesh_flattened</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>
-
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_flattened</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_flattened&quot;</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
 <figure class="figure align-default">
 <img alt="../_images/example_mapping.png" class="figure-img img-fluid" src="../_images/example_mapping.png" />
 </figure>
@@ -736,13 +596,16 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.adaptors.list_adaptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListAdaptor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.hex_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexTessagon</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">compas_libigl</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">igl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.mapping</span><span class="w"> </span><span class="kn">import</span> <span class="n">map_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.parametrisation</span><span class="w"> </span><span class="kn">import</span> <span class="n">trimesh_lsc_mapping</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry: 3D Mesh</span>
 <span class="c1"># ==============================================================================</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;minimal_surface.obj&quot;</span><span class="p">)</span>
 
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="s2">&quot;data/minimal_surface.obj&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
     <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">attr</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
@@ -757,7 +620,7 @@ document.write(`
 <span class="c1"># ==============================================================================</span>
 
 <span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="n">u</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="s2">&quot;u_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.255</span><span class="p">,</span> <span class="mf">1.33</span><span class="p">],</span>
     <span class="s2">&quot;v_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.34</span><span class="p">,</span> <span class="mf">1.33</span><span class="p">],</span>
     <span class="s2">&quot;u_num&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
@@ -775,7 +638,7 @@ document.write(`
 <span class="c1"># Mapping: 3D Mesh, 2D Pattern, UV</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">mv</span><span class="p">,</span> <span class="n">mf</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">map_mesh</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">))</span>
+<span class="n">mv</span><span class="p">,</span> <span class="n">mf</span> <span class="o">=</span> <span class="n">map_mesh</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">))</span>
 <span class="n">mesh_mapped</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">mf</span><span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
@@ -792,143 +655,12 @@ document.write(`
 <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_mapped</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_mapped&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
 
 <span class="c1"># To see where the pattern is mapped:</span>
-<span class="n">uv</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">trimesh_lsc_mapping</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+<span class="n">uv</span> <span class="o">=</span> <span class="n">trimesh_lsc_mapping</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
 <span class="n">mesh_flattened</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()):</span>
     <span class="n">mesh_flattened</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_flattened</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_flattened&quot;</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<figure class="figure align-default">
-<img alt="../_images/example_mapping_boundaries.png" class="figure-img img-fluid" src="../_images/example_mapping_boundaries.png" />
-</figure>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Color</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas.datastructures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.adaptors.list_adaptor</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListAdaptor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tessagon.types.hex_tessagon</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexTessagon</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">compas_libigl</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">igl</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Input geometry: 3D Mesh</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="s2">&quot;data/minimal_surface.obj&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
-    <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">attr</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span>
-    <span class="n">attr</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
-<span class="n">mesh</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
-
-<span class="n">v</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">()</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Flattening</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="c1"># To see where the pattern is mapped:</span>
-<span class="n">uv</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">trimesh_lsc_mapping</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
-<span class="n">mesh_flattened</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()):</span>
-    <span class="n">mesh_flattened</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">])</span>
-
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Input geometry: 2D Pattern creation using Tessagon library, can be other mesh.</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-    <span class="s2">&quot;u_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.255</span><span class="p">,</span> <span class="mf">1.33</span><span class="p">],</span>
-    <span class="s2">&quot;v_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.34</span><span class="p">,</span> <span class="mf">1.33</span><span class="p">],</span>
-    <span class="s2">&quot;u_num&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="s2">&quot;v_num&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="s2">&quot;u_cyclic&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;v_cyclic&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s2">&quot;adaptor_class&quot;</span><span class="p">:</span> <span class="n">ListAdaptor</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="n">tessagon</span> <span class="o">=</span> <span class="n">HexTessagon</span><span class="p">(</span><span class="o">**</span><span class="n">options</span><span class="p">)</span>
-<span class="n">tessagon_mesh</span> <span class="o">=</span> <span class="n">tessagon</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
-<span class="n">pv</span> <span class="o">=</span> <span class="n">tessagon_mesh</span><span class="p">[</span><span class="s2">&quot;vert_list&quot;</span><span class="p">]</span>
-<span class="n">pf</span> <span class="o">=</span> <span class="n">tessagon_mesh</span><span class="p">[</span><span class="s2">&quot;face_list&quot;</span><span class="p">]</span>
-
-<span class="c1"># rotate the pattern</span>
-<span class="n">rotated_mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">)</span>
-<span class="n">rotated_mesh</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="mi">0</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-
-<span class="n">pv</span><span class="p">,</span> <span class="n">pf</span> <span class="o">=</span> <span class="n">rotated_mesh</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">()</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Boundaries</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">boundaries</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">trimesh_boundaries</span><span class="p">(</span><span class="n">mesh_flattened</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">())</span>
-
-<span class="n">polygons</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">boundaries</span><span class="p">:</span>
-    <span class="n">vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-    <span class="n">vertices</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="n">mesh_flattened</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span>
-    <span class="n">polygons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># 2D Boolean Intersection using Shapely</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">polygons_cut</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">pf</span><span class="p">:</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">face</span><span class="p">:</span>
-        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pv</span><span class="p">[</span><span class="n">vertex</span><span class="p">])</span>
-    <span class="n">polygon_cut</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">polygons_cut</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polygon_cut</span><span class="p">)</span>
-
-
-<span class="c1"># Polygon.boolean_intersection</span>
-<span class="n">intersections</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">polygon_cut</span> <span class="ow">in</span> <span class="n">polygons_cut</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">polygon</span> <span class="ow">in</span> <span class="n">polygons</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">boolean_intersection_polygon_polygon</span>
-
-        <span class="n">coords</span> <span class="o">=</span> <span class="n">boolean_intersection_polygon_polygon</span><span class="p">(</span><span class="n">polygon</span><span class="p">,</span> <span class="n">polygon_cut</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">intersection</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">])</span>  <span class="c1"># type: ignore</span>
-            <span class="n">intersections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span>
-
-<span class="n">mesh_cropped</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_polygons</span><span class="p">(</span><span class="n">intersections</span><span class="p">)</span>
-<span class="n">pv</span><span class="p">,</span> <span class="n">pf</span> <span class="o">=</span> <span class="n">mesh_cropped</span><span class="o">.</span><span class="n">to_vertices_and_faces</span><span class="p">()</span>
-
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Place the pattern mesh at the bottom left corner of the meshpattern_uv</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">mv</span><span class="p">,</span> <span class="n">mf</span> <span class="o">=</span> <span class="n">igl</span><span class="o">.</span><span class="n">map_mesh</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">pf</span><span class="p">))</span>
-<span class="n">mesh_mapped</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">mf</span><span class="p">)</span>
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Viewer</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
-<span class="n">config</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
-
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">grey</span><span class="p">(),</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_mapped</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_mapped&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rotated_mesh</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">intersections</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_flattened</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_flattened0&quot;</span><span class="p">)</span>
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
