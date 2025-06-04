@@ -12,26 +12,10 @@ authors = [
     { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
 ]
 classifiers = ["License :: OSI Approved :: BSD License"]
-dynamic = ['dependencies', 'optional-dependencies', 'version']
+dynamic = ['version']
 
 [project.urls]
 Homepage = "https://compas.dev/compas_libigl/latest/"
-
-# ============================================================================
-# setuptools config
-# ============================================================================
-
-# [tool.setuptools]
-# package-dir = { "" = "src" }
-# include-package-data = true
-# zip-safe = false
-
-[tool.setuptools.dynamic]
-dependencies = { file = "requirements.txt" }
-optional-dependencies = { dev = { file = "requirements-dev.txt" } }
-
-# [tool.setuptools.packages.find]
-# where = ["src"]
 
 # ============================================================================
 # pytest configuration
