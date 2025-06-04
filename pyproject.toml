@@ -75,7 +75,7 @@ CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.cibuildwheel]
 build-verbosity = 3
-test-requires = ["numpy", "compas", "pytest", "build"]
+test-requires = ["numpy", "compas", "pytest", "build", "tessagon"]
 test-command = "pip install numpy compas && pip list && pytest {project}/tests"
 build-frontend = "pip"
 manylinux-x86_64-image = "manylinux2014"
