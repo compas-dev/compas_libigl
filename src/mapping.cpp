@@ -1,4 +1,36 @@
 #include "mapping.hpp"
+#include <unordered_map>
+#include <vector>
+#include <cmath>
+#include <tuple>
+#include <iomanip>
+#include <iostream>
+
+// Custom hash function for tuple
+struct TupleHash {
+    std::size_t operator()(const std::tuple<int64_t, int64_t>& t) const {
+        auto h1 = std::hash<int64_t>{}(std::get<0>(t));
+        auto h2 = std::hash<int64_t>{}(std::get<1>(t));
+        return h1 ^ (h2 << 1); // basic hash combination
+    }
+};
+
+constexpr double TOLERANCE = 1e-6;
+
+std::tuple<int64_t, int64_t> grid_key(double x, double y) {
+    return {
+        static_cast<int64_t>(std::floor(x / TOLERANCE)),
+        static_cast<int64_t>(std::floor(y / TOLERANCE))
+    };
+}
+
+bool is_same_point(double x1, double y1, double z1,
+                   double x2, double y2, double z2,
+                   double tol) {
+    return std::abs(x1 - x2) < tol &&
+           std::abs(y1 - y2) < tol &&
+           std::abs(z1 - z2) < tol;
+}
 
 std::vector<std::vector<int>> map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXd> v, 
@@ -217,55 +249,108 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>> eigen_to_clipper 
         
         solutions.push_back(solution);
     }
-    //solutions = patterns_to_cut;
 
-    // Count total points
-    size_t total_points = 0;
-    for (const auto &solution : solutions) 
-        for (const auto &path : solution) 
-            total_points += path.size();
-
-    for (const auto &subject : patterns_to_keep) 
-        for (const auto &path : subject) 
-            total_points += path.size();
-
-
-    // We'll count the total points and then initialize our output matrices
-    // These will be populated later
+    std::vector<std::array<double, 3>> unique_points;
+    std::unordered_map<std::tuple<int64_t, int64_t>, std::vector<int>, TupleHash> grid_map;
     std::vector<std::vector<int>> faces;
-    faces.reserve(total_points); // This is an overestimation, but ensures capacity
     
-    size_t point_index = 0; // Reset point index
+    auto find_or_add_point = [&](double x, double y) -> int {
+        double z = 0.0;
+        auto key = grid_key(x, y);
+        auto& bucket = grid_map[key];
+    
+        for (int idx : bucket) {
+            const auto& pt = unique_points[idx];
+            if (is_same_point(pt[0], pt[1], pt[2], x, y, z, TOLERANCE))
+                return idx;
+        }
+    
+        int new_index = static_cast<int>(unique_points.size());
+        unique_points.push_back({x, y, z});
+        bucket.push_back(new_index);
+        return new_index;
+    };
 
-    compas::RowMatrixXd vertices(total_points, 3);
-
-    for (const auto &solution : solutions){
+    for (const auto &solution : solutions) {
         for (const auto& path : solution) {
             std::vector<int> face;
             for (const auto& point : path) {
-                vertices(point_index, 0) = point.x;
-                vertices(point_index, 1) = point.y;
-                vertices(point_index, 2) = 0;
-                face.push_back(point_index);
-                point_index++;
+                int idx = find_or_add_point(point.x, point.y);
+                face.push_back(idx);
+            }
+            faces.push_back(face);
+        }
+    }
+    
+    for (const auto &subject : patterns_to_keep) {
+        for (const auto& path : subject) {
+            std::vector<int> face;
+            for (const auto& point : path) {
+                int idx = find_or_add_point(point.x, point.y);
+                face.push_back(idx);
             }
             faces.push_back(face);
         }
     }
 
-    for (const auto &subject : patterns_to_keep){
-        for (const auto& path : subject) {
-            std::vector<int> face;
-            for (const auto& point : path) {
-                vertices(point_index, 0) = point.x;
-                vertices(point_index, 1) = point.y;
-                vertices(point_index, 2) = 0; // Set z-coordinate to 0
-                face.push_back(point_index);
-                point_index++;
-            }
-            faces.push_back(face);
-        }
+    compas::RowMatrixXd vertices(unique_points.size(), 3);
+    for (size_t i = 0; i < unique_points.size(); ++i) {
+        vertices(i, 0) = unique_points[i][0];
+        vertices(i, 1) = unique_points[i][1];
+        vertices(i, 2) = 0.0;
     }
+
+    
+
+    // //solutions = patterns_to_cut;
+
+    // // Count total points
+    // size_t total_points = 0;
+    // for (const auto &solution : solutions) 
+    //     for (const auto &path : solution) 
+    //         total_points += path.size();
+
+    // for (const auto &subject : patterns_to_keep) 
+    //     for (const auto &path : subject) 
+    //         total_points += path.size();
+
+
+    // // We'll count the total points and then initialize our output matrices
+    // // These will be populated later
+    // std::vector<std::vector<int>> faces;
+    // faces.reserve(total_points); // This is an overestimation, but ensures capacity
+    
+    // size_t point_index = 0; // Reset point index
+
+    // compas::RowMatrixXd vertices(total_points, 3);
+
+    // for (const auto &solution : solutions){
+    //     for (const auto& path : solution) {
+    //         std::vector<int> face;
+    //         for (const auto& point : path) {
+    //             vertices(point_index, 0) = point.x;
+    //             vertices(point_index, 1) = point.y;
+    //             vertices(point_index, 2) = 0;
+    //             face.push_back(point_index);
+    //             point_index++;
+    //         }
+    //         faces.push_back(face);
+    //     }
+    // }
+
+    // for (const auto &subject : patterns_to_keep){
+    //     for (const auto& path : subject) {
+    //         std::vector<int> face;
+    //         for (const auto& point : path) {
+    //             vertices(point_index, 0) = point.x;
+    //             vertices(point_index, 1) = point.y;
+    //             vertices(point_index, 2) = 0; // Set z-coordinate to 0
+    //             face.push_back(point_index);
+    //             point_index++;
+    //         }
+    //         faces.push_back(face);
+    //     }
+    // }
 
     return std::make_tuple(vertices, faces);
 

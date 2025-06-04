@@ -1,10 +1,8 @@
 import numpy as np
-from compas.utilities import print_profile
 
 from compas_libigl import _mapping
 
 
-@print_profile
 def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True):
     """
     Map a 2D pattern mesh onto a 3D target.
