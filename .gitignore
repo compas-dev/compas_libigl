@@ -26,6 +26,9 @@ _build/
 *.manifest
 *.spec
 
+# Third party dependencies
+.third_party/
+
 # IDE
 .vscode/
 .idea/

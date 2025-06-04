@@ -1,3 +1,4 @@
+from itertools import filterfalse
 from compas.colors import Color
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
@@ -23,7 +24,11 @@ from tessagon.types.tri_tessagon import TriTessagon
 from tessagon.types.weave_tessagon import WeaveTessagon
 from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
-import compas_libigl as igl
+from compas_libigl.mapping import map_mesh
+from compas_libigl.parametrisation import trimesh_lsc_mapping
+
+from pathlib import Path
+
 
 TESSAGON_TYPES = {
     1: ("Hex", HexTessagon),
@@ -53,7 +58,8 @@ PATTERN_TYPE = 15
 # Input geometry: 3D Mesh
 # ==============================================================================
 
-mesh = Mesh.from_obj("data/minimal_surface.obj")
+# mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 for key, attr in mesh.vertices(True):
     y = attr["y"]
     attr["y"] = -attr["z"]
@@ -68,7 +74,7 @@ v, f = mesh.to_vertices_and_faces()
 # ==============================================================================
 
 options = {
-    "function": lambda u, v: [u, v, 0],
+    "function": lambda u, v: [u*1, v*1, 0],
     "u_range": [-0.25, 1.25],
     "v_range": [-0.25, 1.25],
     "u_num": 20,
@@ -91,9 +97,9 @@ pf = tessagon_mesh["face_list"]
 # Mapping: 3D Mesh, 2D Pattern, UV
 # ==============================================================================
 
-mv, mf = igl.map_mesh((v, f), (pv, pf))
+mv, mf = map_mesh((v, f), (pv, pf), clip_boundaries=True, tolerance=1e-6)
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
-
+print(len(mv))
 # ==============================================================================
 # Viewer
 # ==============================================================================
@@ -108,10 +114,10 @@ viewer.scene.add(Mesh.from_vertices_and_faces(pv, pf), name="pattern2d")
 viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())
 
 # To see where the pattern is mapped:
-uv = igl.trimesh_lsc_mapping((v, f))
+uv = trimesh_lsc_mapping((v, f))
 mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])
+viewer.scene.add(mesh_flattened, name="mesh_flattened", show_lines=False, opacity=0.5)
 
-viewer.scene.add(mesh_flattened, name="mesh_flattened")
 viewer.show()

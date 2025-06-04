@@ -18,10 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added Clipper2 to CMakeLists.txt
+
 ### Changed
+
+* Mapping method crops the pattern mesh to the boundaries of the target mesh.
 
 ### Removed
 
+* Removed all the modules from __init__.py
 
 ## [0.4.0] 2025-04-05
 

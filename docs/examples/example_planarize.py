@@ -4,7 +4,7 @@ from compas.colors import ColorMap
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.planarize import quadmesh_planarize
 
 # ==============================================================================
 # Input
@@ -22,7 +22,7 @@ mesh_not_planarized.name = "Not Planarized"
 # ==============================================================================
 
 V, F = mesh_not_planarized.to_vertices_and_faces()
-V2 = igl.quadmesh_planarize((V, F), KMAX, MAXDEV)
+V2 = quadmesh_planarize((V, F), KMAX, MAXDEV)
 
 # ==============================================================================
 # Visualize

@@ -7,13 +7,17 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.meshing import trimesh_remesh_along_isolines
+from compas_libigl.geodistance import trimesh_geodistance_multiple
+
+from pathlib import Path
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "camelhead.off")
 
-mesh = Mesh.from_off(igl.get("camelhead.off"))
+
 R = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 S = Scale.from_factors([10, 10, 10])
 mesh.transform(S * R)
@@ -30,7 +34,7 @@ trimesh.quads_to_triangles()
 boundary_vertices = list(trimesh.vertices_on_boundary())
 
 # Calculate geodesic distances using multiple source points
-distances = igl.trimesh_geodistance_multiple(trimesh.to_vertices_and_faces(), boundary_vertices, method="exact")
+distances = trimesh_geodistance_multiple(trimesh.to_vertices_and_faces(), boundary_vertices, method="exact")
 
 # ==============================================================================
 # Create isolines and remesh
@@ -42,7 +46,7 @@ num_isolines = 5
 isovalues = [min_dist + i * (max_dist - min_dist) / num_isolines for i in range(1, num_isolines + 1)]
 
 # Split mesh along isolines of geodesic distance
-V, F, S, G = igl.trimesh_remesh_along_isolines(trimesh.to_vertices_and_faces(), distances, isovalues)
+V, F, S, G = trimesh_remesh_along_isolines(trimesh.to_vertices_and_faces(), distances, isovalues)
 
 # ==============================================================================
 # Visualization

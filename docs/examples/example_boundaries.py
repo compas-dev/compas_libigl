@@ -7,13 +7,14 @@ from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
 
-import compas_libigl as libigl
+from compas_libigl.boundaries import trimesh_boundaries
+
+from pathlib import Path
 
 # ==============================================================================
 # Input geometry
 # ==============================================================================
-
-mesh = Mesh.from_off(libigl.get_beetle())
+mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 
 Rx = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 Rz = Rotation.from_axis_and_angle([0, 0, 1], math.radians(90))
@@ -25,16 +26,13 @@ mesh.transform(S * Rz * Rx)
 # Boundaries
 # ==============================================================================
 
-boundaries = libigl.trimesh_boundaries(mesh.to_vertices_and_faces())
+boundaries = trimesh_boundaries(mesh.to_vertices_and_faces())
 
 # ==============================================================================
 # Visualize
 # ==============================================================================
 
 viewer = Viewer(width=1600, height=900)
-# viewer.view.camera.position = [8, -7, 1]
-# viewer.view.camera.look_at([1, 0, 0])
-
 
 for vertices in boundaries:
     vertices = list(vertices)

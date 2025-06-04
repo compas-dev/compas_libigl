@@ -15,10 +15,3 @@ Mapping
 
 .. literalinclude:: example_mapping.py
     :language: python
-
-.. figure:: /_images/example_mapping_boundaries.png
-    :figclass: figure
-    :class: figure-img img-fluid
-
-.. literalinclude:: example_mapping_boundaries.py
-    :language: python

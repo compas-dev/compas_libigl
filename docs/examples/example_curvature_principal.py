@@ -6,7 +6,7 @@ from compas.geometry import Point
 from compas.geometry import Vector
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.curvature import trimesh_principal_curvature
 
 # ==============================================================================
 # Input geometry
@@ -21,7 +21,7 @@ trimesh.quads_to_triangles()
 # ==============================================================================
 
 vertices, faces = trimesh.to_vertices_and_faces()
-PD1, PD2, PV1, PV2 = igl.trimesh_principal_curvature((vertices, faces))
+PD1, PD2, PV1, PV2 = trimesh_principal_curvature((vertices, faces))
 
 # ==============================================================================
 # Visualization

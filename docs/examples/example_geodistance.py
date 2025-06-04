@@ -5,7 +5,7 @@ from compas.datastructures import Mesh
 from compas.geometry import Point
 from compas_viewer import Viewer
 
-import compas_libigl as igl
+from compas_libigl.geodistance import trimesh_geodistance
 
 # ==============================================================================
 # Input
@@ -21,7 +21,7 @@ trimesh.quads_to_triangles()
 # ==============================================================================
 
 source = trimesh.vertex_sample(size=1)[0]
-distance = igl.trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="exact")
+distance = trimesh_geodistance(trimesh.to_vertices_and_faces(), source, method="exact")
 
 # ==============================================================================
 # Visualize

@@ -1,9 +1,8 @@
-import compas_libigl as m
+from compas_libigl._nanobind import add
 
 
 def test_add():
-    assert m.add(1, 2) == 3
+    assert add(1, 2) == 3
 
 
-print(m.add(1, 2))
-print(m.__doc__)
+print(add(1, 2))
