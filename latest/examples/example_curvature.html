@@ -599,6 +599,7 @@ document.write(`
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
 <span class="c1"># ==============================================================================</span>
+
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tubemesh.obj&quot;</span><span class="p">))</span>
 <span class="n">trimesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">trimesh</span><span class="o">.</span><span class="n">quads_to_triangles</span><span class="p">()</span>

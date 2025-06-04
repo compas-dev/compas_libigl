@@ -618,8 +618,6 @@ document.write(`
 <span class="n">cmap</span> <span class="o">=</span> <span class="n">ColorMap</span><span class="o">.</span><span class="n">from_color</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
 
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
-<span class="c1"># viewer.view.camera.position = [1, -6, 2]</span>
-<span class="c1"># viewer.view.camera.look_at([1, 1, 1])</span>
 
 <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">show_points</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -652,7 +650,6 @@ document.write(`
 
 <span class="n">trimesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">trimesh</span><span class="o">.</span><span class="n">quads_to_triangles</span><span class="p">()</span>
-
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Get boundary vertices as source points</span>

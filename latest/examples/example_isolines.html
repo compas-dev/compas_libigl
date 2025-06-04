@@ -587,6 +587,7 @@ document.write(`
 <img alt="../_images/example_isolines.png" class="figure-img img-fluid" src="../_images/example_isolines.png" />
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColorMap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.datastructures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
@@ -594,13 +595,13 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scale</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.isolines</span><span class="w"> </span><span class="kn">import</span> <span class="n">trimesh_isolines</span><span class="p">,</span> <span class="n">groupsort_isolines</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.isolines</span><span class="w"> </span><span class="kn">import</span> <span class="n">groupsort_isolines</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas_libigl.isolines</span><span class="w"> </span><span class="kn">import</span> <span class="n">trimesh_isolines</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Input geometry</span>
 <span class="c1"># ==============================================================================</span>
+
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_off</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;beetle.off&quot;</span><span class="p">)</span>
 
 <span class="n">Rx</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_axis_and_angle</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
@@ -625,14 +626,11 @@ document.write(`
 
 <span class="n">isolines</span> <span class="o">=</span> <span class="n">groupsort_isolines</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
 
-
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Visualisation</span>
 <span class="c1"># ==============================================================================</span>
 
-
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">()</span>
-
 
 <span class="n">minval</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">scalars</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.01</span>
 <span class="n">maxval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">scalars</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.01</span>
