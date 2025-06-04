@@ -50,18 +50,19 @@ TESSAGON_TYPES = {
 }
 
 # Pattern selection - change this value to use a different pattern
+
 PATTERN_TYPE = 15
 
 # ==============================================================================
 # Input geometry: 3D Mesh
 # ==============================================================================
 
-# mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
-for key, attr in mesh.vertices(True):
-    y = attr["y"]
-    attr["y"] = -attr["z"]
-    attr["z"] = y
+
+for vertex in mesh.vertices():
+    x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
+    mesh.vertex_attributes(vertex, "xyz", [x, -z, y])
+
 mesh.translate([2, 2, 0.5])
 
 v, f = mesh.to_vertices_and_faces()
@@ -108,6 +109,7 @@ config.camera.target = [2, 2, 0.25]
 config.camera.position = [5, 2, 1.5]
 
 viewer = Viewer(config=config)
+
 viewer.scene.add(mesh, name="mesh", show_faces=False, linecolor=Color.grey(), opacity=0.2)
 viewer.scene.add(Mesh.from_vertices_and_faces(pv, pf), name="pattern2d")
 viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())

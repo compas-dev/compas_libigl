@@ -16,10 +16,10 @@ from compas_libigl.parametrisation import trimesh_lsc_mapping
 
 mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
 
-for key, attr in mesh.vertices(True):
-    y = attr["y"]
-    attr["y"] = -attr["z"]
-    attr["z"] = y
+for vertex in mesh.vertices():
+    x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
+    mesh.vertex_attributes(vertex, "xyz", [x, -z, y])
+
 mesh.translate([2, 2, 0.5])
 
 v, f = mesh.to_vertices_and_faces()
