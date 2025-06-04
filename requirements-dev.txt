@@ -14,5 +14,4 @@ twine
 wheel
 setuptools
 nanobind
-tessagon
 cibuildwheel==2.23.1
