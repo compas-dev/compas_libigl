@@ -57,7 +57,6 @@ pf = tessagon_mesh["face_list"]
 mv, mf, mn, mb, mg = map_mesh((v, f), (pv, pf))
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
-
 # ==============================================================================
 # Offset mesh by normals, normals are interpolated from the original mesh.
 # ==============================================================================

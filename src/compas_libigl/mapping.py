@@ -32,27 +32,25 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, tolerance=1e-6):
 
     Parameters
     ----------
-    target_mesh : tuple
+    target_mesh : tuple[list[list[float]], list[list[int]]]
         A tuple of (vertices, faces) representing the target mesh.
-        vertices : list[list[float]]
-            The vertices of the target mesh.
-        faces : list[list[int]]
-            The triangle faces of the target mesh.
-        clip_boundaries : bool
-            Whether to clip the pattern mesh to the boundaries of the target mesh.
-        tolerance : float
-            The tolerance for point comparison, to remove duplicates.
-    pattern_mesh : tuple
+    pattern_mesh : tuple[list[list[float]], list[list[int]]]
         A tuple of (vertices, faces) representing the pattern mesh.
-        vertices : list[list[float]]
-            The vertices of the pattern mesh.
-        faces : list[list[int]]
-            The polygonal faces of the pattern mesh.
+    clip_boundaries : bool
+        Whether to clip the pattern mesh to the boundaries of the target mesh.
+    tolerance : float
+        The tolerance for point comparison, to remove duplicates.
 
     Returns
     -------
-    tuple
-        A tuple containing: mesh vertices, normals, grouping of polygons (to form holes), boundary flags.
+    tuple[ndarray, VectorVectorInt, ndarray, VectorBool, VectorInt]
+        A tuple containing:
+
+        * vertices: ndarray - The 3D coordinates of the mapped mesh vertices
+        * faces: VectorVectorInt - The faces of the mapped mesh
+        * normals: ndarray - The normal vectors at each vertex
+        * boundary_flags: VectorBool - Boolean flags indicating if vertices are on the boundary
+        * polygon_groups: VectorInt - Grouping indices for polygons (to form holes)
     """
     # Unpack mesh tuples
     v, f = target_mesh
@@ -80,24 +78,26 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     ----------
     name : str
         The name of the pattern to be created. Options are:
-        "Hex",
-        "Tri",
-        "Octo",
-        "Square",
-        "Rhombus",
-        "HexTri",
-        "DissectedSquare",
-        "DissectedTriangle",
-        "DissectedHexQuad",
-        "DissectedHexTri",
-        "Floret",
-        "Pythagorean",
-        "Brick",
-        "Weave",
-        "ZigZag",
-        "HexBigTri",
-        "Dodeca",
-        "SquareTri"
+
+        * "Hex"
+        * "Tri"
+        * "Octo"
+        * "Square"
+        * "Rhombus"
+        * "HexTri"
+        * "DissectedSquare"
+        * "DissectedTriangle"
+        * "DissectedHexQuad"
+        * "DissectedHexTri"
+        * "Floret"
+        * "Pythagorean"
+        * "Brick"
+        * "Weave"
+        * "ZigZag"
+        * "HexBigTri"
+        * "Dodeca"
+        * "SquareTri"
+
     mesh : compas.datastructures.Mesh
         The target mesh.
     clip_boundaries : bool
@@ -113,6 +113,11 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     -------
     compas.datastructures.Mesh
         The mapped pattern mesh.
+
+    Raises
+    ------
+    ValueError
+        If the specified pattern name is not supported.
     """
 
     TESSAGON_TYPES = {
@@ -135,6 +140,11 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
         "Dodeca": DodecaTessagon,
         "SquareTri": SquareTriTessagon,
     }
+
+    # Check if the provided pattern name is supported
+    if name not in TESSAGON_TYPES:
+        supported_names = list(TESSAGON_TYPES.keys())
+        raise ValueError(f"Pattern name '{name}' is not supported. Choose from: {', '.join(supported_names)}")
 
     options = {
         "function": lambda u, v: [u * 1, v * 1, 0],
