@@ -11,18 +11,20 @@ struct TupleHash {
 };
 
 std::tuple<int64_t, int64_t> grid_key(double x, double y, double tolerance) {
+    double cell_size = tolerance * 10.0;
     return {
-        static_cast<int64_t>(std::floor(x / tolerance)),
-        static_cast<int64_t>(std::floor(y / tolerance))
+        static_cast<int64_t>(std::floor(x / cell_size)),
+        static_cast<int64_t>(std::floor(y / cell_size))
     };
 }
 
 bool is_same_point(double x1, double y1, double z1,
-                   double x2, double y2, double z2,
-                   double tol) {
-    return std::abs(x1 - x2) < tol &&
-           std::abs(y1 - y2) < tol &&
-           std::abs(z1 - z2) < tol;
+    double x2, double y2, double z2,
+    double tol) {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        double dz = z1 - z2;
+        return (dx*dx + dy*dy + dz*dz) < (tol*tol);
 }
 
 std::vector<std::vector<int>> map_mesh_cropped(
@@ -95,7 +97,7 @@ std::vector<std::vector<int>> map_mesh_cropped(
             C << v(f(faceID, 2), 0), v(f(faceID, 2), 1), v(f(faceID, 2), 2);
         }
         
-        // Update pattern vertex position through barycentric interpolation
+        // Update pattern vertex position through barycentric interpolation, comment this out if you keep 2D pattern
         pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
         
         // If normals are requested, interpolate them using the same barycentric coordinates
@@ -305,18 +307,34 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     
     auto find_or_add_point = [&](double x, double y) -> int {
         double z = 0.0;
-        auto key = grid_key(x, y, tolerance);
-        auto& bucket = grid_map[key];
-    
-        for (int idx : bucket) {
-            const auto& pt = unique_points[idx];
-            if (is_same_point(pt[0], pt[1], pt[2], x, y, z, tolerance))
-                return idx;
+        
+        // Get the base grid key for this point
+        auto base_key = grid_key(x, y, tolerance);
+        
+        // Check the point's own cell and all neighboring cells
+        for (int di = -1; di <= 1; ++di) {
+            for (int dj = -1; dj <= 1; ++dj) {
+                // Create the neighboring grid key
+                auto neighbor_key = std::make_tuple(std::get<0>(base_key) + di, std::get<1>(base_key) + dj);
+                
+                // Check if this neighboring cell exists in our grid map
+                auto grid_it = grid_map.find(neighbor_key);
+                if (grid_it != grid_map.end()) {
+                    // Check all points in this cell
+                    for (int idx : grid_it->second) {
+                        const auto& pt = unique_points[idx];
+                        if (is_same_point(pt[0], pt[1], pt[2], x, y, z, tolerance))
+                            return idx;
+                    }
+                }
+            }
         }
-    
+        
+        // If we get here, the point doesn't exist yet
+        // Add it to the grid using the base key
         int new_index = static_cast<int>(unique_points.size());
         unique_points.push_back({x, y, z});
-        bucket.push_back(new_index);
+        grid_map[base_key].push_back(new_index);
         return new_index;
     };
 
