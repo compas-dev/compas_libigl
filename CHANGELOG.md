@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed point welding bug in map_mesh function.
 - Changed example_isolines to work with the new compas_viewer.
+- GA for cibuildwheel, bring back the tessagon test.
 
 ### Removed
 
