@@ -53,6 +53,7 @@ cmap = ColorMap.from_mpl("viridis")
 
 for i, isolines in enumerate(isolines):
     color = cmap(values[i], minval, maxval)
-    viewer.scene.add(isolines, linecolor=color, linewidth=3)
+    for isoline in isolines:
+        viewer.scene.add(isoline, linecolor=color, linewidth=3)
 
 viewer.show()
