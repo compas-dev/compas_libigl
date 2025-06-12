@@ -23,8 +23,8 @@ for vertex in mesh.vertices():
 # Mapping: 3D Mesh, 2D Pattern, UV
 # ==============================================================================
 
-mesh_mapped = map_pattern_to_mesh("ZigZag", mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16)
-
+mesh_mapped0 = map_pattern_to_mesh("ZigZag", mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=True)
+mesh_mapped1 = map_pattern_to_mesh("ZigZag", mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=False)
 # ==============================================================================
 # Viewer
 # ==============================================================================
@@ -36,6 +36,8 @@ config.camera.position = [0.75, 0, 0.75]
 viewer = Viewer(config=config)
 
 # viewer.scene.add(mesh, name="mesh", show_faces=False, linecolor=Color.grey(), opacity=0.2)
-viewer.scene.add(mesh_mapped, name="mesh_mapped", facecolor=Color.red())
+viewer.scene.add(mesh_mapped0, name="mesh_mapped0", facecolor=Color.red(), show_points=True)
+viewer.scene.add(mesh_mapped1, name="mesh_mapped1", facecolor=Color.blue(), show_points=True, show_faces=False)
+
 
 viewer.show()
