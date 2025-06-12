@@ -26,7 +26,7 @@ from compas_libigl._types_std import VectorInt  # noqa: F401
 from compas_libigl._types_std import VectorVectorInt  # noqa: F401
 
 
-def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=True, tolerance=1e-6):
+def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=True, fixed_points=None, tolerance=1e-6):
     """
     Map a 2D pattern mesh onto a 3D target.
 
@@ -40,6 +40,8 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
         Whether to clip the pattern mesh to the boundaries of the target mesh.
     simplify_borders : bool
         Whether to simplify the border of the pattern mesh.
+    fixed_points : list[list[float]]
+        A list of fixed points on the target mesh.
     tolerance : float
         The tolerance for point comparison, to remove duplicates.
 
@@ -63,16 +65,30 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
     f_numpy = np.array(f, dtype=np.int32)
     pattern_v_numpy = np.array(pv, dtype=np.float64)
 
+    # Handle fixed_points - provide empty array if None
+
+    fixed_points_vectorint = VectorInt()
+    if fixed_points is None:
+        fixed_points_vectorint = VectorInt()
+    else:
+        fixed_points_vectorint = VectorInt(fixed_points)
+
+    # Convert pattern_f from Python list to VectorVectorInt which is expected by C++ code
+
+    pattern_f_vec = VectorVectorInt()
+    for face in pf:
+        pattern_f_vec.append(face)
+
     # Perform the mapping
     pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups = _mapping.map_mesh_with_automatic_parameterization(
-        v_numpy, f_numpy, pattern_v_numpy, pf, clip_boundaries, simplify_borders, tolerance
+        v_numpy, f_numpy, pattern_v_numpy, pattern_f_vec, clip_boundaries, simplify_borders, fixed_points_vectorint, tolerance
     )
 
     # Return the result as a tuple
     return pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups
 
 
-def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=True):
+def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=True, fixed_points=None):
     """
     Map a 2D pattern mesh onto a 3D target.
 
@@ -112,6 +128,8 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
         The number of pattern vertices in the v direction.
     simplify_borders : bool
         Whether to simplify the border of the pattern mesh.
+    fixed_points : list[list[float]]
+        A list of fixed points on the target mesh.
 
     Returns
     -------
@@ -169,6 +187,8 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     pf = tessagon_mesh["face_list"]
 
     v, f = mesh.to_vertices_and_faces()
-    mapped_vertices, mapped_faces, mapped_normals, mapped_is_boundary, mapped_groups = map_mesh((v, f), (pv, pf), clip_boundaries=clip_boundaries, simplify_borders=simplify_borders, tolerance=tolerance)
+    mapped_vertices, mapped_faces, mapped_normals, mapped_is_boundary, mapped_groups = map_mesh(
+        (v, f), (pv, pf), clip_boundaries=clip_boundaries, simplify_borders=simplify_borders, fixed_points=fixed_points, tolerance=tolerance
+    )
 
     return Mesh.from_vertices_and_faces(mapped_vertices, mapped_faces)

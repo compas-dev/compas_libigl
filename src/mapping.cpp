@@ -1,9 +1,4 @@
 #include "mapping.hpp"
-#include <algorithm>
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-#include <unordered_set>
 
 // Custom hash function for tuple
 struct TupleHash {
@@ -99,7 +94,7 @@ std::vector<std::vector<int>> map_mesh_cropped(
         }
         
         // Update pattern vertex position through barycentric interpolation, comment this out if you keep 2D pattern
-        // pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
+        pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
         
         // If normals are requested, interpolate them using the same barycentric coordinates
         if (compute_normals) {
@@ -177,9 +172,18 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
+    std::vector<int>& fixed_points,
     double tolerance
 )   
 {
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Fixed points
+    ////////////////////////////////////////////////////////////////////////////////////////
+    Clipper2Lib::PathD fixed;
+    for (const auto &point_id : fixed_points){
+        fixed.emplace_back(Clipper2Lib::PointD(flattned_target_uv(point_id, 0), flattned_target_uv(point_id, 1)));
+    }
  
     ////////////////////////////////////////////////////////////////////////////////////////
     // Get Boundary polygon of a Mesh as Clipper Path.
@@ -302,11 +306,25 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
             simplified_paths[0].reserve(subject[0].size());
 
             for (const auto &p : solution[0]){ // iterate the points of the intersection polygon
+                
                 // First check if point is close to any vertex (corner)
                 bool point_added = false;
                 for(size_t i = 0; i < subject[0].size(); i++){
                     double dx = p.x - subject[0][i].x;
                     double dy = p.y - subject[0][i].y;
+                    if (dx*dx + dy*dy < tolerance*tolerance){
+                        simplified_paths[0].push_back(p);
+                        point_added = true;
+                        break;
+                    }
+                }
+
+                // Check if point is close to any fixed point
+                for(size_t i = 0; i < fixed.size(); i++){
+                    double fx = fixed[i].x;
+                    double fy = fixed[i].y;
+                    double dx = p.x - fx;
+                    double dy = p.y - fy;
                     if (dx*dx + dy*dy < tolerance*tolerance){
                         simplified_paths[0].push_back(p);
                         point_added = true;
@@ -431,8 +449,11 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
+    std::vector<int>& fixed_points,
     double tolerance)
 {
+
+
 
 
     // Compute target mesh UV parameterization using LSCM
@@ -441,35 +462,6 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     // Find the open boundary
     Eigen::VectorXi B;
     igl::boundary_loop(target_f, B);
-
-    // Get Boundary vertices
-    std::vector<Eigen::Vector3d> corner_vertex_coords;
-    
-    std::vector<std::vector<int>> VV;
-    igl::adjacency_list(target_f, VV);
-    
-    // Create a set of boundary vertices for faster lookup
-    std::unordered_set<int> boundary_set;
-    for (int i = 0; i < B.size(); i++) {
-        boundary_set.insert(B(i));
-    }
-    
-    for (int i = 0; i < B.size(); i++) {
-        int v = B(i);
-        int boundary_valence = 0;
-        for (int neighbor : VV[v])
-            if (boundary_set.count(neighbor) > 0)
-                boundary_valence++;
-        
-        if (boundary_valence < 2) {
-            Eigen::Vector3d vertex_pos(target_v(v, 0), target_v(v, 1), target_v(v, 2));
-            corner_vertex_coords.push_back(vertex_pos);
-            std::cout << "Corner vertex " << v << " at position (" 
-                      << target_v(v, 0) << ", " 
-                      << target_v(v, 1) << ", " 
-                      << target_v(v, 2) << ")" << std::endl;
-        }
-    }
 
     // Fix two points on the boundary
     Eigen::VectorXi fixed(2, 1);
@@ -494,7 +486,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     
 
     // Clip the pattern
-    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, simplify_borders, tolerance);
+    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, simplify_borders, fixed_points, tolerance);
 
     Eigen::MatrixXd clipped_pattern_uv;
     clipped_pattern_uv.setZero();
@@ -531,6 +523,7 @@ NB_MODULE(_mapping, m)
         "pattern_f"_a,
         "clip_boundaries"_a,
         "simplify_borders"_a,
+        "fixed_points"_a,
         "tolerance"_a
     );
 }
