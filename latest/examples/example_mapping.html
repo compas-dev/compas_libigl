@@ -608,6 +608,7 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas.datastructures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
@@ -622,16 +623,31 @@ document.write(`
 
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;minimal_surface.obj&quot;</span><span class="p">)</span>
 
+
+
 <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
 
 <span class="c1"># ==============================================================================</span>
+<span class="c1"># Get Lowest and Highest points</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="n">aabb</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">aabb</span><span class="p">()</span>
+<span class="n">fixed_vertices</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">aabb</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="o">-</span><span class="n">aabb</span><span class="o">.</span><span class="n">zmax</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+        <span class="n">fixed_vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+
+<span class="c1"># ==============================================================================</span>
 <span class="c1"># Mapping: 3D Mesh, 2D Pattern, UV</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">mesh_mapped</span> <span class="o">=</span> <span class="n">map_pattern_to_mesh</span><span class="p">(</span><span class="s2">&quot;ZigZag&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">clip_boundaries</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">pattern_u</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">pattern_v</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-
+<span class="n">mesh_mapped0</span> <span class="o">=</span> <span class="n">map_pattern_to_mesh</span><span class="p">(</span><span class="s2">&quot;ZigZag&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">clip_boundaries</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">pattern_u</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">pattern_v</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">simplify_borders</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fixed_vertices</span><span class="o">=</span><span class="n">fixed_vertices</span><span class="p">)</span>
+<span class="n">mesh_mapped1</span> <span class="o">=</span> <span class="n">map_pattern_to_mesh</span><span class="p">(</span><span class="s2">&quot;ZigZag&quot;</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">clip_boundaries</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">pattern_u</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">pattern_v</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">simplify_borders</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Viewer</span>
 <span class="c1"># ==============================================================================</span>
@@ -642,8 +658,12 @@ document.write(`
 
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
-<span class="c1"># viewer.scene.add(mesh, name=&quot;mesh&quot;, show_faces=False, linecolor=Color.grey(), opacity=0.2)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_mapped</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_mapped&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">())</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">grey</span><span class="p">(),</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh_mapped0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh_mapped0&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">show_points</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># viewer.scene.add(mesh_mapped1, name=&quot;mesh_mapped1&quot;, facecolor=Color.blue(), show_points=True, show_faces=False)</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">fixed_vertices</span><span class="p">:</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_point</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">pointcolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">(),</span> <span class="n">pointsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>

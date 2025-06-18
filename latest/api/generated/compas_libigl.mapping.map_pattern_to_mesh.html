@@ -611,7 +611,7 @@ document.write(`
 <h1>map_pattern_to_mesh</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_libigl.mapping.map_pattern_to_mesh">
-<span class="sig-name descname"><span class="pre">map_pattern_to_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_boundaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/e7ed598/src/compas_libigl/mapping.py#L73"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">map_pattern_to_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_boundaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify_borders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/12987e9/src/compas_libigl/mapping.py#L95"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Map a 2D pattern mesh onto a 3D target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -640,13 +640,23 @@ document.write(`
 </dd>
 <dt><strong>mesh</strong><span class="classifier">compas.datastructures.Mesh</span></dt><dd><p>The target mesh.</p>
 </dd>
-<dt><strong>clip_boundaries</strong><span class="classifier">bool</span></dt><dd><p>Whether to clip the pattern mesh to the boundaries of the target mesh.</p>
+<dt><strong>clip_boundaries</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to clip the pattern mesh to the boundaries of the target mesh.
+Default is True.</p>
 </dd>
-<dt><strong>tolerance</strong><span class="classifier">float</span></dt><dd><p>The tolerance for point comparison, to remove duplicates.</p>
+<dt><strong>tolerance</strong><span class="classifier">float, optional</span></dt><dd><p>The tolerance for point comparison, to remove duplicates.
+Default is 1e-6.</p>
 </dd>
-<dt><strong>pattern_u</strong><span class="classifier">int</span></dt><dd><p>The number of pattern vertices in the u direction.</p>
+<dt><strong>pattern_u</strong><span class="classifier">int, optional</span></dt><dd><p>The number of pattern vertices in the u direction.
+Default is 16.</p>
 </dd>
-<dt><strong>pattern_v</strong><span class="classifier">int</span></dt><dd><p>The number of pattern vertices in the v direction.</p>
+<dt><strong>pattern_v</strong><span class="classifier">int, optional</span></dt><dd><p>The number of pattern vertices in the v direction.
+Default is 16.</p>
+</dd>
+<dt><strong>simplify_borders</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to simplify the border of the pattern mesh.
+Default is True.</p>
+</dd>
+<dt><strong>fixed_vertices</strong><span class="classifier">list[list[float]], optional</span></dt><dd><p>A list of fixed points on the target mesh.
+Default is None.</p>
 </dd>
 </dl>
 </dd>
