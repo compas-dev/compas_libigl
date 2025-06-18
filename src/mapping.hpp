@@ -19,6 +19,7 @@
 #include <iomanip>
 #include <iostream>
 #include <igl/per_vertex_normals.h>
+#include <igl/adjacency_list.h>
 
 /**
  * Map a 2D already croppedpattern mesh onto a 3D target mesh using AABB tree-based mapping.
@@ -72,6 +73,8 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
  * @param pattern_v The pattern mesh vertex coordinates.
  * @param pattern_f The pattern mesh face indices.
  * @param clip_boundaries Whether to clip the pattern mesh to the boundaries of the target mesh.
+ * @param simplify_borders Whether to simplify the border of the pattern mesh.
+ * @param fixed_vertices fixed points on the target mesh
  * @param tolerance The tolerance for point comparison, to remove duplicates.
  * @return A tuple of the clipped pattern mesh vertex coordinates and face indices.
  */
@@ -82,6 +85,8 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
+    bool simplify_borders,
+    std::vector<int>& fixed_vertices,
     double tolerance = 1e-6
 )  ;    
 
@@ -95,6 +100,9 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
  * @param pattern_v #V x 3 matrix of pattern mesh vertex coordinates
  * @param pattern_f vector of vectors of int of pattern mesh triangle indices
  * @param clip_boundaries whether to clip the pattern mesh to the boundaries of the target mesh
+ * @param simplify_borders whether to simplify the border of the pattern mesh
+ * @param fixed_vertices fixed points on the target mesh
+ * @param tolerance tolerance for point comparison, to remove duplicates
  * @return A tuple containing the mapped pattern vertices, faces, and vertex normal vectors.
  */
 std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
@@ -103,5 +111,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
+    bool simplify_borders,
+    std::vector<int>& fixed_vertices,
     double tolerance = 1e-6
 );

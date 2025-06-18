@@ -1,6 +1,5 @@
 #include "mapping.hpp"
 
-
 // Custom hash function for tuple
 struct TupleHash {
     std::size_t operator()(const std::tuple<int64_t, int64_t>& t) const {
@@ -11,18 +10,17 @@ struct TupleHash {
 };
 
 std::tuple<int64_t, int64_t> grid_key(double x, double y, double tolerance) {
+    double cell_size = tolerance * 10.0;
     return {
-        static_cast<int64_t>(std::floor(x / tolerance)),
-        static_cast<int64_t>(std::floor(y / tolerance))
+        static_cast<int64_t>(std::floor(x / cell_size)),
+        static_cast<int64_t>(std::floor(y / cell_size))
     };
 }
 
-bool is_same_point(double x1, double y1, double z1,
-                   double x2, double y2, double z2,
-                   double tol) {
-    return std::abs(x1 - x2) < tol &&
-           std::abs(y1 - y2) < tol &&
-           std::abs(z1 - z2) < tol;
+bool is_same_point(double x1, double y1, double x2, double y2, double tol) {
+    double dx = x1 - x2;
+    double dy = y1 - y2;
+    return (dx*dx + dy*dy) < (tol*tol);
 }
 
 std::vector<std::vector<int>> map_mesh_cropped(
@@ -95,7 +93,7 @@ std::vector<std::vector<int>> map_mesh_cropped(
             C << v(f(faceID, 2), 0), v(f(faceID, 2), 1), v(f(faceID, 2), 2);
         }
         
-        // Update pattern vertex position through barycentric interpolation
+        // Update pattern vertex position through barycentric interpolation, comment this out if you keep 2D pattern
         pattern_v.row(id) = A * L(0, 0) + B * L(0, 1) + C * L(0, 2);
         
         // If normals are requested, interpolate them using the same barycentric coordinates
@@ -164,6 +162,8 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
 }
 
 
+
+
 std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
     Eigen::Ref<const compas::RowMatrixXd> flattned_target_uv,
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
@@ -171,9 +171,19 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
+    bool simplify_borders,
+    std::vector<int>& fixed_vertices,
     double tolerance
 )   
 {
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Fixed points
+    ////////////////////////////////////////////////////////////////////////////////////////
+    Clipper2Lib::PathD fixed;
+    for (const auto &point_id : fixed_vertices){
+        fixed.emplace_back(Clipper2Lib::PointD(flattned_target_uv(point_id, 0), flattned_target_uv(point_id, 1)));
+    }
  
     ////////////////////////////////////////////////////////////////////////////////////////
     // Get Boundary polygon of a Mesh as Clipper Path.
@@ -215,21 +225,18 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
             path.emplace_back(pattern_v(point_id, 0), pattern_v(point_id, 1));
         paths.emplace_back(path);
 
+        if (!clip_boundaries){
+            patterns_to_keep.push_back(paths);
+            continue;
+        }
+
         // Get bounds of current pattern polygon
         Clipper2Lib::RectD pattern_bounds = Clipper2Lib::GetBounds(paths);
         
         // Check if the pattern bounds intersect with boundary bounds
         if (!pattern_bounds.Intersects(boundary_bounds))
             continue;
-
-        // Check if Elements are inside the boundary
-        // Clipper2Lib::PointD corners[] = {
-        //     {pattern_bounds.left, pattern_bounds.top},      // Top-left
-        //     {pattern_bounds.right, pattern_bounds.top},     // Top-right
-        //     {pattern_bounds.right, pattern_bounds.bottom},  // Bottom-right
-        //     {pattern_bounds.left, pattern_bounds.bottom}    // Bottom-left
-        // };
-
+    
         bool is_rect_inside_polygon = false;
         size_t num_corners_in_polygon = 0;
         for (const auto& corner : paths[0]) {
@@ -239,8 +246,6 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
                 is_rect_inside_polygon = true;
                 bool has_collision = paths_intersect(paths, boundary);
 
-
-                
                 // check if the point is not in a hole
                 bool is_rect_outside_polygon_hole = true;
                 for (size_t i = 1; i < boundary.size(); i++) {                    
@@ -272,12 +277,10 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
         // Fully enclosed polygons are added to the keep list
         // Other polygons edges are intersected with the boundary
 
-        if (num_corners_in_polygon == paths[0].size() && !is_hole_in_polygon){
+        if (num_corners_in_polygon == paths[0].size() && !is_hole_in_polygon){ //  
             patterns_to_keep.push_back(paths);
-        }else if (clip_boundaries){
-            if (paths_intersect(paths, boundary) || is_hole_in_polygon){
-                patterns_to_cut.push_back(paths);
-            }
+        }else if(num_corners_in_polygon > 0 || paths_intersect(paths, boundary) || is_hole_in_polygon){
+            patterns_to_cut.push_back(paths);
         }
 
 
@@ -288,10 +291,70 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     std::vector<Clipper2Lib::PathsD> solutions;
     for (const auto &subject : patterns_to_cut){
         Clipper2Lib::PathsD solution = Clipper2Lib::Intersect(subject, boundary, Clipper2Lib::FillRule::NonZero, 8);
-        if (solution.size() == 0)
+
+        if (solution.size() == 0){
+            // If no intersection is found, skip this polygon
             continue;
+        }else if (solution.size() > 1 || !simplify_borders){
+            // Highly likely we do not consider polygons with holes, we do not simplify them.
+            solutions.push_back(solution);
+        }else{
+            // After boolean intersection the pattern is merged with boundary polygons. This is often not wanted.
+            // Simplification is made by comparing polygon after boolean intersection and before. If the points lie on the initial polygon edges we keep them.
+            // Additionally we add an option to keep arbitrary points from a user given points or boundary valence points.
+            Clipper2Lib::PathsD simplified_paths{Clipper2Lib::PathD()};
+            simplified_paths[0].reserve(subject[0].size());
+
+            for (const auto &p : solution[0]){ // iterate the points of the intersection polygon
+                
+                // First check if point is close to any vertex (corner)
+                bool point_added = false;
+                for(size_t i = 0; i < subject[0].size(); i++){
+                    double dx = p.x - subject[0][i].x;
+                    double dy = p.y - subject[0][i].y;
+                    if (dx*dx + dy*dy < tolerance*tolerance){
+                        simplified_paths[0].push_back(p);
+                        point_added = true;
+                        break;
+                    }
+                }
+
+                // Check if point is close to any fixed point
+                for(size_t i = 0; i < fixed.size(); i++){
+                    double fx = fixed[i].x;
+                    double fy = fixed[i].y;
+                    double dx = p.x - fx;
+                    double dy = p.y - fy;
+                    if (dx*dx + dy*dy < tolerance*tolerance){
+                        simplified_paths[0].push_back(p);
+                        point_added = true;
+                        break;
+                    }
+                }
+                
+                // If not close to a vertex, check if close to any edge
+                if (!point_added) {
+                    for(size_t i = 0; i < subject[0].size()-1; i++){
+                        if (Clipper2Lib::PerpendicDistFromLineSqrd(p, subject[0][i], subject[0][i+1]) < tolerance*tolerance){
+                            simplified_paths[0].push_back(p);
+                            break;
+                        }
+                    }
+                    // Also check the closing edge between last and first point
+                    if (subject[0].size() > 1){
+                        size_t last = subject[0].size()-1;
+                        if (Clipper2Lib::PerpendicDistFromLineSqrd(p, subject[0][last], subject[0][0]) < tolerance*tolerance){
+                            simplified_paths[0].push_back(p);
+                        }
+                    }
+                }
+                }
+
+            if (simplified_paths[0].size() > 2)
+                solutions.push_back(simplified_paths);
+        }
         
-        solutions.push_back(solution);
+
     }
 
     std::vector<std::array<double, 3>> unique_points;
@@ -303,20 +366,37 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     groups.reserve(solutions.size() + patterns_to_keep.size());
     is_boundary.reserve(solutions.size() + patterns_to_keep.size());
     
+    // 9 bucket search to avoid rounding wrong rounded grid key, when the distance is close to the tolerance.
     auto find_or_add_point = [&](double x, double y) -> int {
         double z = 0.0;
-        auto key = grid_key(x, y, tolerance);
-        auto& bucket = grid_map[key];
-    
-        for (int idx : bucket) {
-            const auto& pt = unique_points[idx];
-            if (is_same_point(pt[0], pt[1], pt[2], x, y, z, tolerance))
-                return idx;
+        
+        // Get the base grid key for this point
+        auto base_key = grid_key(x, y, tolerance);
+        
+        // Check the point's own cell and all neighboring cells
+        for (int di = -1; di <= 1; ++di) {
+            for (int dj = -1; dj <= 1; ++dj) {
+                // Create the neighboring grid key
+                auto neighbor_key = std::make_tuple(std::get<0>(base_key) + di, std::get<1>(base_key) + dj);
+                
+                // Check if this neighboring cell exists in our grid map
+                auto grid_it = grid_map.find(neighbor_key);
+                if (grid_it != grid_map.end()) {
+                    // Check all points in this cell
+                    for (int idx : grid_it->second) {
+                        const auto& pt = unique_points[idx];
+                        if (is_same_point(pt[0], pt[1], x, y, tolerance))
+                            return idx;
+                    }
+                }
+            }
         }
-    
+        
+        // If we get here, the point doesn't exist yet
+        // Add it to the grid using the base key
         int new_index = static_cast<int>(unique_points.size());
         unique_points.push_back({x, y, z});
-        bucket.push_back(new_index);
+        grid_map[base_key].push_back(new_index);
         return new_index;
     };
 
@@ -360,14 +440,20 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
 
 }
 
+
+
 std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
+    bool simplify_borders,
+    std::vector<int>& fixed_vertices,
     double tolerance)
 {
+
+
 
 
     // Compute target mesh UV parameterization using LSCM
@@ -397,10 +483,10 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     double scale_factor = 1.0 / std::max(size(0), size(1)); // Scale to fit in a 0-1 box while maintaining aspect ratio
     target_uv *= scale_factor;
 
-    // Clip the pattern
-    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, tolerance);
+    
 
-    // return std::make_tuple(clipped_pattern_v, clipped_pattern_f); // Comment this out to see 2d cropped pattern
+    // Clip the pattern
+    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, simplify_borders, fixed_vertices, tolerance);
 
     Eigen::MatrixXd clipped_pattern_uv;
     clipped_pattern_uv.setZero();
@@ -420,15 +506,13 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
         clipped_pattern_uv,
         pattern_normals);
 
-
     return std::make_tuple(clipped_pattern_v, result, pattern_normals, clipped_pattern_is_boundary, clipped_pattern_groups);
 
 }
 
-
+// Define the nanobind module at global scope
 NB_MODULE(_mapping, m)
 {
-        
     m.def(
         "map_mesh_with_automatic_parameterization",
         &map_mesh_with_automatic_parameterization,
@@ -438,5 +522,8 @@ NB_MODULE(_mapping, m)
         "pattern_v"_a,
         "pattern_f"_a,
         "clip_boundaries"_a,
-        "tolerance"_a);
+        "simplify_borders"_a,
+        "fixed_vertices"_a,
+        "tolerance"_a
+    );
 }
