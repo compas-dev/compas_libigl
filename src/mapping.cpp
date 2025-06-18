@@ -172,7 +172,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    std::vector<int>& fixed_points,
+    std::vector<int>& fixed_vertices,
     double tolerance
 )   
 {
@@ -181,7 +181,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     // Fixed points
     ////////////////////////////////////////////////////////////////////////////////////////
     Clipper2Lib::PathD fixed;
-    for (const auto &point_id : fixed_points){
+    for (const auto &point_id : fixed_vertices){
         fixed.emplace_back(Clipper2Lib::PointD(flattned_target_uv(point_id, 0), flattned_target_uv(point_id, 1)));
     }
  
@@ -449,7 +449,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    std::vector<int>& fixed_points,
+    std::vector<int>& fixed_vertices,
     double tolerance)
 {
 
@@ -486,7 +486,7 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     
 
     // Clip the pattern
-    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, simplify_borders, fixed_points, tolerance);
+    auto [clipped_pattern_v, clipped_pattern_f, clipped_pattern_is_boundary, clipped_pattern_groups] = eigen_to_clipper(target_uv, target_f, pattern_v, pattern_f, clip_boundaries, simplify_borders, fixed_vertices, tolerance);
 
     Eigen::MatrixXd clipped_pattern_uv;
     clipped_pattern_uv.setZero();
@@ -523,7 +523,7 @@ NB_MODULE(_mapping, m)
         "pattern_f"_a,
         "clip_boundaries"_a,
         "simplify_borders"_a,
-        "fixed_points"_a,
+        "fixed_vertices"_a,
         "tolerance"_a
     );
 }
