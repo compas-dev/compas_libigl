@@ -31,6 +31,13 @@ def quadmesh_planarize(M, kmax=500, maxdev=0.005):
     Notes
     -----
     The input mesh should consist of quad and triangle faces, else ValueError is raised.
+
+
+    Raises
+    -----
+    ValueError
+        If the input mesh contains faces other than quads or triangles.
+
     """
 
     V, F = M
