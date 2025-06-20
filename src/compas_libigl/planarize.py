@@ -30,10 +30,17 @@ def quadmesh_planarize(M, kmax=500, maxdev=0.005):
 
     Notes
     -----
-    The input mesh should consist primarily of quad faces for best results.
-    Non-quad faces may produce unexpected results.
+    The input mesh should consist of quad and triangle faces, else ValueError is raised.
     """
+
     V, F = M
+
+    for f in F:
+        if len(f) == 3:
+            f.append(f[0])
+        elif len(f) != 4:
+            raise ValueError("All faces must be quads for planarization.")
+
     V = np.asarray(V, dtype=np.float64)
     F = np.asarray(F, dtype=np.int32)
     return _planarize.planarize_quads(V, F, kmax, maxdev)
