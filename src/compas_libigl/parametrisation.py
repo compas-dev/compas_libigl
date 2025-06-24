@@ -2,7 +2,7 @@ import numpy as np
 from compas.plugins import plugin
 
 from compas_libigl import _parametrisation
-from compas_libigl._types_std import VectorVectorInt  # noqa: F401
+from compas_libigl import _types_std  # noqa: F401
 
 
 @plugin(category="trimesh")

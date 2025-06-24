@@ -1,7 +1,7 @@
 import numpy as np
 
 from compas_libigl import _boundaries
-from compas_libigl._types_std import VectorVectorInt
+from compas_libigl import _types_std  # noqa: F401
 
 
 def trimesh_boundaries(M):

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Changed location of `TESSAGON_TYPES` to `compas_libigl.mapping.TESSAGON_TYPES`.
+* Changed nanobind types import, from individual types to a single module import.
 
 ### Removed
 
