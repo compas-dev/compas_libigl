@@ -25,6 +25,27 @@ from compas_libigl._types_std import VectorBool  # noqa: F401
 from compas_libigl._types_std import VectorInt  # noqa: F401
 from compas_libigl._types_std import VectorVectorInt  # noqa: F401
 
+TESSAGON_TYPES = {
+    "Hex": HexTessagon,
+    "Tri": TriTessagon,
+    "Octo": OctoTessagon,
+    "Square": SquareTessagon,
+    "Rhombus": RhombusTessagon,
+    "HexTri": HexTriTessagon,
+    "DissectedSquare": DissectedSquareTessagon,
+    "DissectedTriangle": DissectedTriangleTessagon,
+    "DissectedHexQuad": DissectedHexQuadTessagon,
+    "DissectedHexTri": DissectedHexTriTessagon,
+    "Floret": FloretTessagon,
+    "Pythagorean": PythagoreanTessagon,
+    "Brick": BrickTessagon,
+    "Weave": WeaveTessagon,
+    "ZigZag": ZigZagTessagon,
+    "HexBigTri": HexBigTriTessagon,
+    "Dodeca": DodecaTessagon,
+    "SquareTri": SquareTriTessagon,
+}
+
 
 def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=True, fixed_vertices=None, tolerance=1e-6):
     """
@@ -151,27 +172,6 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     ValueError
         If the specified pattern name is not supported.
     """
-
-    TESSAGON_TYPES = {
-        "Hex": HexTessagon,
-        "Tri": TriTessagon,
-        "Octo": OctoTessagon,
-        "Square": SquareTessagon,
-        "Rhombus": RhombusTessagon,
-        "HexTri": HexTriTessagon,
-        "DissectedSquare": DissectedSquareTessagon,
-        "DissectedTriangle": DissectedTriangleTessagon,
-        "DissectedHexQuad": DissectedHexQuadTessagon,
-        "DissectedHexTri": DissectedHexTriTessagon,
-        "Floret": FloretTessagon,
-        "Pythagorean": PythagoreanTessagon,
-        "Brick": BrickTessagon,
-        "Weave": WeaveTessagon,
-        "ZigZag": ZigZagTessagon,
-        "HexBigTri": HexBigTriTessagon,
-        "Dodeca": DodecaTessagon,
-        "SquareTri": SquareTriTessagon,
-    }
 
     # Check if the provided pattern name is supported
     if name not in TESSAGON_TYPES:
