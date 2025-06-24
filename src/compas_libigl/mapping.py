@@ -20,7 +20,7 @@ from tessagon.types.tri_tessagon import TriTessagon
 from tessagon.types.weave_tessagon import WeaveTessagon
 from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
-from compas_libigl import _mapping
+from compas_libigl import _mapping  # type: ignore
 from compas_libigl._types_std import VectorBool  # noqa: F401
 from compas_libigl._types_std import VectorInt  # noqa: F401
 from compas_libigl._types_std import VectorVectorInt  # noqa: F401
