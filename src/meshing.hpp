@@ -15,7 +15,7 @@
  * @param s Isovalue at which to cut
  * @return Tuple of (vertices, faces, labels) where labels indicate which side of the cut each face is on
  */
-compas::RemeshIsolineResult
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, Eigen::VectorXi>
 trimesh_remesh_along_isoline(
     Eigen::Ref<const compas::RowMatrixXd> V1,
     Eigen::Ref<const compas::RowMatrixXi> F1,
@@ -31,7 +31,7 @@ trimesh_remesh_along_isoline(
  * @param values Vector of isovalues at which to cut
  * @return Tuple of (vertices, faces, scalar values, face groups) where face groups indicate regions between cuts
  */
-compas::RemeshIsolinesResult
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, Eigen::VectorXd, Eigen::VectorXi>
 trimesh_remesh_along_isolines(
     Eigen::Ref<const compas::RowMatrixXd> V_initial,
     Eigen::Ref<const compas::RowMatrixXi> F_initial,

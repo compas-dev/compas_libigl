@@ -69,14 +69,14 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
 
     Returns
     -------
-    tuple[ndarray, VectorVectorInt, ndarray, VectorBool, VectorInt]
+    tuple[np.array, list[list[int]], np.array, list[bool], list[int]]
         A tuple containing:
 
-        * vertices: ndarray - The 3D coordinates of the mapped mesh vertices
-        * faces: VectorVectorInt - The faces of the mapped mesh
-        * normals: ndarray - The normal vectors at each vertex
-        * boundary_flags: VectorBool - Boolean flags indicating if vertices are on the boundary
-        * polygon_groups: VectorInt - Grouping indices for polygons (to form holes)
+        * vertices: np.array - The 3D coordinates of the mapped mesh vertices
+        * faces: list[list[int]] - The faces of the mapped mesh
+        * normals: np.array - The normal vectors at each vertex
+        * boundary_flags: list[bool] - Boolean flags indicating if vertices are on the boundary
+        * polygon_groups: list[int] - Grouping indices for polygons (to form holes)
     """
     # Unpack mesh tuples
     v, f = target_mesh

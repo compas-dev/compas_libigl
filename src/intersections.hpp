@@ -17,7 +17,7 @@
  *         - u, v: barycentric coordinates of hit point
  *         - t: ray parameter at intersection
  */
- compas::VectorTupleIntFloatFloatFloat intersection_ray_mesh(
+ std::vector<std::tuple<int, float, float, float>> intersection_ray_mesh(
     const Eigen::Vector3d& point, 
     const Eigen::Vector3d& direction,
     Eigen::Ref<const compas::RowMatrixXd> V, 
@@ -32,7 +32,7 @@
  * @param F #F x 3 matrix of triangle indices
  * @return Vector of intersection hits per ray, each hit containing (face_id, u, v, t)
  */
-compas::VectorVectorTupleIntFloatFloatFloat intersection_rays_mesh(
+std::vector<std::vector<std::tuple<int, float, float, float>>> intersection_rays_mesh(
     Eigen::Ref<const compas::RowMatrixXd> points,
     Eigen::Ref<const compas::RowMatrixXd> directions,
     Eigen::Ref<const compas::RowMatrixXd> V, 

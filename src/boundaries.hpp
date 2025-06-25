@@ -11,4 +11,4 @@
  *
  * @note The input mesh should be manifold for correct results.
  */
- compas::VectorVectorInt trimesh_boundaries(Eigen::Ref<const compas::RowMatrixXi> F);
+ std::vector<std::vector<int>> trimesh_boundaries(Eigen::Ref<const compas::RowMatrixXi> F);

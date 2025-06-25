@@ -12,7 +12,7 @@
  * @param F The face matrix of the triangle mesh (m x 3).
  * @return A vector of gaussian curvature values per vertex.
  */
-compas::VectorXd trimesh_gaussian_curvature(
+Eigen::VectorXd trimesh_gaussian_curvature(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F
 );
@@ -29,7 +29,10 @@ compas::VectorXd trimesh_gaussian_curvature(
  *         - PV1: principal curvature 1 per vertex (n x 1)
  *         - PV2: principal curvature 2 per vertex (n x 1)
  */
-compas::PrincipalCurvatureResult
+std::tuple<compas::RowMatrixXd, 
+         compas::RowMatrixXd, 
+         Eigen::VectorXd, 
+         Eigen::VectorXd>
 trimesh_principal_curvature(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,

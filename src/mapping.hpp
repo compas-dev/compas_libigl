@@ -13,6 +13,7 @@
 #include <igl/boundary_loop.h>
 #include <igl/per_vertex_normals.h>
 #include <igl/adjacency_list.h>
+#include <igl/bfs_orient.h>
 
 /**
  * Map a 2D already croppedpattern mesh onto a 3D target mesh using AABB tree-based mapping.
@@ -29,14 +30,14 @@
  * @param pattern_normals Output matrix for interpolated normal vectors.
  * @return Vector of vectors representing the polygonal faces of the mapped pattern mesh.
  */
-compas::VectorVectorInt map_mesh_cropped(
-    Eigen::Ref<const compas::RowMatrixXd> v, 
-    Eigen::Ref<const compas::RowMatrixXi> f, 
-    Eigen::Ref<const compas::RowMatrixXd> uv,
-    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const compas::VectorVectorInt& pattern_f, 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
-    Eigen::Ref<compas::RowMatrixXd> pattern_normals);
+std::vector<std::vector<int>> map_mesh_cropped(
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> v, 
+    Eigen::Ref<const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> f, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> uv,
+    Eigen::Ref<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_v, 
+    const std::vector<std::vector<int>>& pattern_f, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_uv,
+    Eigen::Ref<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_normals);
 
 /**
  * Check if two paths intersect.
@@ -71,11 +72,11 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
  * @param tolerance The tolerance for point comparison, to remove duplicates.
  * @return A tuple of the clipped pattern mesh vertex coordinates and face indices.
  */
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
-    Eigen::Ref<const compas::RowMatrixXd> flattned_target_uv,
-    Eigen::Ref<const compas::RowMatrixXi> target_f, 
+std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> flattned_target_uv,
+    Eigen::Ref<const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> target_f, 
     
-    Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
@@ -98,13 +99,13 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
  * @param tolerance tolerance for point comparison, to remove duplicates
  * @return A tuple containing the mapped pattern vertices, faces, and vertex normal vectors.
  */
-compas::MeshMapResult map_mesh_with_automatic_parameterization(
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const compas::VectorVectorInt& pattern_f,
+    const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    compas::VectorInt& fixed_vertices,
+    std::vector<int>& fixed_vertices,
     double tolerance = 1e-6
 );
