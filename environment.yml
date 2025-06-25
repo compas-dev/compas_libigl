@@ -8,6 +8,7 @@ dependencies:
   - cmake
   - compas
   - pip:
+      - tessagon
       - -r requirements-dev.txt
       - -r requirements.txt
       - .
