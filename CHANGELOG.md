@@ -20,14 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Added meshpatter unify_cycles from COMPAS, LIBIGL has only triangle BFS.
+
 ### Removed
 
 
 ## [0.7.2] 2025-06-24
 
 ### Added
-
-* Added meshpatter unify_cycles from COMPAS, LIBIGL has only triangle BFS.
 
 ### Changed
 
