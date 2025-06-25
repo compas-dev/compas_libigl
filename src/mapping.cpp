@@ -184,7 +184,29 @@ std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor
     for (const auto &point_id : fixed_vertices){
         fixed.emplace_back(Clipper2Lib::PointD(flattned_target_uv(point_id, 0), flattned_target_uv(point_id, 1)));
     }
- 
+    
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // Check and correct polygon orientations to ensure they're all counter-clockwise
+    ////////////////////////////////////////////////////////////////////////////////////////
+    std::vector<std::vector<int>> corrected_pattern_f = pattern_f;
+    
+    // Function to check if a polygon is counter-clockwise oriented
+    auto is_counter_clockwise = [&pattern_v](const std::vector<int>& face_indices) -> bool {
+        double sum = 0.0;
+        for (size_t i = 0; i < face_indices.size(); i++) {
+            sum += (pattern_v(face_indices[(i + 1) % face_indices.size()], 0) - pattern_v(face_indices[i], 0)) * 
+                  (pattern_v(face_indices[(i + 1) % face_indices.size()], 1) + pattern_v(face_indices[i], 1));
+        }
+        return sum < 0;
+    };
+    
+    // Check and correct orientations of all input polygon faces
+    for (size_t i = 0; i < corrected_pattern_f.size(); i++) {
+        if (!is_counter_clockwise(corrected_pattern_f[i])) {
+            std::reverse(corrected_pattern_f[i].begin(), corrected_pattern_f[i].end());
+        }
+    }
+    
     ////////////////////////////////////////////////////////////////////////////////////////
     // Get Boundary polygon of a Mesh as Clipper Path.
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +237,7 @@ std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor
     std::vector<Clipper2Lib::PathsD> patterns_to_cut;
     std::vector<Clipper2Lib::PathsD> patterns_to_keep;
 
-    for (const auto &polyline_ids : pattern_f)
+    for (const auto &polyline_ids : corrected_pattern_f)
     {
 
         // Convert to clipper paths
@@ -422,6 +444,7 @@ std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor
                 int idx = find_or_add_point(point.x, point.y);
                 face.push_back(idx);
             }
+            
             faces.push_back(face);
             groups.push_back(group_id);
             is_boundary.push_back(false);

@@ -44,7 +44,7 @@ TESSAGON_TYPES = {
 }
 
 
-def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=True, fixed_vertices=None, tolerance=1e-6, unify_cycles=True):
+def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=True, fixed_vertices=None, tolerance=1e-6):
     """
     Map a 2D pattern mesh onto a 3D target.
 
@@ -66,9 +66,6 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
     tolerance : float, optional
         The tolerance for point comparison, to remove duplicates.
         Default is 1e-6.
-    unify_cycles : bool, optional
-        Whether to unify cycles of the pattern mesh.
-        Default is True.
 
     Returns
     -------
@@ -109,17 +106,11 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
         v_numpy, f_numpy, pattern_v_numpy, pattern_f_vec, clip_boundaries, simplify_borders, fixed_vertices_vectorint, tolerance
     )
 
-    # LIBIGL has no BFS orienting for polygons, only triangles, so we copy here data several times:
-    if unify_cycles:
-        mesh = Mesh.from_vertices_and_faces(pv_numpy_copy, pf_numpy_cleaned)
-        mesh.unify_cycles()
-        pv_numpy_copy, pf_numpy_cleaned = mesh.to_vertices_and_faces()
-
     # Return the result as a tuple
     return pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups
 
 
-def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=True, fixed_vertices=None, unify_cycles=True):
+def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, pattern_u=16, pattern_v=16, simplify_borders=True, fixed_vertices=None):
     """
     Map a 2D pattern mesh onto a 3D target.
 
@@ -167,9 +158,7 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
     fixed_vertices : list[list[float]], optional
         A list of fixed points on the target mesh.
         Default is None.
-    unify_cycles : bool, optional
-        Whether to unify cycles of the pattern mesh.
-        Default is True.
+
     Returns
     -------
     compas.datastructures.Mesh
@@ -206,7 +195,7 @@ def map_pattern_to_mesh(name, mesh, clip_boundaries=True, tolerance=1e-6, patter
 
     v, f = mesh.to_vertices_and_faces()
     mapped_vertices, mapped_faces, mapped_normals, mapped_is_boundary, mapped_groups = map_mesh(
-        (v, f), (pv, pf), clip_boundaries=clip_boundaries, simplify_borders=simplify_borders, fixed_vertices=fixed_vertices, tolerance=tolerance, unify_cycles=unify_cycles
+        (v, f), (pv, pf), clip_boundaries=clip_boundaries, simplify_borders=simplify_borders, fixed_vertices=fixed_vertices, tolerance=tolerance
     )
 
     return Mesh.from_vertices_and_faces(mapped_vertices, mapped_faces)
