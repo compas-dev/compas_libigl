@@ -102,7 +102,5 @@ mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])
 
-json_dump([Mesh.from_vertices_and_faces(pv, pf), mesh_mapped, mesh_mapped_offset, boundaries, mesh_flattened], "mesh_flattened.json")
-
 viewer.scene.add(mesh_flattened, name="mesh_flattened")
 viewer.show()
