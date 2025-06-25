@@ -611,7 +611,7 @@ document.write(`
 <h1>map_mesh</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_libigl.mapping.map_mesh">
-<span class="sig-name descname"><span class="pre">map_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_boundaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify_borders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/eb76c80/src/compas_libigl/mapping.py#L47"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">map_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_boundaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify_borders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_libigl/blob/1b56f92/src/compas_libigl/mapping.py#L47"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Map a 2D pattern mesh onto a 3D target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -636,13 +636,13 @@ Default is 1e-6.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>tuple[ndarray, VectorVectorInt, ndarray, VectorBool, VectorInt]</dt><dd><p>A tuple containing:</p>
+<dt>tuple[np.array, list[list[int]], np.array, list[bool], list[int]]</dt><dd><p>A tuple containing:</p>
 <ul class="simple">
-<li><p>vertices: ndarray - The 3D coordinates of the mapped mesh vertices</p></li>
-<li><p>faces: VectorVectorInt - The faces of the mapped mesh</p></li>
-<li><p>normals: ndarray - The normal vectors at each vertex</p></li>
-<li><p>boundary_flags: VectorBool - Boolean flags indicating if vertices are on the boundary</p></li>
-<li><p>polygon_groups: VectorInt - Grouping indices for polygons (to form holes)</p></li>
+<li><p>vertices: np.array - The 3D coordinates of the mapped mesh vertices</p></li>
+<li><p>faces: list[list[int]] - The faces of the mapped mesh</p></li>
+<li><p>normals: np.array - The normal vectors at each vertex</p></li>
+<li><p>boundary_flags: list[bool] - Boolean flags indicating if vertices are on the boundary</p></li>
+<li><p>polygon_groups: list[int] - Grouping indices for polygons (to form holes)</p></li>
 </ul>
 </dd>
 </dl>
