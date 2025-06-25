@@ -1,9 +1,9 @@
 #include "intersections.hpp"
 
-std::vector<std::tuple<int, float, float, float>>
-intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direction,
+compas::VectorTupleIntFloatFloatFloat intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direction,
                      Eigen::Ref<const compas::RowMatrixXd> V, 
                      Eigen::Ref<const compas::RowMatrixXi> F) {
+    
     std::vector<std::tuple<int, float, float, float>> hits;
     std::vector<igl::Hit<double>> igl_hits;
 
@@ -18,8 +18,7 @@ intersection_ray_mesh(const Eigen::Vector3d& point, const Eigen::Vector3d& direc
     return hits;
 }
 
-std::vector<std::vector<std::tuple<int, float, float, float>>>
-intersection_rays_mesh(Eigen::Ref<const compas::RowMatrixXd> points,
+compas::VectorVectorTupleIntFloatFloatFloat intersection_rays_mesh(Eigen::Ref<const compas::RowMatrixXd> points,
                       Eigen::Ref<const compas::RowMatrixXd> directions,
                       Eigen::Ref<const compas::RowMatrixXd> V, 
                       Eigen::Ref<const compas::RowMatrixXi> F) {

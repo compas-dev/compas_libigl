@@ -9,7 +9,7 @@
 /**
  * Helper function to compute exact geodesic distances.
  */
-Eigen::VectorXd trimesh_geodistance_exact(
+compas::VectorXd trimesh_geodistance_exact(
     const compas::RowMatrixXd& V,
     const compas::RowMatrixXi& F,
     int vid);
@@ -17,7 +17,7 @@ Eigen::VectorXd trimesh_geodistance_exact(
 /**
  * Helper function to compute heat method geodesic distances.
  */
-Eigen::VectorXd trimesh_geodistance_heat(
+compas::VectorXd trimesh_geodistance_heat(
     const compas::RowMatrixXd& V,
     const compas::RowMatrixXi& F,
     int vid);
@@ -31,7 +31,7 @@ Eigen::VectorXd trimesh_geodistance_heat(
  * @param method Method to use: "exact" or "heat".
  * @return Vector of geodesic distances from source to all vertices.
  */
-Eigen::VectorXd trimesh_geodistance(
+compas::VectorXd trimesh_geodistance(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
     int source,
@@ -47,9 +47,9 @@ Eigen::VectorXd trimesh_geodistance(
  * @param method Method to use: "exact" or "heat".
  * @return Vector of minimum geodesic distances from any source to all vertices.
  */
-Eigen::VectorXd trimesh_geodistance_multiple(
+compas::VectorXd trimesh_geodistance_multiple(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
-    Eigen::Ref<const Eigen::VectorXi> sources,
+    Eigen::Ref<const compas::VectorXi> sources,
     const std::string& method
 );

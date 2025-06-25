@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+* Removed all the types_std imports from the code. Instead type casters are used: https://nanobind.readthedocs.io/en/latest/exchanging.html .
+
 
 ## [0.7.1] 2025-06-24
 
