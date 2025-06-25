@@ -23,14 +23,14 @@ bool is_same_point(double x1, double y1, double x2, double y2, double tol) {
     return (dx*dx + dy*dy) < (tol*tol);
 }
 
-compas::VectorVectorInt map_mesh_cropped(
-    Eigen::Ref<const compas::RowMatrixXd> v, 
-    Eigen::Ref<const compas::RowMatrixXi> f, 
-    Eigen::Ref<const compas::RowMatrixXd> uv,
-    Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const compas::VectorVectorInt& pattern_f, 
-    Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
-    Eigen::Ref<compas::RowMatrixXd> pattern_normals)
+std::vector<std::vector<int>> map_mesh_cropped(
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> v, 
+    Eigen::Ref<const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> f, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> uv,
+    Eigen::Ref<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_v, 
+    const std::vector<std::vector<int>>& pattern_f, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_uv,
+    Eigen::Ref<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_normals)
 {
 
     // Use regular MatrixXd to avoid type conflicts with AABB functions
@@ -164,11 +164,11 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
 
 
 
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
-    Eigen::Ref<const compas::RowMatrixXd> flattned_target_uv,
-    Eigen::Ref<const compas::RowMatrixXi> target_f, 
+std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> flattned_target_uv,
+    Eigen::Ref<const Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> target_f, 
     
-    Eigen::Ref<const compas::RowMatrixXd> pattern_v, 
+    Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> pattern_v, 
     const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
@@ -437,24 +437,20 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
     }
 
     return std::make_tuple(vertices, faces, is_boundary, groups);
-
 }
 
 
-compas::MeshMapResult map_mesh_with_automatic_parameterization(
+std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const compas::VectorVectorInt& pattern_f,
+    const std::vector<std::vector<int>>& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    compas::VectorInt& fixed_vertices,
+    std::vector<int>& fixed_vertices,
     double tolerance)
 {
-
-
-
-
+    // ... (function implementation remains the same)
     // Compute target mesh UV parameterization using LSCM
     Eigen::MatrixXd target_uv;
     
@@ -492,7 +488,7 @@ compas::MeshMapResult map_mesh_with_automatic_parameterization(
     clipped_pattern_uv = clipped_pattern_v.leftCols(2);
 
     // Initialize normals matrix for pattern vertices
-    compas::RowMatrixXd pattern_normals;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> pattern_normals;
     pattern_normals.resize(clipped_pattern_v.rows(), 3);
     
     // Map the mesh with normal mapping

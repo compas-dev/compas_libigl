@@ -27,7 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added meshpatter unify_cycles from COMPAS, LIBIGL has only triangle BFS.
+
 ### Changed
+
+* Remove C++ aliases to minimum.
 
 ### Removed
 

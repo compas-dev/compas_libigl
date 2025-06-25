@@ -1,6 +1,6 @@
 #include "meshing.hpp"
 
-compas::RemeshIsolineResult
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, Eigen::VectorXi>
 trimesh_remesh_along_isoline(
     Eigen::Ref<const compas::RowMatrixXd> V1,
     Eigen::Ref<const compas::RowMatrixXi> F1,
@@ -37,7 +37,7 @@ trimesh_remesh_along_isoline(
     return std::make_tuple(V2, F2, L);
 }
 
-compas::RemeshIsolinesResult
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, Eigen::VectorXd, Eigen::VectorXi>
 trimesh_remesh_along_isolines(
     Eigen::Ref<const compas::RowMatrixXd> V_initial,
     Eigen::Ref<const compas::RowMatrixXi> F_initial,
@@ -53,8 +53,8 @@ trimesh_remesh_along_isolines(
     Eigen::VectorXi face_groups = Eigen::VectorXi::Zero(F.rows());
     
     // Temporary variables - pre-allocated once
-    compas::RowMatrixXd V_temp;
-    compas::RowMatrixXi F_temp;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> V_temp;
+    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> F_temp;
     Eigen::VectorXd S_temp;
     Eigen::VectorXi J, L;
     Eigen::SparseMatrix<double> BC;
