@@ -1,9 +1,6 @@
 #include "meshing.hpp"
 
-std::tuple<
-    compas::RowMatrixXd,
-    compas::RowMatrixXi,
-    Eigen::VectorXi>
+compas::RemeshIsolineResult
 trimesh_remesh_along_isoline(
     Eigen::Ref<const compas::RowMatrixXd> V1,
     Eigen::Ref<const compas::RowMatrixXi> F1,
@@ -40,11 +37,7 @@ trimesh_remesh_along_isoline(
     return std::make_tuple(V2, F2, L);
 }
 
-std::tuple<
-    compas::RowMatrixXd,
-    compas::RowMatrixXi,
-    Eigen::VectorXd,
-    Eigen::VectorXi>
+compas::RemeshIsolinesResult
 trimesh_remesh_along_isolines(
     Eigen::Ref<const compas::RowMatrixXd> V_initial,
     Eigen::Ref<const compas::RowMatrixXi> F_initial,

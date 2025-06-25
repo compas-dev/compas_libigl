@@ -23,12 +23,12 @@ bool is_same_point(double x1, double y1, double x2, double y2, double tol) {
     return (dx*dx + dy*dy) < (tol*tol);
 }
 
-std::vector<std::vector<int>> map_mesh_cropped(
+compas::VectorVectorInt map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXd> v, 
     Eigen::Ref<const compas::RowMatrixXi> f, 
     Eigen::Ref<const compas::RowMatrixXd> uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f, 
+    const compas::VectorVectorInt& pattern_f, 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_normals)
 {
@@ -441,15 +441,14 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
 }
 
 
-
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
+compas::MeshMapResult map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f,
+    const compas::VectorVectorInt& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    std::vector<int>& fixed_vertices,
+    compas::VectorInt& fixed_vertices,
     double tolerance)
 {
 

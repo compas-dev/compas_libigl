@@ -21,7 +21,6 @@ from tessagon.types.weave_tessagon import WeaveTessagon
 from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
 from compas_libigl import _mapping  # type: ignore
-from compas_libigl import _types_std  # noqa: F401
 
 TESSAGON_TYPES = {
     "Hex": HexTessagon,
@@ -90,15 +89,15 @@ def map_mesh(target_mesh, pattern_mesh, clip_boundaries=True, simplify_borders=T
 
     # Handle fixed_vertices - provide empty array if None
 
-    fixed_vertices_vectorint = _types_std.VectorInt()
+    fixed_vertices_vectorint = []
     if fixed_vertices is None:
-        fixed_vertices_vectorint = _types_std.VectorInt()
+        fixed_vertices_vectorint = []
     else:
-        fixed_vertices_vectorint = _types_std.VectorInt(fixed_vertices)
+        fixed_vertices_vectorint = fixed_vertices
 
     # Convert pattern_f from Python list to VectorVectorInt which is expected by C++ code
 
-    pattern_f_vec = _types_std.VectorVectorInt()
+    pattern_f_vec = []
     for face in pf:
         pattern_f_vec.append(face)
 

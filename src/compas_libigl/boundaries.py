@@ -1,7 +1,6 @@
 import numpy as np
 
 from compas_libigl import _boundaries
-from compas_libigl import _types_std  # noqa: F401
 
 
 def trimesh_boundaries(M):
@@ -29,5 +28,5 @@ def trimesh_boundaries(M):
     """
     V, F = M
     F = np.asarray(F, dtype=np.int32)
-    result: _types_std.VectorVectorInt = _boundaries.trimesh_boundaries(F)
+    result = _boundaries.trimesh_boundaries(F)
     return [list(loop) for loop in result]
