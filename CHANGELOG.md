@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Remove C++ aliases to minimum.
+* Removed C++ aliases to minimum.
 
 ### Removed
 
