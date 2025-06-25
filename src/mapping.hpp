@@ -8,16 +8,9 @@
 #include <igl/boundary_loop.h>
 #include <igl/AABB.h>
 #include <igl/edges.h>
-#include <algorithm>
 #include <Eigen/Core>
 #include <clipper2/clipper.h>
 #include <igl/boundary_loop.h>
-#include <unordered_map>
-#include <vector>
-#include <cmath>
-#include <tuple>
-#include <iomanip>
-#include <iostream>
 #include <igl/per_vertex_normals.h>
 #include <igl/adjacency_list.h>
 
@@ -36,12 +29,12 @@
  * @param pattern_normals Output matrix for interpolated normal vectors.
  * @return Vector of vectors representing the polygonal faces of the mapped pattern mesh.
  */
-std::vector<std::vector<int>> map_mesh_cropped(
+compas::VectorVectorInt map_mesh_cropped(
     Eigen::Ref<const compas::RowMatrixXd> v, 
     Eigen::Ref<const compas::RowMatrixXi> f, 
     Eigen::Ref<const compas::RowMatrixXd> uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f, 
+    const compas::VectorVectorInt& pattern_f, 
     Eigen::Ref<const compas::RowMatrixXd> pattern_uv,
     Eigen::Ref<compas::RowMatrixXd> pattern_normals);
 
@@ -105,13 +98,13 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, std::vector<bool>
  * @param tolerance tolerance for point comparison, to remove duplicates
  * @return A tuple containing the mapped pattern vertices, faces, and vertex normal vectors.
  */
-std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
+compas::MeshMapResult map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 
     Eigen::Ref<const compas::RowMatrixXi> target_f, 
     Eigen::Ref<compas::RowMatrixXd> pattern_v, 
-    const std::vector<std::vector<int>>& pattern_f,
+    const compas::VectorVectorInt& pattern_f,
     bool clip_boundaries,
     bool simplify_borders,
-    std::vector<int>& fixed_vertices,
+    compas::VectorInt& fixed_vertices,
     double tolerance = 1e-6
 );

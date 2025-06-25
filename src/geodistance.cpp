@@ -1,13 +1,13 @@
 #include "geodistance.hpp"
 
 // Main entry points
-Eigen::VectorXd trimesh_geodistance(
+compas::VectorXd trimesh_geodistance(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
     int source,
     const std::string& method
 ) {
-    Eigen::VectorXi sources(1);
+    compas::VectorXi sources(1);
     sources << source;
 
     if (method == "exact") {
@@ -19,10 +19,10 @@ Eigen::VectorXd trimesh_geodistance(
     throw std::runtime_error("Unknown method: " + method);
 }
 
-Eigen::VectorXd trimesh_geodistance_multiple(
+compas::VectorXd trimesh_geodistance_multiple(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
-    Eigen::Ref<const Eigen::VectorXi> sources,
+    Eigen::Ref<const compas::VectorXi> sources,
     const std::string& method
 ) {
     if (sources.size() == 0) {
@@ -57,13 +57,13 @@ Eigen::VectorXd trimesh_geodistance_multiple(
 }
 
 // Implementation details
-Eigen::VectorXd trimesh_geodistance_exact(
+compas::VectorXd trimesh_geodistance_exact(
     const compas::RowMatrixXd& V,
     const compas::RowMatrixXi& F,
     int vid)
 {
-    Eigen::VectorXd D;
-    Eigen::VectorXi VS, FS, VT, FT;
+    compas::VectorXd D;
+    compas::VectorXi VS, FS, VT, FT;
 
     VS.resize(1);
     VS << vid;
@@ -75,12 +75,12 @@ Eigen::VectorXd trimesh_geodistance_exact(
     return D;
 }
 
-Eigen::VectorXd trimesh_geodistance_heat(
+compas::VectorXd trimesh_geodistance_heat(
     const compas::RowMatrixXd& V,
     const compas::RowMatrixXi& F,
     int vid)
 {
-    Eigen::VectorXi gamma;
+    compas::VectorXi gamma;
     gamma.resize(1);
     gamma << vid;
 

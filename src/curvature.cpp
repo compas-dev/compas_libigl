@@ -1,24 +1,24 @@
 #include "curvature.hpp"
 
 
-std::tuple<compas::RowMatrixXd, compas::RowMatrixXd, Eigen::VectorXd, Eigen::VectorXd>
+compas::PrincipalCurvatureResult
 trimesh_principal_curvature(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
     int radius
 ) {
-    Eigen::MatrixXd PD1, PD2;
-    Eigen::VectorXd PV1, PV2;
+    compas::RowMatrixXd PD1, PD2;
+    compas::VectorXd PV1, PV2;
     igl::principal_curvature(V, F, PD1, PD2, PV1, PV2, radius);
     return std::make_tuple(PD1, PD2, PV1, PV2);
 }
 
-Eigen::VectorXd
+compas::VectorXd
 trimesh_gaussian_curvature(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F
 ) {
-    Eigen::VectorXd K;
+    compas::VectorXd K;
     igl::gaussian_curvature(V, F, K);
     return K;
 }

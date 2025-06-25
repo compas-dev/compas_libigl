@@ -1,6 +1,6 @@
 #include "isolines.hpp"
 
-std::tuple<compas::RowMatrixXd, compas::RowMatrixXi, compas::RowMatrixXi> trimesh_isolines(
+compas::IsolinesResult trimesh_isolines(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
     Eigen::Ref<const Eigen::VectorXd> isovalues,
