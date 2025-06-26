@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Add winding check in map_mesh function.
+
 ### Changed
+
+* Added meshpatter unify_cycles from COMPAS, LIBIGL has only triangle BFS.
 
 ### Removed
 
@@ -18,11 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-* Add winding check in map_mesh function.
-
 ### Changed
 
-* Added meshpatter unify_cycles from COMPAS, LIBIGL has only triangle BFS.
+* Changed type binding to type casting.
 
 ### Removed
 
