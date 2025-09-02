@@ -61,8 +61,8 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 # Offset mesh by normals, normals are interpolated from the original mesh.
 # ==============================================================================
 mesh_mapped_offset = mesh_mapped.copy()
-for i in range(mesh_mapped.number_of_vertices()):   
-    mesh_mapped_offset.vertex_attributes(i, "xyz", mesh_mapped.vertex_attributes(i, "xyz") - mn[i]*0.001)
+for i in range(mesh_mapped.number_of_vertices()):
+    mesh_mapped_offset.vertex_attributes(i, "xyz", mesh_mapped.vertex_attributes(i, "xyz") - mn[i] * 0.001)
 
 # ==============================================================================
 # Get Boundary Polylines
@@ -74,7 +74,7 @@ for i in range(len(mb)):
     points = []
     for j in range(len(mf[i])):
         id = mf[i][j]
-        points.append(mesh_mapped.vertex_attributes(id, "xyz") + mn[id]*0.002)
+        points.append(mesh_mapped.vertex_attributes(id, "xyz") + mn[id] * 0.002)
     points.append(points[0])
     polyline = Polyline(points)
     boundaries.append(polyline)

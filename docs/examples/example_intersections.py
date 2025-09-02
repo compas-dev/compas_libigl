@@ -7,6 +7,7 @@ from compas.geometry import Point
 from compas_viewer import Viewer
 
 from compas_libigl.intersections import intersection_rays_mesh
+from compas_libigl.intersections import barycenter_to_point
 
 # ==============================================================================
 # Input geometry
@@ -56,11 +57,12 @@ hits_per_ray = intersection_rays_mesh(rays, mesh.to_vertices_and_faces())
 intersections = []
 for ray, hits in zip(rays, hits_per_ray):
     if hits:
-        base, vector = ray
-        index = hits[0][0]
-        distance = hits[0][3]
-        face = index_face[index]
-        point = base + vector * distance
+        idx, u, v, w = hits[0]
+        vertices = mesh.face_vertices(idx)
+        p1 = mesh.vertex_coordinates(vertices[0])
+        p2 = mesh.vertex_coordinates(vertices[1])
+        p3 = mesh.vertex_coordinates(vertices[2])
+        point = barycenter_to_point(u, v, w, p1, p2, p3)
         intersections.append(point)
 
 # ==============================================================================
