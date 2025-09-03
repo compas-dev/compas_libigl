@@ -10,5 +10,4 @@ dependencies:
   - pip:
       - tessagon
       - -r requirements-dev.txt
-      - -r requirements.txt
       - .
