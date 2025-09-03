@@ -96,7 +96,7 @@ macos.archs = ["x86_64", "arm64"]
 # ============================================================================
 
 [tool.bumpversion]
-current_version = "0.7.4"
+current_version = "0.7.5"
 message = "Bump version to {new_version}"
 commit = true
 tag = true
