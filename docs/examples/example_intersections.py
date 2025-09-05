@@ -56,10 +56,11 @@ index_face = {index: face for index, face in enumerate(mesh.faces())}
 hits_per_rays = intersection_rays_mesh(rays, trimesh.to_vertices_and_faces())
 
 intersection_points = []
-for hit in hits_per_rays:
-    if hit:
-        pt, idx, u, v, w = hit[0]
-        intersection_points.append(pt)
+for hits_per_ray in hits_per_rays:
+    if hits_per_ray:
+        for hit in hits_per_ray:
+            pt, idx, u, v, w = hit
+            intersection_points.append(pt)
 
 # ==============================================================================
 # Visualisation
