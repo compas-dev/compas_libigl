@@ -1,6 +1,6 @@
 import compas.geometry
 import compas.datastructures
-from compas_libigl.intersections import intersection_rays_mesh, intersection_ray_mesh
+from compas_libigl.intersections import intersection_ray_mesh
 from compas_libigl.intersections import barycenter_to_point
 from compas_viewer import Viewer
 from compas.colors import Color
@@ -19,8 +19,6 @@ ray = (p0, compas.geometry.Vector(0, 0, 1))
 hits_per_ray = intersection_ray_mesh(ray, mesh.to_vertices_and_faces())
 
 point, idx, u, v, w = hits_per_ray[0][0], hits_per_ray[0][1], hits_per_ray[0][2], hits_per_ray[0][3], hits_per_ray[0][4]
-
-index_face = {index: face for index, face in enumerate(mesh.faces())}
 
 intersections = []
 for hit in hits_per_ray:

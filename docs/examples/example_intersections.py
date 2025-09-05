@@ -51,8 +51,6 @@ for x, y, z in hemi:
 # Intersections
 # ==============================================================================
 
-index_face = {index: face for index, face in enumerate(mesh.faces())}
-
 hits_per_rays = intersection_rays_mesh(rays, trimesh.to_vertices_and_faces())
 
 intersection_points = []
