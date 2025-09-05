@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Fixed `compas_libigl` plugins are not detected.
 * Align barycentric coordinates of libigl to COMPAS.
+* Ray mesh intersection now returns a point.
 
 ### Removed
 

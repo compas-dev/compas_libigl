@@ -17,7 +17,6 @@ mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
 trimesh = mesh.copy()
 trimesh.quads_to_triangles()
-
 # ==============================================================================
 # Rays
 # ==============================================================================
@@ -25,8 +24,8 @@ trimesh.quads_to_triangles()
 base = Point(*mesh.centroid())
 base.z = 0
 
-theta = np.linspace(0, np.pi, 20, endpoint=False)
-phi = np.linspace(0, 2 * np.pi, 20, endpoint=False)
+theta = np.linspace(0, np.pi, 5, endpoint=False)
+phi = np.linspace(0, 2 * np.pi, 5, endpoint=False)
 theta, phi = np.meshgrid(theta, phi)
 theta = theta.ravel()
 phi = phi.ravel()
@@ -39,11 +38,13 @@ xyz = np.vstack((x, y, z)).T
 mask = xyz[:, 2] > 0
 hemi = xyz[mask]
 
+lines = []
 rays = []
 for x, y, z in hemi:
     point = Point(x, y, z)
     vector = point - base
     vector.unitize()
+    lines.append(Line(base, base + vector))
     rays.append((base, vector))
 
 # ==============================================================================
@@ -52,18 +53,13 @@ for x, y, z in hemi:
 
 index_face = {index: face for index, face in enumerate(mesh.faces())}
 
-hits_per_ray = intersection_rays_mesh(rays, mesh.to_vertices_and_faces())
+hits_per_rays = intersection_rays_mesh(rays, trimesh.to_vertices_and_faces())
 
-intersections = []
-for ray, hits in zip(rays, hits_per_ray):
-    if hits:
-        idx, u, v, w = hits[0]
-        vertices = mesh.face_vertices(idx)
-        p1 = mesh.vertex_coordinates(vertices[0])
-        p2 = mesh.vertex_coordinates(vertices[1])
-        p3 = mesh.vertex_coordinates(vertices[2])
-        point = barycenter_to_point(u, v, w, p1, p2, p3)
-        intersections.append(point)
+intersection_points = []
+for hit in hits_per_rays:
+    if hit:
+        pt, idx, u, v, w = hit[0]
+        intersection_points.append(pt)
 
 # ==============================================================================
 # Visualisation
@@ -73,7 +69,12 @@ viewer = Viewer(width=1600, height=900)
 
 viewer.scene.add(mesh, opacity=0.7, show_points=False)
 
-for intersection in intersections:
-    viewer.scene.add(Line(base, intersection), linecolor=Color.blue(), linewidth=3)
+for point in intersection_points:
+    viewer.scene.add(Line(base, point), linecolor=Color.blue(), linewidth=3)
+    viewer.scene.add(point, pointcolor=Color.red(), pointsize=10)
+
+for line in lines:
+    for i in range(20):
+        viewer.scene.add(line.point_at(i / 20), pointcolor=Color.red(), pointsize=5)
 
 viewer.show()
