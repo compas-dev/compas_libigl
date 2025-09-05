@@ -12,6 +12,7 @@ authors = [
     { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
 ]
 classifiers = ["License :: OSI Approved :: BSD License"]
+
 dynamic = ['version']
 dependencies = [
     "compas >=2.0.0",
@@ -20,6 +21,10 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://compas.dev/compas_libigl/latest/"
+
+# ============================================================================
+# pyproject dependecy groups
+# ============================================================================
 
 [dependency-groups]
 dev = [
@@ -96,8 +101,8 @@ CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.cibuildwheel]
 build-verbosity = 3
-test-groups = ["tests"]
-test-command = "pytest {project}/tests"
+test-requires = ["numpy", "compas", "pytest", "build", "tessagon"]
+test-command = "pip install numpy compas && pip list && pytest {project}/tests"
 build-frontend = "pip"
 manylinux-x86_64-image = "manylinux2014"
 skip = ["*_i686", "*-musllinux_*", "*-win32", "pp*"]
@@ -109,7 +114,7 @@ macos.archs = ["x86_64", "arm64"]
 # ============================================================================
 
 [tool.bumpversion]
-current_version = "0.7.4"
+current_version = "0.7.6"
 message = "Bump version to {new_version}"
 commit = true
 tag = true

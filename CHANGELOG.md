@@ -11,9 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Removed
+
+
+## [0.7.6] 2025-09-04
+
+### Added
+
+### Changed
+
+### Removed
+
+
+## [0.7.5] 2025-09-03
+
+### Added
+
+### Changed
+
 * Fixed `compas_libigl` plugins are not detected.
 * Align barycentric coordinates of libigl to COMPAS.
 * Ray mesh intersection now returns a point.
+* Add project dependency groups in pyproject.toml.
+* Change requirements.txt to pyproject.toml.
 
 ### Removed
 
