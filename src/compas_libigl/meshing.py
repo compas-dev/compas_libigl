@@ -65,3 +65,53 @@ def trimesh_remesh_along_isolines(M, scalars, isovalues):
     ISO = np.asarray(isovalues, dtype=np.float64)
     V2, F2, S2, G2 = _meshing.trimesh_remesh_along_isolines(V, F, S, ISO)
     return V2.tolist(), F2.tolist(), S2.tolist(), G2.tolist()
+
+
+@plugin(category="trimesh")
+def trimesh_cut_mesh(M, cuts):
+    """Cut a mesh along specified edges.
+
+    Parameters
+    ----------
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
+    cuts : list[list[int]]
+        A matrix of shape (F, 3) with boolean flags indicating
+        which edges to cut. For each face, the three values
+        correspond to edges (v0,v1), (v1,v2), (v2,v0).
+
+    Returns
+    -------
+    tuple[list[list[float]], list[list[int]]]
+        A tuple containing
+        * the vertices of the cut mesh (with duplicated vertices along cuts),
+        * the faces of the cut mesh.
+    """
+    V, F = M
+    V = np.asarray(V, dtype=np.float64)
+    F = np.asarray(F, dtype=np.int32)
+    C = np.asarray(cuts, dtype=np.int32)
+    Vn, Fn = _meshing.trimesh_cut_mesh(V, F, C)
+    return Vn.tolist(), Fn.tolist()
+
+
+@plugin(category="trimesh")
+def trimesh_face_components(M):
+    """Compute connected components of mesh faces.
+
+    Parameters
+    ----------
+    M : tuple[list[list[float]], list[list[int]]]
+        A mesh represented by a tuple of (vertices, faces)
+        where vertices are 3D points and faces are triangles
+
+    Returns
+    -------
+    list[int]
+        Component ID per face. Faces sharing edges belong to the same component.
+    """
+    V, F = M
+    F = np.asarray(F, dtype=np.int32)
+    C = _meshing.trimesh_face_components(F)
+    return C.tolist()
