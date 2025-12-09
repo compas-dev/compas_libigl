@@ -14,6 +14,9 @@ def test_ramer_douglas_peucker():
     S, J, Q = ramer_douglas_peucker(points, threshold=0.5)
     assert len(S) <= len(points)
     assert len(S) >= 2  # At least start and end points
+    # Q maps each original point to simplified curve - same length as input
+    assert len(Q) == len(points)
+    assert len(Q[0]) == 3  # Each Q entry is a 3D point
     # With zero threshold, should keep all points
     S2, J2, Q2 = ramer_douglas_peucker(points, threshold=0.0)
     assert len(S2) == len(points)
