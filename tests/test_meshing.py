@@ -1,5 +1,10 @@
 import compas
-from compas_libigl.meshing import trimesh_remesh_along_isoline, trimesh_remesh_along_isolines
+from compas_libigl.meshing import (
+    trimesh_remesh_along_isoline,
+    trimesh_remesh_along_isolines,
+    trimesh_cut_mesh,
+    trimesh_face_components,
+)
 from compas.datastructures import Mesh
 
 
@@ -29,3 +34,27 @@ def test_trimesh_remesh_along_isolines():
     assert len(F2) > 0
     assert len(S2) == len(V2)
     assert len(G2) == len(F2)
+
+
+def test_trimesh_cut_mesh():
+    mesh = Mesh.from_off(compas.get("tubemesh.off"))
+    mesh.quads_to_triangles()
+    M = mesh.to_vertices_and_faces()
+    V, F = M
+    # Create cut flags: all ones means cut all edges
+    cuts = [[1, 1, 1] for _ in F]
+    Vn, Fn = trimesh_cut_mesh(M, cuts)
+    # After cutting all edges, we should have more vertices
+    assert len(Vn) >= len(V)
+    assert len(Fn) == len(F)
+
+
+def test_trimesh_face_components():
+    mesh = Mesh.from_off(compas.get("tubemesh.off"))
+    mesh.quads_to_triangles()
+    M = mesh.to_vertices_and_faces()
+    C = trimesh_face_components(M)
+    # Component IDs, one per face
+    assert len(C) == mesh.number_of_faces()
+    # Connected mesh should have single component (component 0)
+    assert max(C) == 0
