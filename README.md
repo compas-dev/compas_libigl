@@ -1,6 +1,6 @@
 # compas_libigl
 
-COMPAS-compatible bindings for top-level algorithms of libigl generated with Pybind.
+COMPAS-compatible bindings for top-level algorithms of libigl generated with `nanobind`.
 Many of the functions provided by `compas_libigl` are based on the examples in the libigl tutorial.
 
 ## Installation
