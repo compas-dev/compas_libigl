@@ -18,11 +18,11 @@ def ramer_douglas_peucker(points, threshold):
 
     Returns
     -------
-    tuple[list[list[float]], list[int], list[int]]
+    tuple[list[list[float]], list[int], list[list[float]]]
         A tuple containing
-        * the simplified polyline points,
-        * indices in original polyline that were kept,
-        * for each simplified point, its index in the original polyline.
+        * the simplified polyline points (S),
+        * indices in original polyline that were kept (J),
+        * for each original point, the corresponding point on the simplified curve (Q).
     """
     P = np.asarray(points, dtype=np.float64)
     S, J, Q = _simplify.ramer_douglas_peucker(P, float(threshold))

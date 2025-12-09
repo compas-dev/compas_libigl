@@ -9,9 +9,9 @@
  *
  * @param P #P x 3 matrix of polyline points
  * @param threshold Maximum distance threshold for simplification
- * @return Tuple of (simplified points, indices of kept points, mapping from simplified to original)
+ * @return Tuple of (simplified points, indices of kept points, mapping from original to simplified)
  */
-std::tuple<compas::RowMatrixXd, Eigen::VectorXi, Eigen::VectorXi>
+std::tuple<compas::RowMatrixXd, Eigen::VectorXi, compas::RowMatrixXd>
 ramer_douglas_peucker(
     Eigen::Ref<const compas::RowMatrixXd> P,
     double threshold);
