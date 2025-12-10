@@ -12,9 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Add missing igl functions to enable compas_slicer to drop the `libigl` dependency entirely:
 
 - `cotmatrix` module: `trimesh_cotmatrix`, `trimesh_cotmatrix_entries`
-- grad module: `trimesh_grad` (gradient operator)
-- meshing module: `trimesh_cut_mesh`, `trimesh_face_components`
-- simplify module: `ramer_douglas_peucker` (polyline simplification)
+- `grad` module: `trimesh_grad` (gradient operator)
+- `meshing` module: `trimesh_cut_mesh`, `trimesh_face_components`
+- `simplify` module: `ramer_douglas_peucker` (polyline simplification)
 
 ### Changed
 
