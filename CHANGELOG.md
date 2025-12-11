@@ -37,6 +37,8 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 ### Changed
 
 * Fixed `compas_libigl` plugins are not detected.
+* Align barycentric coordinates of libigl to COMPAS.
+* Ray mesh intersection now returns a point.
 * Add project dependency groups in pyproject.toml.
 * Change requirements.txt to pyproject.toml.
 
