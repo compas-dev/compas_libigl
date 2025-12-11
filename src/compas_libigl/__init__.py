@@ -6,11 +6,14 @@ __version__ = "0.7.6"
 
 
 __all_plugins__ = [
+    "compas_libigl.cotmatrix",
     "compas_libigl.geodistance",
+    "compas_libigl.grad",
     "compas_libigl.intersections",
     "compas_libigl.isolines",
     "compas_libigl.massmatrix",
+    "compas_libigl.meshing",
     "compas_libigl.parametrisation",
     "compas_libigl.planarize",
-    "compas_libigl.meshing",
+    "compas_libigl.simplify",
 ]

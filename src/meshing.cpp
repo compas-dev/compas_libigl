@@ -89,6 +89,28 @@ trimesh_remesh_along_isolines(
     return std::make_tuple(V, F, S, face_groups);
 }
 
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi>
+trimesh_cut_mesh(
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
+    Eigen::Ref<const compas::RowMatrixXi> cuts
+) {
+    compas::RowMatrixXd Vn;
+    compas::RowMatrixXi Fn;
+    Eigen::VectorXi I;  // birth vertices (original vertex indices)
+    igl::cut_mesh(V, F, cuts, Vn, Fn, I);
+    return std::make_tuple(Vn, Fn);
+}
+
+Eigen::VectorXi
+trimesh_face_components(
+    Eigen::Ref<const compas::RowMatrixXi> F
+) {
+    Eigen::VectorXi C;
+    igl::facet_components(F, C);
+    return C;
+}
+
 NB_MODULE(_meshing, m) {
     m.doc() = "Mesh remeshing functions using libigl";
 
@@ -100,7 +122,7 @@ NB_MODULE(_meshing, m) {
         "F1"_a,
         "S1"_a,
         "s"_a);
-        
+
     m.def(
         "trimesh_remesh_along_isolines",
         &trimesh_remesh_along_isolines,
@@ -109,4 +131,18 @@ NB_MODULE(_meshing, m) {
         "F1"_a,
         "S1"_a,
         "values"_a);
+
+    m.def(
+        "trimesh_cut_mesh",
+        &trimesh_cut_mesh,
+        "Cut a mesh along specified edges, duplicating vertices.",
+        "V"_a,
+        "F"_a,
+        "cuts"_a);
+
+    m.def(
+        "trimesh_face_components",
+        &trimesh_face_components,
+        "Compute connected components of mesh faces.",
+        "F"_a);
 }

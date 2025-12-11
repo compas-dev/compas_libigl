@@ -3,6 +3,7 @@
 #include "compas.hpp"
 #include <Eigen/Core>
 #include <Eigen/Sparse>
+#include <igl/cut_mesh.h>
 #include <igl/facet_components.h>
 #include <igl/remesh_along_isoline.h>
 
@@ -37,3 +38,27 @@ trimesh_remesh_along_isolines(
     Eigen::Ref<const compas::RowMatrixXi> F_initial,
     Eigen::Ref<const Eigen::VectorXd> S_initial,
     Eigen::Ref<const Eigen::VectorXd> values);
+
+/**
+ * Cut a mesh along specified edges.
+ *
+ * @param V #V x 3 matrix of vertex coordinates
+ * @param F #F x 3 matrix of triangle indices
+ * @param cuts #F x 3 matrix of boolean cut flags per edge
+ * @return Tuple of (vertices, faces) with vertices duplicated along cuts
+ */
+std::tuple<compas::RowMatrixXd, compas::RowMatrixXi>
+trimesh_cut_mesh(
+    Eigen::Ref<const compas::RowMatrixXd> V,
+    Eigen::Ref<const compas::RowMatrixXi> F,
+    Eigen::Ref<const compas::RowMatrixXi> cuts);
+
+/**
+ * Compute connected components of mesh faces.
+ *
+ * @param F #F x 3 matrix of triangle indices
+ * @return Vector of component IDs per face
+ */
+Eigen::VectorXi
+trimesh_face_components(
+    Eigen::Ref<const compas::RowMatrixXi> F);
