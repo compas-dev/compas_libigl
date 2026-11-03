@@ -2,12 +2,13 @@ import math
 from pathlib import Path
 
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas.geometry import Translation
 from compas_viewer import Viewer
 
-from compas_libigl.parametrisation import trimesh_lsc_mapping
+from compas_libigl.parametrisation import trimesh_lscm
 
 # ==============================================================================
 # Input geometry
@@ -26,8 +27,7 @@ mesh_lscm.vertices_attribute("z", 0)
 # Least-squares conformal map
 # ==============================================================================
 
-# lscm_uv = igl.trimesh_harmonic_mapping(mesh.to_vertices_and_faces())
-lscm_uv = trimesh_lsc_mapping(mesh.to_vertices_and_faces())
+lscm_uv = trimesh_lscm(mesh.triangulated(FaceTriangulation()))
 
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])

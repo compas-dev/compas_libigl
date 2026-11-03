@@ -1,21 +1,17 @@
 from pathlib import Path
 
 from compas.colors import Color
-from compas.geometry import Point
 from compas.datastructures import Mesh
 from compas_viewer import Viewer
 from compas_viewer.config import Config
 
 from compas_libigl.mapping import map_pattern_to_mesh
 
-
-
 # ==============================================================================
 # Input geometry: 3D Mesh
 # ==============================================================================
 
 mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_surface.obj")
-
 
 
 for vertex in mesh.vertices():
@@ -26,13 +22,13 @@ for vertex in mesh.vertices():
 # Get Lowest and Highest points
 # ==============================================================================
 
-aabb = mesh.aabb()
+aabb = mesh.aabb
 fixed_vertices = []
 
 
 for vertex in mesh.vertices():
     x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
-    if abs(z-aabb.zmin) < 1e-3 or abs(z-aabb.zmax) < 1e-3:
+    if abs(z - aabb.zmin) < 1e-3 or abs(z - aabb.zmax) < 1e-3:
         fixed_vertices.append(vertex)
 
 # ==============================================================================

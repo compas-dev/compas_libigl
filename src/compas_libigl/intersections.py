@@ -1,20 +1,21 @@
 import numpy as np
+from compas.geometry import Tessellation
 from compas.plugins import plugin
 
 from compas_libigl import _intersections
+from compas_libigl._tessellation import as_libigl_tessellation
 
 
 @plugin(category="intersections")
-def intersection_ray_mesh(ray, M):
+def intersection_ray_mesh(ray, mesh: Tessellation) -> list[tuple[int, float, float, float]]:
     """Compute the intersection(s) between a ray and a mesh.
 
     Parameters
     ----------
     ray : tuple[list[float], list[float]]
         A ray represented by a point and a direction vector.
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
+    mesh
+        The triangle tessellation.
 
     Returns
     -------
@@ -28,11 +29,15 @@ def intersection_ray_mesh(ray, M):
         3. the distance between the ray origin and the hit
     """
     point, vector = ray
-    vertices, faces = M
     P = np.asarray(point, dtype=np.float64)
     D = np.asarray(vector, dtype=np.float64)
-    V = np.asarray(vertices, dtype=np.float64)
-    F = np.asarray(faces, dtype=np.int32)
+    if P.shape != (3,) or D.shape != (3,):
+        raise ValueError("ray point and direction should be three-dimensional.")
+    if not np.all(np.isfinite(P)) or not np.all(np.isfinite(D)):
+        raise ValueError("ray point and direction should contain only finite values.")
+    if np.linalg.norm(D) == 0:
+        raise ValueError("ray direction should be nonzero.")
+    V, F = as_libigl_tessellation(mesh)
     return _intersections.intersection_ray_mesh(P, D, V, F)
 
 

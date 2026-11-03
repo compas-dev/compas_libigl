@@ -1,10 +1,8 @@
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _grad
 
 
-@plugin(category="trimesh")
 def trimesh_grad(M):
     """Compute the gradient operator for a triangle mesh.
 

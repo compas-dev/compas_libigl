@@ -1,41 +1,44 @@
+from collections.abc import Sequence
+
 import numpy as np
+from compas.geometry import Tessellation
 from compas.plugins import plugin
 
 from compas_libigl import _meshing
+from compas_libigl._tessellation import as_libigl_tessellation
+from compas_libigl._tessellation import as_scalarfield
 
 
 @plugin(category="trimesh")
-def trimesh_remesh_along_isoline(M, scalars, isovalue):
+def trimesh_remesh_along_isoline(
+    mesh: Tessellation,
+    scalarfield: Sequence[float],
+    scalar: float,
+) -> Tessellation:
     """Remesh a triangle mesh along an isoline.
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
-    scalars : list[float]
+    mesh
+        The triangle tessellation.
+    scalarfield : list[float]
         A scalar value per vertex.
-    isovalue : float
+    scalar
         The value at which to compute the isoline.
 
     Returns
     -------
-    tuple[list[list[float]], list[list[int]], list[int]]
-        A tuple containing
-        * the vertices of the remeshed mesh,
-        * the faces of the remeshed mesh,
-        * labels for the faces of the remeshed mesh.
+    Tessellation
+        The remeshed triangle geometry.
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
-    S = np.asarray(scalars, dtype=np.float64)
-    ISO = np.float64(isovalue)
-    V2, F2, L = _meshing.trimesh_remesh_along_isoline(V, F, S, ISO)
-    return V2.tolist(), F2.tolist(), L.tolist()
+    V, F = as_libigl_tessellation(mesh)
+    S = as_scalarfield(scalarfield, len(V))
+    if not np.isfinite(scalar):
+        raise ValueError("scalar should be finite.")
+    V2, F2, _ = _meshing.trimesh_remesh_along_isoline(V, F, S, np.float64(scalar))
+    return Tessellation(V2, F2)
 
 
-@plugin(category="trimesh")
 def trimesh_remesh_along_isolines(M, scalars, isovalues):
     """Remesh a triangle mesh along multiple isolines.
 
@@ -67,7 +70,6 @@ def trimesh_remesh_along_isolines(M, scalars, isovalues):
     return V2.tolist(), F2.tolist(), S2.tolist(), G2.tolist()
 
 
-@plugin(category="trimesh")
 def trimesh_cut_mesh(M, cuts):
     """Cut a mesh along specified edges.
 
@@ -96,7 +98,6 @@ def trimesh_cut_mesh(M, cuts):
     return Vn.tolist(), Fn.tolist()
 
 
-@plugin(category="trimesh")
 def trimesh_face_components(M):
     """Compute connected components of mesh faces.
 

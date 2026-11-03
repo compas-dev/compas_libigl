@@ -18,6 +18,9 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 
 ### Changed
 
+* Standardized triangle-processing plugin and public API boundaries on `compas.geometry.Tessellation`, including shared native buffer validation for libigl operations.
+* Updated the runtime and wheel-test dependency baseline to COMPAS 3.
+
 ### Removed
 
 

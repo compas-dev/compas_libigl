@@ -1,12 +1,13 @@
 import compas
 from compas_libigl.mapping import map_mesh
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 
 
 def test_map_mesh():
     # Create target mesh (using a mesh we know exists)
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.quads_to_triangles()  # Ensure we have a triangle mesh
+    mesh.triangulate(FaceTriangulation())
     v, f = mesh.to_vertices_and_faces()
 
     # Create simple pattern mesh manually (grid pattern)

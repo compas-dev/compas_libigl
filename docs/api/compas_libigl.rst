@@ -49,7 +49,6 @@ Isolines
     :nosignatures:
 
     compas_libigl.isolines.trimesh_isolines
-    compas_libigl.isolines.groupsort_isolines
 
 Mapping
 -------
@@ -87,8 +86,8 @@ Parametrisation
     :toctree: generated/
     :nosignatures:
 
-    compas_libigl.parametrisation.trimesh_harmonic_mapping
-    compas_libigl.parametrisation.trimesh_lsc_mapping
+    compas_libigl.parametrisation.trimesh_harmonic
+    compas_libigl.parametrisation.trimesh_lscm
 
 Planarization
 -------------

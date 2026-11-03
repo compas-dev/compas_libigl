@@ -1,10 +1,8 @@
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _simplify
 
 
-@plugin(category="polyline")
 def ramer_douglas_peucker(points, threshold):
     """Simplify a polyline using Ramer-Douglas-Peucker algorithm.
 

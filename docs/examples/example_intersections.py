@@ -2,6 +2,7 @@ import compas
 import numpy as np
 from compas.colors import Color
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Line
 from compas.geometry import Point
 from compas_viewer import Viewer
@@ -15,13 +16,14 @@ from compas_libigl.intersections import intersection_rays_mesh
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
 trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+trimesh.triangulate(FaceTriangulation())
 
 # ==============================================================================
 # Rays
 # ==============================================================================
 
-base = Point(*mesh.centroid())
+centroid = mesh.centroid()
+base = Point(centroid[0], centroid[1], centroid[2])
 base.z = 0
 
 theta = np.linspace(0, np.pi, 20, endpoint=False)

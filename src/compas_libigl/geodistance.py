@@ -1,11 +1,20 @@
+from numbers import Integral
+from typing import Literal
+
 import numpy as np
+from compas.geometry import Tessellation
 from compas.plugins import plugin
 
 from compas_libigl import _geodistance
+from compas_libigl._tessellation import as_libigl_tessellation
 
 
 @plugin(category="trimesh")
-def trimesh_geodistance(M, source, method="exact"):
+def trimesh_geodistance(
+    mesh: Tessellation,
+    source: int,
+    method: Literal["exact", "heat"] = "exact",
+) -> list[float]:
     """Compute the geodesic distance from a source point to all vertices.
 
     Calculates the geodesic distance from a single source vertex to all other
@@ -13,9 +22,8 @@ def trimesh_geodistance(M, source, method="exact"):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
+    mesh
+        The triangle tessellation.
     source : int
         The index of the source vertex.
     method : str, optional
@@ -35,15 +43,14 @@ def trimesh_geodistance(M, source, method="exact"):
     NotImplementedError
         If method is not one of {'exact', 'heat'}.
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
-    # Extract single integer from source array if needed
-    source = int(source)  # Ensure it's a scalar
-    return _geodistance.trimesh_geodistance(V, F, source, method)
+    V, F = as_libigl_tessellation(mesh)
+    if isinstance(source, bool) or not isinstance(source, Integral):
+        raise TypeError("source should be an integer vertex index.")
+    if source < 0 or source >= len(V):
+        raise IndexError("source vertex index is out of range.")
+    return _geodistance.trimesh_geodistance(V, F, source, method).tolist()
 
 
-@plugin(category="trimesh")
 def trimesh_geodistance_multiple(M, sources, method="exact"):
     """Compute the geodesic distance from multiple source points.
 

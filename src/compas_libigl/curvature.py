@@ -12,8 +12,7 @@ def trimesh_gaussian_curvature(M):
     Parameters
     ----------
     M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
+        A mesh represented by vertices and triangle faces.
 
     Returns
     -------
@@ -21,6 +20,12 @@ def trimesh_gaussian_curvature(M):
         The gaussian curvature values per vertex.
         Positive values indicate elliptic points, negative values indicate hyperbolic points,
         and zero values indicate parabolic or flat points.
+
+    Notes
+    -----
+    This is a direct libigl operation, not the COMPAS Gaussian-curvature
+    plugin. Libigl's angle-defect boundary convention does not match the core
+    contract, so the operation is intentionally not registered.
     """
     V, F = M
     V = np.asarray(V, dtype=np.float64)

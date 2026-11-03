@@ -2,6 +2,7 @@ import compas
 from compas.colors import Color
 from compas.colors.colormap import ColorMap
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Line
 from compas.geometry import Point
 from compas_viewer import Viewer
@@ -14,7 +15,7 @@ from compas_libigl.curvature import trimesh_gaussian_curvature
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+trimesh.triangulate(FaceTriangulation())
 
 # ==============================================================================
 # Gaussian Curvature
@@ -24,7 +25,7 @@ vertices, faces = trimesh.to_vertices_and_faces()
 gaussian_curvature = trimesh_gaussian_curvature((vertices, faces))
 
 # Get non-boundary vertex indices
-non_boundary_vertices = [i for i in range(len(vertices)) if not trimesh.is_vertex_on_boundary(i)]
+non_boundary_vertices = [i for i in range(len(vertices)) if not mesh.is_vertex_on_boundary(i)]
 
 # Prepare vertex colors based on Gaussian curvature (excluding boundary vertices)
 min_gaussian = min(gaussian_curvature[i] for i in non_boundary_vertices)
@@ -38,7 +39,7 @@ cmap_positive = ColorMap.from_two_colors(Color.yellow(), Color.magenta())
 # Create vertex colors dictionary
 vertex_colors = {}
 for i, k in enumerate(gaussian_curvature):
-    if trimesh.is_vertex_on_boundary(i):
+    if mesh.is_vertex_on_boundary(i):
         # Set boundary vertices to black
         vertex_colors[i] = Color.black()
     else:
@@ -54,14 +55,15 @@ for i, k in enumerate(gaussian_curvature):
 viewer = Viewer()
 
 # Add the colored mesh
-viewer.scene.add(trimesh, use_vertexcolors=True, pointcolor=vertex_colors)
+viewer.scene.add(mesh, use_vertexcolors=True, pointcolor=vertex_colors)
 
 # Add normal vectors scaled by Gaussian curvature
 normal_scale = -10
-for vertex in trimesh.vertices():
-    if not trimesh.is_vertex_on_boundary(vertex):
-        point = Point(*trimesh.vertex_coordinates(vertex))
-        normal = trimesh.vertex_normal(vertex)
+for vertex in mesh.vertices():
+    if not mesh.is_vertex_on_boundary(vertex):
+        xyz = mesh.vertex_coordinates(vertex)
+        point = Point(xyz[0], xyz[1], xyz[2])
+        normal = mesh.vertex_normal(vertex)
         k = gaussian_curvature[vertex]
 
         scaled_normal = [n * normal_scale * k for n in normal]

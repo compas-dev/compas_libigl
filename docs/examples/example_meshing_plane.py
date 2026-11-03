@@ -3,9 +3,11 @@ from pathlib import Path
 
 from compas.colors import Color
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Plane
 from compas.geometry import Rotation
 from compas.geometry import Scale
+from compas.geometry import centroid_points
 from compas_viewer import Viewer
 
 from compas_libigl.meshing import trimesh_remesh_along_isoline
@@ -20,12 +22,18 @@ mesh.transform(S * R)
 plane = Plane([0, 0, 0], [0, 1, 1])
 distances = [plane.normal.dot(plane.point - mesh.vertex_coordinates(v)) for v in mesh.vertices()]
 
-# Split mesh along plane
-V, F, L = trimesh_remesh_along_isoline(mesh.to_vertices_and_faces(), distances, 0)
+# Split the tessellation along the plane
+result = trimesh_remesh_along_isoline(mesh.triangulated(FaceTriangulation()), distances, 0)
+V, F = result.to_vertices_and_triangles()
 
 # Create meshes for parts below and above plane
-below = Mesh.from_vertices_and_faces(V, [F[i] for i, l in enumerate(L) if l == 0])
-above = Mesh.from_vertices_and_faces(V, [F[i] for i, l in enumerate(L) if l == 1])
+below_faces = []
+above_faces = []
+for face in F:
+    centroid = centroid_points([V[index] for index in face])
+    (below_faces if plane.normal.dot(plane.point - centroid) >= 0 else above_faces).append(face)
+below = Mesh.from_vertices_and_faces(V, below_faces)
+above = Mesh.from_vertices_and_faces(V, above_faces)
 
 # Visualize
 viewer = Viewer()

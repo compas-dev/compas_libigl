@@ -1,10 +1,8 @@
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _cotmatrix
 
 
-@plugin(category="trimesh")
 def trimesh_cotmatrix(M):
     """Compute the cotangent Laplacian matrix of a triangle mesh.
 
@@ -25,7 +23,6 @@ def trimesh_cotmatrix(M):
     return _cotmatrix.trimesh_cotmatrix(V, F)
 
 
-@plugin(category="trimesh")
 def trimesh_cotmatrix_entries(M):
     """Compute cotangent values for each edge in each triangle.
 

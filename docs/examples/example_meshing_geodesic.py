@@ -3,6 +3,7 @@ from pathlib import Path
 
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Point
 from compas.geometry import Rotation
 from compas.geometry import Scale
@@ -23,7 +24,7 @@ mesh.transform(S * R)
 
 # Convert to triangle mesh
 trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+trimesh.triangulate(FaceTriangulation())
 
 # ==============================================================================
 # Compute geodesic distances from boundary

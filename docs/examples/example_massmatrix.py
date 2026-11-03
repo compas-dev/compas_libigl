@@ -1,7 +1,7 @@
 import compas
-import numpy as np
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas_viewer import Viewer
 
 from compas_libigl.massmatrix import trimesh_massmatrix
@@ -12,16 +12,13 @@ from compas_libigl.massmatrix import trimesh_massmatrix
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
-trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+tessellation = mesh.triangulated(FaceTriangulation())
 
 # ==============================================================================
 # Mass matrix
 # ==============================================================================
 
-mass = trimesh_massmatrix(trimesh.to_vertices_and_faces())
-# Convert sparse diagonal to dense array
-mass_diag = np.array(mass.diagonal())
+mass = trimesh_massmatrix(tessellation)
 
 # ==============================================================================
 # Visualisation
@@ -29,8 +26,8 @@ mass_diag = np.array(mass.diagonal())
 
 cmap = ColorMap.from_rgb()
 
-minval = mass_diag.min()
-maxval = mass_diag.max()
+minval = min(mass)
+maxval = max(mass)
 
 viewer = Viewer(width=1600, height=900)
 # viewer.view.camera.position = [1, -6, 2]
@@ -38,7 +35,7 @@ viewer = Viewer(width=1600, height=900)
 
 viewer.scene.add(mesh, show_points=False)
 
-for m, vertex in zip(mass_diag, mesh.vertices()):
+for m, vertex in zip(mass, mesh.vertices()):
     point = mesh.vertex_point(vertex)
     viewer.scene.add(point, pointsize=30, pointcolor=cmap(m, minval, maxval))
 

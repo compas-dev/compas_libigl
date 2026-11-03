@@ -6,24 +6,24 @@ from compas_libigl.meshing import (
     trimesh_face_components,
 )
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
+from compas.geometry import Tessellation
 
 
 def test_trimesh_remesh_along_isoline():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.quads_to_triangles()
-    M = mesh.to_vertices_and_faces()
+    tessellation = mesh.triangulated(FaceTriangulation())
     scalars = mesh.vertices_attribute("z")
     mean_z = sum(scalars) / len(scalars)
-    V2, F2, L = trimesh_remesh_along_isoline(M, scalars, mean_z)
-    # Labels array L has one entry per face in F2
-    assert len(L) == len(F2)
-    assert len(V2) > 0
-    assert len(F2) > 0
+    result = trimesh_remesh_along_isoline(tessellation, scalars, mean_z)
+    assert isinstance(result, Tessellation)
+    assert result.number_of_vertices > 0
+    assert result.number_of_triangles > 0
 
 
 def test_trimesh_remesh_along_isolines():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.quads_to_triangles()
+    mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
     scalars = mesh.vertices_attribute("z")
     z_min, z_max = min(scalars), max(scalars)
@@ -38,7 +38,7 @@ def test_trimesh_remesh_along_isolines():
 
 def test_trimesh_cut_mesh():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.quads_to_triangles()
+    mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
     V, F = M
     # Create cut flags: all ones means cut all edges
@@ -51,7 +51,7 @@ def test_trimesh_cut_mesh():
 
 def test_trimesh_face_components():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.quads_to_triangles()
+    mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
     C = trimesh_face_components(M)
     # Component IDs, one per face

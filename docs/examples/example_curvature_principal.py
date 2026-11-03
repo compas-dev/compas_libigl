@@ -1,6 +1,7 @@
 import compas
 from compas.colors import Color
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Line
 from compas.geometry import Point
 from compas.geometry import Vector
@@ -14,7 +15,7 @@ from compas_libigl.curvature import trimesh_principal_curvature
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+trimesh.triangulate(FaceTriangulation())
 
 # ==============================================================================
 # Principal Curvature
@@ -38,7 +39,7 @@ principal_scale = 0.3
 # Add principal direction lines
 for vertex_idx, point in enumerate(vertices):
     if not trimesh.is_vertex_on_boundary(vertex_idx):
-        point = Point(*point)
+        point = Point(point[0], point[1], point[2])
 
         # Scale lines by curvature magnitude
         pd1 = Vector(*PD1[vertex_idx]).scaled(principal_scale * abs(PV1[vertex_idx]))

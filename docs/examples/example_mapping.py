@@ -1,17 +1,16 @@
 from pathlib import Path
 
 from compas.colors import Color
-from compas.geometry import Polyline
 from compas.datastructures import Mesh
+from compas.geometry import Polyline
+from compas.geometry import Tessellation
 from compas_viewer import Viewer
 from compas_viewer.config import Config
 from tessagon.adaptors.list_adaptor import ListAdaptor
 from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 
 from compas_libigl.mapping import map_mesh
-from compas_libigl.parametrisation import trimesh_lsc_mapping
-
-from compas import json_dump
+from compas_libigl.parametrisation import trimesh_lscm
 
 # ==============================================================================
 # Input geometry: 3D Mesh
@@ -61,8 +60,8 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 # Offset mesh by normals, normals are interpolated from the original mesh.
 # ==============================================================================
 mesh_mapped_offset = mesh_mapped.copy()
-for i in range(mesh_mapped.number_of_vertices()):   
-    mesh_mapped_offset.vertex_attributes(i, "xyz", mesh_mapped.vertex_attributes(i, "xyz") - mn[i]*0.001)
+for i in range(mesh_mapped.number_of_vertices()):
+    mesh_mapped_offset.vertex_attributes(i, "xyz", mesh_mapped.vertex_attributes(i, "xyz") - mn[i] * 0.001)
 
 # ==============================================================================
 # Get Boundary Polylines
@@ -74,7 +73,7 @@ for i in range(len(mb)):
     points = []
     for j in range(len(mf[i])):
         id = mf[i][j]
-        points.append(mesh_mapped.vertex_attributes(id, "xyz") + mn[id]*0.002)
+        points.append(mesh_mapped.vertex_attributes(id, "xyz") + mn[id] * 0.002)
     points.append(points[0])
     polyline = Polyline(points)
     boundaries.append(polyline)
@@ -97,7 +96,7 @@ for boundary in boundaries:
     viewer.scene.add(boundary, name="boundary", linecolor=Color.yellow(), linewidth=3)
 
 # To see where the pattern is mapped:
-uv = trimesh_lsc_mapping((v, f))
+uv = trimesh_lscm(Tessellation(v, f))
 mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])

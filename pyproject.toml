@@ -6,7 +6,7 @@ build-backend = "scikit_build_core.build"
 name = "compas_libigl"
 description = "libigl wrapper for COMPAS."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 authors = [
     { name = "tom van mele", email = "tom.v.mele@gmail.com" },
     { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
@@ -15,12 +15,20 @@ classifiers = ["License :: OSI Approved :: BSD License"]
 
 dynamic = ['version']
 dependencies = [
-    "compas >=2.0.0",
+    "compas >=3.0.0",
     "tessagon",
 ]
 
 [project.urls]
 Homepage = "https://compas.dev/compas_libigl/latest/"
+
+[project.entry-points."compas.plugins"]
+compas_libigl_geodistance = "compas_libigl.geodistance"
+compas_libigl_intersections = "compas_libigl.intersections"
+compas_libigl_isolines = "compas_libigl.isolines"
+compas_libigl_massmatrix = "compas_libigl.massmatrix"
+compas_libigl_meshing = "compas_libigl.meshing"
+compas_libigl_parametrisation = "compas_libigl.parametrisation"
 
 # ============================================================================
 # pyproject dependecy groups
@@ -101,8 +109,9 @@ CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.cibuildwheel]
 build-verbosity = 3
-test-requires = ["numpy", "compas", "pytest", "build", "tessagon"]
-test-command = "pip install numpy compas && pip list && pytest {project}/tests"
+before-test = "pip install numpy 'compas>=3.0.0' && pip list"
+test-requires = ["numpy", "compas>=3.0.0", "pytest", "build", "tessagon"]
+test-command = "pytest {project}/tests"
 build-frontend = "pip"
 manylinux-x86_64-image = "manylinux2014"
 skip = ["*_i686", "*-musllinux_*", "*-win32", "pp*"]

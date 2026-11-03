@@ -1,25 +1,24 @@
-import numpy as np
+from compas.geometry import Tessellation
 from compas.plugins import plugin
 
 from compas_libigl import _massmatrix
+from compas_libigl._tessellation import as_libigl_tessellation
 
 
 @plugin(category="trimesh")
-def trimesh_massmatrix(M):
+def trimesh_massmatrix(mesh: Tessellation) -> list[float]:
     """Compute the mass matrix of a triangle mesh.
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
+    mesh
+        The triangle tessellation.
 
     Returns
     -------
-    scipy.sparse.csc_matrix
-        The mass matrix in sparse format.
+    list[float]
+        The barycentric mass associated with every vertex.
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
-    return _massmatrix.trimesh_massmatrix(V, F)
+    V, F = as_libigl_tessellation(mesh)
+    matrix = _massmatrix.trimesh_massmatrix(V, F)
+    return matrix.diagonal().tolist()

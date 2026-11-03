@@ -2,6 +2,7 @@ import compas
 from compas.colors import Color
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
+from compas.geometry import FaceTriangulation
 from compas.geometry import Point
 from compas_viewer import Viewer
 
@@ -14,7 +15,7 @@ from compas_libigl.geodistance import trimesh_geodistance_multiple
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
 trimesh = mesh.copy()
-trimesh.quads_to_triangles()
+trimesh.triangulate(FaceTriangulation())
 
 # ==============================================================================
 # Get boundary vertices as source points
