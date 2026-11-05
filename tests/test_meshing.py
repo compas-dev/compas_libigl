@@ -7,7 +7,6 @@ from compas_libigl.meshing import (
 )
 from compas.datastructures import Mesh
 from compas.geometry import FaceTriangulation
-from compas.geometry import Tessellation
 
 
 def test_trimesh_remesh_along_isoline():
@@ -15,10 +14,9 @@ def test_trimesh_remesh_along_isoline():
     tessellation = mesh.triangulated(FaceTriangulation())
     scalars = mesh.vertices_attribute("z")
     mean_z = sum(scalars) / len(scalars)
-    result = trimesh_remesh_along_isoline(tessellation, scalars, mean_z)
-    assert isinstance(result, Tessellation)
-    assert result.number_of_vertices > 0
-    assert result.number_of_triangles > 0
+    vertices, triangles = trimesh_remesh_along_isoline(tessellation.to_vertices_and_triangles(), scalars, mean_z)
+    assert len(vertices) > 0
+    assert len(triangles) > 0
 
 
 def test_trimesh_remesh_along_isolines():

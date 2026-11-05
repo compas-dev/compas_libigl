@@ -5,8 +5,8 @@ from compas.geometry import Tessellation
 from compas.plugins import plugin
 
 from compas_libigl import _isolines
+from compas_libigl._mesh import as_scalarfield
 from compas_libigl._tessellation import as_libigl_tessellation
-from compas_libigl._tessellation import as_scalarfield
 
 
 @plugin(category="trimesh")

@@ -19,20 +19,6 @@ def as_libigl_tessellation(mesh: Tessellation):
     return V, F
 
 
-def as_scalarfield(values, vertex_count: int):
-    """Convert and validate a per-vertex scalar field."""
-    scalars = np.asarray(values, dtype=np.float64)
-    if scalars.ndim != 1:
-        raise ValueError("scalarfield should be one-dimensional.")
-    if len(scalars) != vertex_count:
-        raise ValueError("scalarfield should contain one value per tessellation vertex.")
-    if not len(scalars):
-        raise ValueError("scalarfield should not be empty.")
-    if not np.all(np.isfinite(scalars)):
-        raise ValueError("scalarfield should contain only finite values.")
-    return np.asarray(scalars, dtype=np.float64, order="C")
-
-
 def validate_parametrisation_topology(triangles, vertex_count: int):
     """Validate topology required by libigl's boundary-based parametrisations."""
     if vertex_count == 0 or len(triangles) == 0:

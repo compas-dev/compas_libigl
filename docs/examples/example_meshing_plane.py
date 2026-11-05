@@ -22,9 +22,8 @@ mesh.transform(S * R)
 plane = Plane([0, 0, 0], [0, 1, 1])
 distances = [plane.normal.dot(plane.point - mesh.vertex_coordinates(v)) for v in mesh.vertices()]
 
-# Split the tessellation along the plane
-result = trimesh_remesh_along_isoline(mesh.triangulated(FaceTriangulation()), distances, 0)
-V, F = result.to_vertices_and_triangles()
+# Split the triangle mesh along the plane
+V, F = trimesh_remesh_along_isoline(mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles(), distances, 0)
 
 # Create meshes for parts below and above plane
 below_faces = []

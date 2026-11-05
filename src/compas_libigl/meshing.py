@@ -1,42 +1,56 @@
+from __future__ import annotations
+
 from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
-from compas.geometry import Tessellation
 from compas.plugins import plugin
 
-from compas_libigl import _meshing
-from compas_libigl._tessellation import as_libigl_tessellation
-from compas_libigl._tessellation import as_scalarfield
+from compas_libigl import _meshing  # type: ignore
+from compas_libigl._mesh import as_native_mesh
+from compas_libigl._mesh import as_scalarfield
+from compas_libigl._mesh import validate_native_mesh
+
+if TYPE_CHECKING:
+    from compas._typing import TriangleMeshInput
 
 
-@plugin(category="trimesh")
+@plugin(category="trimesh", pluggable_name="_trimesh_remesh_along_isoline")
 def trimesh_remesh_along_isoline(
-    mesh: Tessellation,
+    mesh: TriangleMeshInput,
     scalarfield: Sequence[float],
     scalar: float,
-) -> Tessellation:
+) -> TriangleMeshInput:
     """Remesh a triangle mesh along an isoline.
 
     Parameters
     ----------
     mesh
-        The triangle tessellation.
-    scalarfield : list[float]
+        Structural vertex and triangle buffers.
+    scalarfield
         A scalar value per vertex.
     scalar
         The value at which to compute the isoline.
 
     Returns
     -------
-    Tessellation
-        The remeshed triangle geometry.
+    tuple[numpy.ndarray, numpy.ndarray]
+        Native vertex and triangle arrays of the remeshed geometry.
+
+    Notes
+    -----
+    Input buffers are normalized once at the native boundary. The face labels
+    produced internally by libigl are not part of the public result contract.
+
     """
-    V, F = as_libigl_tessellation(mesh)
+    V, F = as_native_mesh(mesh, "mesh")
+    if not len(F):
+        raise ValueError("mesh should contain at least one triangle.")
     S = as_scalarfield(scalarfield, len(V))
     if not np.isfinite(scalar):
         raise ValueError("scalar should be finite.")
     V2, F2, _ = _meshing.trimesh_remesh_along_isoline(V, F, S, np.float64(scalar))
-    return Tessellation(V2, F2)
+    return validate_native_mesh((V2, F2), "remesh-along-isoline")
 
 
 def trimesh_remesh_along_isolines(M, scalars, isovalues):

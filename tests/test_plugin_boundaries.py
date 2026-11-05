@@ -46,9 +46,9 @@ def test_mapped_signatures_and_registration(monkeypatch):
         intersections.intersection_ray_mesh,
         isolines.trimesh_isolines,
         massmatrix.trimesh_massmatrix,
-        meshing.trimesh_remesh_along_isoline,
     )
     assert all(function.__plugin_spec__.extension_point.name == function.__name__ for function in mapped)
+    assert meshing.trimesh_remesh_along_isoline.__plugin_spec__.extension_point.name == "_trimesh_remesh_along_isoline"
     assert parametrisation.trimesh_harmonic.__plugin_spec__.extension_point.name == "trimesh_harmonic"
     assert parametrisation.trimesh_lscm.__plugin_spec__.extension_point.name == "trimesh_lscm"
     assert not hasattr(geodistance.trimesh_geodistance_multiple, "__plugin_spec__")
@@ -105,7 +105,7 @@ def test_results_are_normalized(monkeypatch, open_tessellation):
     assert isolines.trimesh_isolines(open_tessellation, [0, 1, 2, 3], 1) == ([[0.0, 0.0, 0.0]], [[0, 0]])
 
 
-def test_remesh_returns_tessellation_without_labels(monkeypatch, open_tessellation):
+def test_remesh_returns_raw_mesh_without_labels(monkeypatch, open_tessellation):
     native_result = (
         np.array(open_tessellation.vertices, dtype=float),
         np.array(open_tessellation.triangles, dtype=np.int32),
@@ -113,12 +113,58 @@ def test_remesh_returns_tessellation_without_labels(monkeypatch, open_tessellati
     )
     meshing = _load(monkeypatch, "meshing", trimesh_remesh_along_isoline=lambda *args: native_result)
 
-    result = meshing.trimesh_remesh_along_isoline(open_tessellation, [0, 1, 2, 3], 0.5)
-    assert isinstance(result, Tessellation)
-    assert result.number_of_triangles == 2
+    result = meshing.trimesh_remesh_along_isoline(open_tessellation.to_vertices_and_triangles(), [0, 1, 2, 3], 0.5)
+    assert result[0] is native_result[0]
+    assert result[1] is native_result[1]
 
     with pytest.raises(ValueError):
-        meshing.trimesh_remesh_along_isoline(open_tessellation, [0, 1, 2, 3], np.inf)
+        meshing.trimesh_remesh_along_isoline(open_tessellation.to_vertices_and_triangles(), [0, 1, 2, 3], np.inf)
+
+
+def test_remesh_normalizes_raw_buffers_without_mutation(monkeypatch):
+    captured = {}
+
+    def remesh(vertices, faces, scalarfield, scalar):
+        captured.update(vertices=vertices, faces=faces, scalarfield=scalarfield, scalar=scalar)
+        return vertices, faces, np.zeros(len(faces), dtype=np.int32)
+
+    meshing = _load(monkeypatch, "meshing", trimesh_remesh_along_isoline=remesh)
+    vertices = np.asfortranarray(np.asarray([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=np.float32))
+    faces = np.asarray([[0, 1, 2, 9]], dtype=np.int64)[:, :3]
+    vertices.flags.writeable = False
+    faces.flags.writeable = False
+    vertices_before = vertices.copy()
+    faces_before = faces.copy()
+
+    result = meshing.trimesh_remesh_along_isoline((vertices, faces), [0, 1, 2], 0.5)
+
+    assert captured["vertices"].dtype == np.float64
+    assert captured["faces"].dtype == np.int32
+    assert captured["vertices"].flags.c_contiguous
+    assert captured["faces"].flags.c_contiguous
+    assert captured["scalarfield"].dtype == np.float64
+    assert result[0] is captured["vertices"]
+    assert result[1] is captured["faces"]
+    np.testing.assert_array_equal(vertices, vertices_before)
+    np.testing.assert_array_equal(faces, faces_before)
+
+
+@pytest.mark.parametrize(
+    "native_result",
+    [
+        (np.empty((0, 2)), np.empty((0, 3), dtype=np.int32), np.empty(0, dtype=np.int32)),
+        (np.empty((0, 3)), np.empty((0, 2), dtype=np.int32), np.empty(0, dtype=np.int32)),
+    ],
+)
+def test_remesh_rejects_invalid_native_result_shape(monkeypatch, native_result):
+    meshing = _load(monkeypatch, "meshing", trimesh_remesh_along_isoline=lambda *args: native_result)
+
+    with pytest.raises(RuntimeError, match="libigl remesh-along-isoline result"):
+        meshing.trimesh_remesh_along_isoline(
+            ([[0, 0, 0], [1, 0, 0], [0, 1, 0]], [[0, 1, 2]]),
+            [0, 1, 2],
+            0.5,
+        )
 
 
 def test_parametrisation_topology_validation(monkeypatch, open_tessellation):
