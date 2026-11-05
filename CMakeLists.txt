@@ -52,6 +52,7 @@ endif()
 FetchContent_Declare(
   eigen
   URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+  URL_HASH SHA256=8586084f71f9bde545ee7fa6d00288b264a2b7ac3607b974e54d13e7162c1c72
   SOURCE_DIR "${eigen_SOURCE_DIR}"
   BINARY_DIR "${eigen_BINARY_DIR}"
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
@@ -70,7 +71,7 @@ endif()
 FetchContent_Declare(
   libigl
   GIT_REPOSITORY https://github.com/libigl/libigl.git
-  GIT_TAG main
+  GIT_TAG b41f1944a703653ae0da81e6588650ba14c270ea
   SOURCE_DIR "${libigl_SOURCE_DIR}"
   BINARY_DIR "${libigl_BINARY_DIR}"
 )
@@ -88,6 +89,7 @@ endif()
 FetchContent_Declare(
   clipper2
   URL https://github.com/AngusJohnson/Clipper2/releases/download/Clipper2_1.5.3/Clipper2_1.5.3.zip
+  URL_HASH SHA256=51064d727855c4c1175a5af1760b75b575a700f70a7e7be033aad9eca49f64bd
   SOURCE_DIR "${clipper2_SOURCE_DIR}"
   BINARY_DIR "${clipper2_BINARY_DIR}"
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
