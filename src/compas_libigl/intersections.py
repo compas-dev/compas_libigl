@@ -1,32 +1,40 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
-from compas.geometry import Tessellation
 from compas.plugins import plugin
 
-from compas_libigl import _intersections
-from compas_libigl._tessellation import as_libigl_tessellation
+from compas_libigl import _intersections  # type: ignore
+from compas_libigl._mesh import as_native_mesh
+
+if TYPE_CHECKING:
+    from compas._typing import RayMeshHit
+    from compas._typing import RayType
+    from compas._typing import TriangleMeshInput
 
 
-@plugin(category="intersections")
-def intersection_ray_mesh(ray, mesh: Tessellation) -> list[tuple[int, float, float, float]]:
+@plugin(category="intersections", pluggable_name="_intersection_ray_mesh")
+def intersection_ray_mesh(ray: RayType, mesh: TriangleMeshInput) -> list[RayMeshHit]:
     """Compute the intersection(s) between a ray and a mesh.
 
     Parameters
     ----------
-    ray : tuple[list[float], list[float]]
+    ray
         A ray represented by a point and a direction vector.
     mesh
-        The triangle tessellation.
+        Structural vertex and triangle buffers.
 
     Returns
     -------
     list[tuple[int, float, float, float]]
-        The array contains a tuple per intersection of the ray with the mesh.
-        Each tuple contains:
+        A tuple per intersection of the ray with the mesh. Each tuple contains:
 
         0. the index of the intersected face
         1. the u coordinate of the intersection in the barycentric coordinates of the face
-        2. the u coordinate of the intersection in the barycentric coordinates of the face
+        2. the v coordinate of the intersection in the barycentric coordinates of the face
         3. the distance between the ray origin and the hit
+
     """
     point, vector = ray
     P = np.asarray(point, dtype=np.float64)
@@ -37,7 +45,7 @@ def intersection_ray_mesh(ray, mesh: Tessellation) -> list[tuple[int, float, flo
         raise ValueError("ray point and direction should contain only finite values.")
     if np.linalg.norm(D) == 0:
         raise ValueError("ray direction should be nonzero.")
-    V, F = as_libigl_tessellation(mesh)
+    V, F = as_native_mesh(mesh, "mesh")
     return _intersections.intersection_ray_mesh(P, D, V, F)
 
 

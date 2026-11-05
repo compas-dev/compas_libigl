@@ -9,9 +9,10 @@ def test_trimesh_geodistance():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
     tessellation = mesh.triangulated(FaceTriangulation())
     source = 0
-    distances = trimesh_geodistance(tessellation, source, method="exact")
+    meshdata = tessellation.to_vertices_and_triangles()
+    distances = trimesh_geodistance(meshdata, source, method="exact")
     assert len(distances) == mesh.number_of_vertices()
-    distances = trimesh_geodistance(tessellation, source, method="heat")
+    distances = trimesh_geodistance(meshdata, source, method="heat")
     assert len(distances) == mesh.number_of_vertices()
 
 

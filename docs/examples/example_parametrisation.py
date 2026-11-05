@@ -27,7 +27,7 @@ mesh_lscm.vertices_attribute("z", 0)
 # Least-squares conformal map
 # ==============================================================================
 
-lscm_uv = trimesh_lscm(mesh.triangulated(FaceTriangulation()))
+lscm_uv = trimesh_lscm(mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles())
 
 for index, key in enumerate(mesh.vertices()):
     mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])

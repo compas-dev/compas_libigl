@@ -42,15 +42,15 @@ def test_mapped_signatures_and_registration(monkeypatch):
     assert tuple(inspect.signature(massmatrix.trimesh_massmatrix).parameters) == ("mesh",)
     assert tuple(inspect.signature(meshing.trimesh_remesh_along_isoline).parameters) == ("mesh", "scalarfield", "scalar")
     mapped = (
-        geodistance.trimesh_geodistance,
-        intersections.intersection_ray_mesh,
-        isolines.trimesh_isolines,
-        massmatrix.trimesh_massmatrix,
+        (geodistance.trimesh_geodistance, "_trimesh_geodistance"),
+        (intersections.intersection_ray_mesh, "_intersection_ray_mesh"),
+        (isolines.trimesh_isolines, "_trimesh_isolines"),
+        (massmatrix.trimesh_massmatrix, "_trimesh_massmatrix"),
     )
-    assert all(function.__plugin_spec__.extension_point.name == function.__name__ for function in mapped)
+    assert all(function.__plugin_spec__.extension_point.name == name for function, name in mapped)
     assert meshing.trimesh_remesh_along_isoline.__plugin_spec__.extension_point.name == "_trimesh_remesh_along_isoline"
-    assert parametrisation.trimesh_harmonic.__plugin_spec__.extension_point.name == "trimesh_harmonic"
-    assert parametrisation.trimesh_lscm.__plugin_spec__.extension_point.name == "trimesh_lscm"
+    assert parametrisation.trimesh_harmonic.__plugin_spec__.extension_point.name == "_trimesh_harmonic"
+    assert parametrisation.trimesh_lscm.__plugin_spec__.extension_point.name == "_trimesh_lscm"
     assert not hasattr(geodistance.trimesh_geodistance_multiple, "__plugin_spec__")
 
 
@@ -67,7 +67,7 @@ def test_geodistance_rejects_invalid_source(monkeypatch, open_tessellation, sour
     geodistance = _load(monkeypatch, "geodistance", trimesh_geodistance=lambda *args: np.zeros(4))
 
     with pytest.raises((TypeError, IndexError)):
-        geodistance.trimesh_geodistance(open_tessellation, source)
+        geodistance.trimesh_geodistance(open_tessellation.to_vertices_and_triangles(), source)
 
 
 @pytest.mark.parametrize(
@@ -82,7 +82,7 @@ def test_ray_validation_precedes_native_call(monkeypatch, open_tessellation, ray
     intersections = _load(monkeypatch, "intersections", intersection_ray_mesh=lambda *args: pytest.fail("native called"))
 
     with pytest.raises(ValueError):
-        intersections.intersection_ray_mesh(ray, open_tessellation)
+        intersections.intersection_ray_mesh(ray, open_tessellation.to_vertices_and_triangles())
 
 
 @pytest.mark.parametrize("values", [[], [0, 1, 2], [[0, 1, 2, 3]], [0, 1, 2, np.nan]])
@@ -90,7 +90,7 @@ def test_scalarfield_validation(monkeypatch, open_tessellation, values):
     isolines = _load(monkeypatch, "isolines", trimesh_isolines=lambda *args: pytest.fail("native called"))
 
     with pytest.raises(ValueError):
-        isolines.trimesh_isolines(open_tessellation, values, 1)
+        isolines.trimesh_isolines(open_tessellation.to_vertices_and_triangles(), values, 1)
 
 
 def test_results_are_normalized(monkeypatch, open_tessellation):
@@ -101,8 +101,41 @@ def test_results_are_normalized(monkeypatch, open_tessellation):
         trimesh_isolines=lambda *args: (np.array([[0.0, 0.0, 0.0]]), np.array([[0, 0]]), np.array([0])),
     )
 
-    assert geodistance.trimesh_geodistance(open_tessellation, 0) == [0.0, 1.0, 2.0, 3.0]
-    assert isolines.trimesh_isolines(open_tessellation, [0, 1, 2, 3], 1) == ([[0.0, 0.0, 0.0]], [[0, 0]])
+    meshdata = open_tessellation.to_vertices_and_triangles()
+    assert geodistance.trimesh_geodistance(meshdata, 0) == [0.0, 1.0, 2.0, 3.0]
+    assert isolines.trimesh_isolines(meshdata, [0, 1, 2, 3], 1) == ([[0.0, 0.0, 0.0]], [[0, 0]])
+
+
+@pytest.mark.parametrize(
+    ("module_name", "native_name", "native_result", "message"),
+    [
+        ("geodistance", "trimesh_geodistance", np.zeros((4, 1)), "geodistance result"),
+        ("massmatrix", "trimesh_massmatrix", np.zeros((3, 3)), "mass matrix result"),
+    ],
+)
+def test_vector_operations_reject_invalid_native_result_shape(monkeypatch, open_tessellation, module_name, native_name, native_result, message):
+    module = _load(monkeypatch, module_name, **{native_name: lambda *args: native_result})
+    meshdata = open_tessellation.to_vertices_and_triangles()
+
+    with pytest.raises(RuntimeError, match=message):
+        if module_name == "geodistance":
+            module.trimesh_geodistance(meshdata, 0)
+        else:
+            module.trimesh_massmatrix(meshdata)
+
+
+@pytest.mark.parametrize(
+    "native_result",
+    [
+        (np.zeros((1, 2)), np.zeros((1, 2), dtype=np.int32), np.zeros(1)),
+        (np.zeros((1, 3)), np.zeros((1, 3), dtype=np.int32), np.zeros(1)),
+    ],
+)
+def test_isolines_reject_invalid_native_result_shape(monkeypatch, open_tessellation, native_result):
+    isolines = _load(monkeypatch, "isolines", trimesh_isolines=lambda *args: native_result)
+
+    with pytest.raises(RuntimeError, match="libigl isolines result"):
+        isolines.trimesh_isolines(open_tessellation.to_vertices_and_triangles(), [0, 1, 2, 3], 1)
 
 
 def test_remesh_returns_raw_mesh_without_labels(monkeypatch, open_tessellation):
@@ -167,7 +200,7 @@ def test_remesh_rejects_invalid_native_result_shape(monkeypatch, native_result):
         )
 
 
-def test_parametrisation_topology_validation(monkeypatch, open_tessellation):
+def test_parametrisation_uses_raw_mesh_and_checks_result_shape(monkeypatch, open_tessellation):
     parametrisation = _load(
         monkeypatch,
         "parametrisation",
@@ -175,26 +208,14 @@ def test_parametrisation_topology_validation(monkeypatch, open_tessellation):
         lscm=lambda vertices, faces: np.zeros((len(vertices), 2)),
     )
 
-    assert len(parametrisation.trimesh_harmonic(open_tessellation)) == 4
+    meshdata = open_tessellation.to_vertices_and_triangles()
+    assert len(parametrisation.trimesh_harmonic(meshdata)) == 4
 
-    closed = Tessellation(
-        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
-        [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]],
+    invalid = _load(
+        monkeypatch,
+        "parametrisation",
+        harmonic=lambda vertices, faces: np.zeros((len(vertices), 3)),
+        lscm=lambda vertices, faces: np.zeros((len(vertices), 3)),
     )
-    inconsistent = Tessellation(
-        open_tessellation.vertices,
-        [[0, 1, 2], [0, 3, 2]],
-    )
-    nonmanifold = Tessellation(
-        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1]],
-        [[0, 1, 2], [1, 0, 3], [0, 1, 4]],
-    )
-    disconnected = Tessellation(
-        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [3, 0, 0], [4, 0, 0], [3, 1, 0]],
-        [[0, 1, 2], [3, 4, 5]],
-    )
-    empty = Tessellation([], [])
-
-    for invalid in (closed, inconsistent, nonmanifold, disconnected, empty):
-        with pytest.raises(ValueError):
-            parametrisation.trimesh_lscm(invalid)
+    with pytest.raises(RuntimeError, match="shape"):
+        invalid.trimesh_lscm(meshdata)

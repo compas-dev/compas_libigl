@@ -30,7 +30,11 @@ mesh.transform(S * Rz * Rx)
 scalars = mesh.vertices_attribute("z")
 
 num_isolines = 100
-vertices, edges = trimesh_isolines(mesh.triangulated(FaceTriangulation()), scalars, num_isolines)
+vertices, edges = trimesh_isolines(
+    mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles(),
+    scalars,
+    num_isolines,
+)
 
 # ==============================================================================
 # Visualisation

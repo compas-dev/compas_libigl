@@ -1,24 +1,33 @@
-from compas.geometry import Tessellation
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from compas.plugins import plugin
 
-from compas_libigl import _massmatrix
-from compas_libigl._tessellation import as_libigl_tessellation
+from compas_libigl import _massmatrix  # type: ignore
+from compas_libigl._mesh import as_native_mesh
+from compas_libigl._mesh import validate_native_vector
+
+if TYPE_CHECKING:
+    from compas._typing import TriangleMeshInput
 
 
-@plugin(category="trimesh")
-def trimesh_massmatrix(mesh: Tessellation) -> list[float]:
+@plugin(category="trimesh", pluggable_name="_trimesh_massmatrix")
+def trimesh_massmatrix(mesh: TriangleMeshInput) -> list[float]:
     """Compute the mass matrix of a triangle mesh.
 
     Parameters
     ----------
     mesh
-        The triangle tessellation.
+        Structural vertex and triangle buffers.
 
     Returns
     -------
     list[float]
         The barycentric mass associated with every vertex.
+
     """
-    V, F = as_libigl_tessellation(mesh)
+    V, F = as_native_mesh(mesh, "mesh")
     matrix = _massmatrix.trimesh_massmatrix(V, F)
-    return matrix.diagonal().tolist()
+    diagonal = matrix.diagonal()
+    return validate_native_vector(diagonal, len(V), "mass matrix").tolist()

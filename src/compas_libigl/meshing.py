@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -12,13 +11,16 @@ from compas_libigl._mesh import as_scalarfield
 from compas_libigl._mesh import validate_native_mesh
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from compas._typing import NumericArray
     from compas._typing import TriangleMeshInput
 
 
 @plugin(category="trimesh", pluggable_name="_trimesh_remesh_along_isoline")
 def trimesh_remesh_along_isoline(
     mesh: TriangleMeshInput,
-    scalarfield: Sequence[float],
+    scalarfield: Sequence[float] | NumericArray,
     scalar: float,
 ) -> TriangleMeshInput:
     """Remesh a triangle mesh along an isoline.

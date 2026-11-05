@@ -11,7 +11,7 @@ def test_intersection_ray_mesh():
     tessellation = mesh.triangulated(FaceTriangulation())
     centroid = mesh.centroid()
     ray = [centroid[0], centroid[1], 0], [0, 0, 1.0]
-    hits = intersection_ray_mesh(ray, tessellation)
+    hits = intersection_ray_mesh(ray, tessellation.to_vertices_and_triangles())
     assert len(hits) == 1
     # Test computing intersection point
     point = add_vectors(ray[0], scale_vector(ray[1], hits[0][3]))

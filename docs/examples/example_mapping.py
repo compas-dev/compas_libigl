@@ -3,7 +3,6 @@ from pathlib import Path
 from compas.colors import Color
 from compas.datastructures import Mesh
 from compas.geometry import Polyline
-from compas.geometry import Tessellation
 from compas_viewer import Viewer
 from compas_viewer.config import Config
 from tessagon.adaptors.list_adaptor import ListAdaptor
@@ -96,7 +95,7 @@ for boundary in boundaries:
     viewer.scene.add(boundary, name="boundary", linecolor=Color.yellow(), linewidth=3)
 
 # To see where the pattern is mapped:
-uv = trimesh_lscm(Tessellation(v, f))
+uv = trimesh_lscm((v, f))
 mesh_flattened = mesh.copy()
 for i in range(mesh.number_of_vertices()):
     mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])

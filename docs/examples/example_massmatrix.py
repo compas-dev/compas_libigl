@@ -18,7 +18,7 @@ tessellation = mesh.triangulated(FaceTriangulation())
 # Mass matrix
 # ==============================================================================
 
-mass = trimesh_massmatrix(tessellation)
+mass = trimesh_massmatrix(tessellation.to_vertices_and_triangles())
 
 # ==============================================================================
 # Visualisation

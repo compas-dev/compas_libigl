@@ -21,7 +21,7 @@ tessellation = mesh.triangulated(FaceTriangulation())
 # ==============================================================================
 
 source = mesh.vertex_sample(size=1)[0]
-distance = trimesh_geodistance(tessellation, source, method="exact")
+distance = trimesh_geodistance(tessellation.to_vertices_and_triangles(), source, method="exact")
 
 # ==============================================================================
 # Visualize

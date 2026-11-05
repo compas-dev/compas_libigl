@@ -11,3 +11,4 @@ faces64 = np.asarray(faces32, dtype=np.int64)
 
 trimesh_remesh_along_isoline((vertices32, faces64), [0.0, 1.0, 2.0], 0.5)
 trimesh_remesh_along_isoline((vertices64, faces32), [0.0, 1.0, 2.0], 0.5)
+trimesh_remesh_along_isoline((vertices64, faces32), np.asarray([0.0, 1.0, 2.0]), 0.5)
