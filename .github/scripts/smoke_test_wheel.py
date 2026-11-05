@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 import tempfile
@@ -34,27 +35,37 @@ def environment_python(environment: Path) -> Path:
     return environment / "bin" / "python"
 
 
-def smoke_test(wheel: Path, constraint: Path) -> None:
-    """Install ``wheel`` with ``constraint`` and import all native modules."""
+def smoke_test(wheel: Path, constraint: Path, consumer: Path | None = None) -> None:
+    """Install ``wheel`` with ``constraint`` and verify its public surface."""
+    if consumer:
+        consumer = consumer.resolve()
     with tempfile.TemporaryDirectory(prefix="compas-libigl-wheel-") as directory:
         environment = Path(directory) / "environment"
         venv.EnvBuilder(with_pip=True).create(environment)
         python = environment_python(environment)
-        subprocess.run(
-            [
-                str(python),
-                "-m",
-                "pip",
-                "install",
-                "--disable-pip-version-check",
-                "--constraint",
-                str(constraint),
-                str(wheel),
-            ],
-            check=True,
-        )
+        install = [
+            str(python),
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--constraint",
+            str(constraint),
+            str(wheel),
+        ]
+        if consumer:
+            install.append("pyright==1.1.414")
+        subprocess.run(install, check=True)
         imports = "; ".join(f"import {module}" for module in IMPORT_MODULES)
         subprocess.run([str(python), "-c", imports], check=True)
+        if consumer:
+            config = environment / "pyrightconfig.json"
+            config.write_text(json.dumps({"typeCheckingMode": "strict", "pythonVersion": "3.12"}), encoding="utf-8")
+            subprocess.run(
+                [str(python), "-m", "pyright", "--pythonpath", str(python), "--project", str(config), str(consumer)],
+                check=True,
+                cwd=environment,
+            )
 
 
 def main() -> None:
@@ -62,11 +73,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("wheelhouse", type=Path)
     parser.add_argument("--constraint", required=True, type=Path)
+    parser.add_argument("--consumer", type=Path)
     args = parser.parse_args()
     wheels = sorted(args.wheelhouse.glob("*.whl"))
     if len(wheels) != 1:
         raise SystemExit(f"Expected exactly one wheel in {args.wheelhouse}, found {len(wheels)}")
-    smoke_test(wheels[0], args.constraint)
+    smoke_test(wheels[0], args.constraint, args.consumer)
 
 
 if __name__ == "__main__":

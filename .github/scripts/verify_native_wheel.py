@@ -29,6 +29,8 @@ REQUIRED_DEPENDENCIES = {
     "tessagon",
 }
 
+TYPING_MARKER = "compas_libigl/py.typed"
+
 
 def verify_wheel(wheel: Path) -> None:
     """Verify the stable-ABI tag, native modules, and runtime metadata."""
@@ -46,6 +48,8 @@ def verify_wheel(wheel: Path) -> None:
 
     with ZipFile(wheel) as archive:
         names = set(archive.namelist())
+        if TYPING_MARKER not in names:
+            raise SystemExit(f"{wheel} is missing the PEP 561 marker: {TYPING_MARKER}")
         metadata_paths = [name for name in names if name.endswith(".dist-info/METADATA")]
         if len(metadata_paths) != 1:
             raise SystemExit(f"{wheel} has {len(metadata_paths)} METADATA files")

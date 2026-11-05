@@ -105,6 +105,27 @@ jobs:
           python .github/scripts/smoke_test_wheel.py wheelhouse
           --constraint .github/constraints/compas-candidate.txt
 
+  wheel-typing:
+    needs: [detect, wheels]
+    if: needs.detect.outputs.is-release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-wheels-manylinux
+          path: ${{ runner.temp }}/wheelhouse
+      - name: Type-check an external installed-wheel consumer
+        run: >-
+          python .github/scripts/smoke_test_wheel.py ${{ runner.temp }}/wheelhouse
+          --constraint .github/constraints/compas-candidate.txt
+          --consumer tests/typing/installed_consumer.py
+
   sdist:
     needs: detect
     if: needs.detect.outputs.is-release == 'true'
@@ -138,7 +159,7 @@ jobs:
           if-no-files-found: error
 
   prepare:
-    needs: [detect, wheels, wheel-smoke, sdist]
+    needs: [detect, wheels, wheel-smoke, wheel-typing, sdist]
     if: needs.detect.outputs.is-release == 'true'
     runs-on: ubuntu-latest
     steps:

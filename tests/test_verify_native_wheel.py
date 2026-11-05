@@ -20,11 +20,14 @@ def make_wheel(
     filename_tag: str = "cp312-abi3-manylinux_2_28_x86_64",
     internal_tags: tuple[str, ...] = ("cp312-abi3-manylinux_2_28_x86_64",),
     omitted_module: str | None = None,
+    include_typing_marker: bool = True,
     include_metadata: bool = True,
     dependencies: tuple[str, ...] = ("compas<4,>=3.0", "numpy>=1.24", "tessagon"),
 ) -> Path:
     wheel = tmp_path / f"compas_libigl-0.7.6-{filename_tag}.whl"
     with ZipFile(wheel, "w") as archive:
+        if include_typing_marker:
+            archive.writestr(verify_native_wheel.TYPING_MARKER, b"")
         for module in verify_native_wheel.NATIVE_MODULES:
             if module != omitted_module:
                 archive.writestr(f"compas_libigl/{module}.abi3.so", b"")
@@ -76,6 +79,12 @@ def test_verify_wheel_rejects_incomplete_compressed_platform_tags(tmp_path: Path
 def test_verify_wheel_rejects_missing_native_module(tmp_path: Path) -> None:
     wheel = make_wheel(tmp_path, omitted_module="_mapping")
     with pytest.raises(SystemExit, match="_mapping"):
+        verify_native_wheel.verify_wheel(wheel)
+
+
+def test_verify_wheel_rejects_missing_typing_marker(tmp_path: Path) -> None:
+    wheel = make_wheel(tmp_path, include_typing_marker=False)
+    with pytest.raises(SystemExit, match="PEP 561 marker"):
         verify_native_wheel.verify_wheel(wheel)
 
 
