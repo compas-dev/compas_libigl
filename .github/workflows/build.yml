@@ -2,7 +2,7 @@ name: build
 
 on:
   pull_request:
-    branches: [main, c3-upgrade]
+    branches: [main, c3-upgrade, initiative/repository-modernisation]
   push:
     branches: [main]
 

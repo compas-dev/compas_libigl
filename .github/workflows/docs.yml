@@ -2,7 +2,7 @@ name: docs
 
 on:
   pull_request:
-    branches: [main, c3-upgrade]
+    branches: [main, c3-upgrade, initiative/repository-modernisation]
     paths:
       - "docs/**"
       - "src/**"
