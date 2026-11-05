@@ -62,6 +62,7 @@ tests = [
 ]
 docs = [
     "compas-viewer>=2",
+    "mike>=2",
     "mkdocs>=1.6",
     "mkdocs-autorefs>=1.4",
     "mkdocs-material>=9.5",
@@ -128,12 +129,13 @@ compas = { git = "https://github.com/compas-dev/compas.git", rev = "e54f8ae0eba3
 # ============================================================================
 
 [tool.cibuildwheel]
+build = ["cp312-*"]
 build-verbosity = 3
-before-test = "pip install numpy 'compas>=3.0.0' && pip list"
-test-requires = ["numpy", "compas>=3.0.0", "pytest", "build", "tessagon"]
+before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@e54f8ae0eba39e84b1290bea9c368a1a646dfdcd' && pip list"
+test-requires = ["numpy>=1.24", "pytest", "build", "tessagon"]
 test-command = "pytest {project}/tests"
 build-frontend = "pip"
-manylinux-x86_64-image = "manylinux2014"
+manylinux-x86_64-image = "manylinux_2_28"
 skip = ["*_i686", "*-musllinux_*", "*-win32", "pp*"]
 macos.environment.MACOSX_DEPLOYMENT_TARGET = "11.00"
 macos.archs = ["x86_64", "arm64"]
@@ -165,7 +167,7 @@ replace = "[{new_version}] {now:%Y-%m-%d}"
 [tool.ruff]
 line-length = 179
 indent-width = 4
-target-version = "py39"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
