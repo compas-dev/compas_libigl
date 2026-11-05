@@ -3,14 +3,3 @@ __copyright__ = "Block Research Group - ETH Zurich"
 __license__ = "MIT"
 __email__ = "van.mele@arch.ethz.ch, petrasvestartas@gmail.com"
 __version__ = "0.7.6"
-
-
-__all_plugins__ = [
-    "compas_libigl.geodistance",
-    "compas_libigl.intersections",
-    "compas_libigl.isolines",
-    "compas_libigl.massmatrix",
-    "compas_libigl.meshing",
-    "compas_libigl.parametrisation",
-    "compas_libigl.planarize",
-]

@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _intersections  # type: ignore
 from compas_libigl._mesh import as_native_mesh
@@ -14,7 +13,6 @@ if TYPE_CHECKING:
     from compas._typing import TriangleMeshInput
 
 
-@plugin(category="intersections", pluggable_name="_intersection_ray_mesh")
 def intersection_ray_mesh(ray: RayType, mesh: TriangleMeshInput) -> list[RayMeshHit]:
     """Compute the intersection(s) between a ray and a mesh.
 

@@ -24,12 +24,9 @@ dependencies = [
 Homepage = "https://compas.dev/compas_libigl/latest/"
 
 [project.entry-points."compas.plugins"]
-compas_libigl_geodistance = "compas_libigl.geodistance"
-compas_libigl_intersections = "compas_libigl.intersections"
-compas_libigl_isolines = "compas_libigl.isolines"
-compas_libigl_massmatrix = "compas_libigl.massmatrix"
-compas_libigl_meshing = "compas_libigl.meshing"
-compas_libigl_parametrisation = "compas_libigl.parametrisation"
+compas_libigl_intersections = "compas_libigl.plugins.intersections"
+compas_libigl_quadmesh = "compas_libigl.plugins.quadmesh"
+compas_libigl_trimesh = "compas_libigl.plugins.trimesh"
 
 # ============================================================================
 # pyproject dependecy groups

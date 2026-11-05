@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _meshing  # type: ignore
 from compas_libigl._mesh import NativeTriangleMesh
@@ -18,7 +17,6 @@ if TYPE_CHECKING:
     from compas._typing import TriangleMeshInput
 
 
-@plugin(category="trimesh", pluggable_name="_trimesh_remesh_along_isoline")
 def trimesh_remesh_along_isoline(
     mesh: TriangleMeshInput,
     scalarfield: Sequence[float] | NumericArray,

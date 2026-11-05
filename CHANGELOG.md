@@ -23,6 +23,7 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 * Aligned annotations and made Pyright a blocking continuous-integration check.
 * Updated the runtime and wheel-test dependency baseline to COMPAS 3.
 * Modernized dependency locking, documentation, native build provenance, continuous integration, and release workflows.
+* Registered lightweight category plugin modules through the current `compas.plugins` entry-point discovery mechanism, kept native implementations lazily imported, added non-mutating planarization normalization and result-shape checks, and removed the obsolete `__all_plugins__` list.
 
 ### Removed
 

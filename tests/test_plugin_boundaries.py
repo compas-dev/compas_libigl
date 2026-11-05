@@ -28,29 +28,54 @@ def open_tessellation():
     )
 
 
-def test_mapped_signatures_and_registration(monkeypatch):
+def test_implementation_signatures_and_lightweight_registration(monkeypatch):
     geodistance = _load(monkeypatch, "geodistance", trimesh_geodistance=lambda *args: np.zeros(3))
     intersections = _load(monkeypatch, "intersections", intersection_ray_mesh=lambda *args: [])
     isolines = _load(monkeypatch, "isolines", trimesh_isolines=lambda *args: ([], [], []))
     massmatrix = _load(monkeypatch, "massmatrix", trimesh_massmatrix=lambda *args: None)
     meshing = _load(monkeypatch, "meshing", trimesh_remesh_along_isoline=lambda *args: None)
     parametrisation = _load(monkeypatch, "parametrisation", harmonic=lambda *args: np.zeros((3, 2)), lscm=lambda *args: np.zeros((3, 2)))
+    planarize = _load(monkeypatch, "planarize", planarize_quads=lambda *args: np.zeros((3, 3)))
+    plugin_intersections = importlib.import_module("compas_libigl.plugins.intersections")
+    plugin_quadmesh = importlib.import_module("compas_libigl.plugins.quadmesh")
+    plugin_trimesh = importlib.import_module("compas_libigl.plugins.trimesh")
 
     assert tuple(inspect.signature(geodistance.trimesh_geodistance).parameters) == ("mesh", "source", "method")
     assert tuple(inspect.signature(intersections.intersection_ray_mesh).parameters) == ("ray", "mesh")
     assert tuple(inspect.signature(isolines.trimesh_isolines).parameters) == ("mesh", "scalarfield", "number_of_isolines")
     assert tuple(inspect.signature(massmatrix.trimesh_massmatrix).parameters) == ("mesh",)
     assert tuple(inspect.signature(meshing.trimesh_remesh_along_isoline).parameters) == ("mesh", "scalarfield", "scalar")
+    assert tuple(inspect.signature(planarize.quadmesh_planarize).parameters) == ("M", "kmax", "maxdev")
     mapped = (
-        (geodistance.trimesh_geodistance, "_trimesh_geodistance"),
-        (intersections.intersection_ray_mesh, "_intersection_ray_mesh"),
-        (isolines.trimesh_isolines, "_trimesh_isolines"),
-        (massmatrix.trimesh_massmatrix, "_trimesh_massmatrix"),
+        (plugin_trimesh.trimesh_geodistance, "_trimesh_geodistance"),
+        (plugin_intersections.intersection_ray_mesh, "_intersection_ray_mesh"),
+        (plugin_trimesh.trimesh_isolines, "_trimesh_isolines"),
+        (plugin_trimesh.trimesh_massmatrix, "_trimesh_massmatrix"),
+        (plugin_trimesh.trimesh_remesh_along_isoline, "_trimesh_remesh_along_isoline"),
+        (plugin_trimesh.trimesh_harmonic, "_trimesh_harmonic"),
+        (plugin_trimesh.trimesh_lscm, "_trimesh_lscm"),
+        (plugin_quadmesh.quadmesh_planarize, "quadmesh_planarize"),
     )
     assert all(function.__plugin_spec__.extension_point.name == name for function, name in mapped)
-    assert meshing.trimesh_remesh_along_isoline.__plugin_spec__.extension_point.name == "_trimesh_remesh_along_isoline"
-    assert parametrisation.trimesh_harmonic.__plugin_spec__.extension_point.name == "_trimesh_harmonic"
-    assert parametrisation.trimesh_lscm.__plugin_spec__.extension_point.name == "_trimesh_lscm"
+    signature_pairs = (
+        (plugin_trimesh.trimesh_geodistance, geodistance.trimesh_geodistance),
+        (plugin_intersections.intersection_ray_mesh, intersections.intersection_ray_mesh),
+        (plugin_trimesh.trimesh_isolines, isolines.trimesh_isolines),
+        (plugin_trimesh.trimesh_massmatrix, massmatrix.trimesh_massmatrix),
+        (plugin_trimesh.trimesh_remesh_along_isoline, meshing.trimesh_remesh_along_isoline),
+        (plugin_trimesh.trimesh_harmonic, parametrisation.trimesh_harmonic),
+        (plugin_trimesh.trimesh_lscm, parametrisation.trimesh_lscm),
+        (plugin_quadmesh.quadmesh_planarize, planarize.quadmesh_planarize),
+    )
+    assert all(inspect.signature(wrapper).parameters == inspect.signature(implementation).parameters for wrapper, implementation in signature_pairs)
+    assert not hasattr(geodistance.trimesh_geodistance, "__plugin_spec__")
+    assert not hasattr(intersections.intersection_ray_mesh, "__plugin_spec__")
+    assert not hasattr(isolines.trimesh_isolines, "__plugin_spec__")
+    assert not hasattr(massmatrix.trimesh_massmatrix, "__plugin_spec__")
+    assert not hasattr(meshing.trimesh_remesh_along_isoline, "__plugin_spec__")
+    assert not hasattr(parametrisation.trimesh_harmonic, "__plugin_spec__")
+    assert not hasattr(parametrisation.trimesh_lscm, "__plugin_spec__")
+    assert not hasattr(planarize.quadmesh_planarize, "__plugin_spec__")
     assert not hasattr(geodistance.trimesh_geodistance_multiple, "__plugin_spec__")
 
 

@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from typing import Literal
 
 import numpy as np
-from compas.plugins import plugin
 
 from compas_libigl import _geodistance  # type: ignore
 from compas_libigl._mesh import as_native_mesh
@@ -15,7 +14,6 @@ if TYPE_CHECKING:
     from compas._typing import TriangleMeshInput
 
 
-@plugin(category="trimesh", pluggable_name="_trimesh_geodistance")
 def trimesh_geodistance(
     mesh: TriangleMeshInput,
     source: int,
