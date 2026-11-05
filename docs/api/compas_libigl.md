@@ -1,0 +1,15 @@
+# `compas_libigl`
+
+- [`boundaries`](boundaries.md)
+- [`cotmatrix`](cotmatrix.md)
+- [`curvature`](curvature.md)
+- [`geodistance`](geodistance.md)
+- [`grad`](grad.md)
+- [`intersections`](intersections.md)
+- [`isolines`](isolines.md)
+- [`mapping`](mapping.md)
+- [`massmatrix`](massmatrix.md)
+- [`meshing`](meshing.md)
+- [`parametrisation`](parametrisation.md)
+- [`planarize`](planarize.md)
+- [`simplify`](simplify.md)

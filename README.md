@@ -1,47 +1,50 @@
 # compas_libigl
 
-COMPAS-compatible bindings for top-level algorithms of libigl generated with `nanobind`.
-Many of the functions provided by `compas_libigl` are based on the examples in the libigl tutorial.
+COMPAS-compatible Python bindings for selected [libigl](https://libigl.github.io/) algorithms, generated with [nanobind](https://nanobind.readthedocs.io/).
 
 ## Installation
 
-### Stable
-
-The stable version of `compas_libigl` can now be installed from conda-forge.
+Install a published wheel with pip:
 
 ```bash
-conda create -n igl compas_libigl
+python -m pip install compas_libigl
 ```
 
-### Dev install
+## Development
 
-A dev version of `compas_libigl` can be installed using a combination of conda and pip.
+Python 3.12 or newer and a platform C++ toolchain are required. Create the locked development environment with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-conda create -n igl-dev python=3.9 --yes
-conda activate igl
-pip install --no-build-isolation -ve .
+uv sync --frozen --all-groups
 ```
 
-## Libigl functions
+The authoritative local checks are:
 
-Currently the following functionalities of Libigl are included in the wrapper
+```bash
+uv run ruff check .
+uv run ruff format --check .
+uv run pyright
+uv run pytest
+uv run mkdocs build --strict
+uv build
+```
 
-* Geodesic distance calculation
-* Scalarfield isolines
-* Quad mesh planarization
-* Mass matrix of triangle meshes
-* Discrete gaussian curvature
-* Ray/mesh intersection
-* Boundary loops
-* Harmonic parametrisation
-* Least-squares conformal maps
+Thin Invoke conveniences are also available, for example `uv run invoke test` and `uv run invoke docs`.
 
-## Examples
+## Functionality
 
-The use of the wrapped functions is illustrated with scripts in the `examples` folder.
-Note that the functionality of the package is not directly available in Rhino, but can be used through `compas.rpc`.
+The bindings include:
+
+- geodesic distance;
+- scalar-field isolines;
+- quad-mesh planarisation;
+- triangle-mesh mass matrices and curvature;
+- ray-mesh intersections and boundary loops;
+- harmonic and least-squares conformal parametrisation;
+- mapping, remeshing, gradients, and simplification utilities.
+
+See the [documentation](https://compas.dev/compas_libigl/) and the scripts in [`docs/examples`](docs/examples). Visual examples additionally require `compas-viewer`.
 
 ## License
 
-Libigl (and therefore also `compas_libigl`) is licensed under MPL-2.
+`compas_libigl` is distributed under the MIT License. libigl itself is distributed under the Mozilla Public License 2.0; see [`LICENSE.igl`](LICENSE.igl).

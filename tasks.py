@@ -1,29 +1,41 @@
-from __future__ import print_function
+import sys
 
-import os
+from invoke import task
 
-from compas_invocations2 import build
-from compas_invocations2 import docs
-from compas_invocations2 import style
-from compas_invocations2 import tests
-from invoke.collection import Collection
 
-ns = Collection(
-    docs.help,
-    style.check,
-    style.lint,
-    style.format,
-    docs.docs,
-    docs.linkcheck,
-    tests.test,
-    tests.testdocs,
-    build.build_ghuser_components,
-    build.prepare_changelog,
-    build.clean,
-    build.release,
-)
-ns.configure(
-    {
-        "base_folder": os.path.dirname(__file__),
-    }
-)
+@task
+def check(ctx):
+    """Run all style checks."""
+    ctx.run("ruff check .")
+    ctx.run("ruff format --check .")
+
+
+@task
+def lint(ctx):
+    """Run the linter."""
+    ctx.run("ruff check .")
+
+
+@task(name="format")
+def format_code(ctx):
+    """Apply lint fixes and format the codebase."""
+    ctx.run("ruff check --fix .")
+    ctx.run("ruff format .")
+
+
+@task
+def typecheck(ctx):
+    """Run static type checking."""
+    ctx.run(f'pyright --pythonpath "{sys.executable}"')
+
+
+@task
+def test(ctx):
+    """Run the test suite."""
+    ctx.run("pytest")
+
+
+@task
+def docs(ctx):
+    """Build the documentation in strict mode."""
+    ctx.run("mkdocs build --strict")
