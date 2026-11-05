@@ -18,12 +18,15 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 
 ### Changed
 
-* Standardized triangle-processing plugin and public API boundaries on `compas.geometry.Tessellation`, including shared native buffer validation for libigl operations.
+* Standardized migrated triangle-mesh operations on structural `(vertices, triangles)` buffers, including NumPy arrays, with shared native buffer normalization at the libigl boundary.
+* Kept curvature as a package-owned direct API because its conventions do not match the core COMPAS plugin contract.
+* Aligned annotations and made Pyright a blocking continuous-integration check.
 * Updated the runtime and wheel-test dependency baseline to COMPAS 3.
 * Modernized dependency locking, documentation, native build provenance, continuous integration, and release workflows.
 
 ### Removed
 
+* Removed the requirement to construct `compas.geometry.Tessellation` objects before calling the migrated triangle-mesh operations.
 
 ## [0.7.6] 2025-09-04
 
