@@ -18,7 +18,7 @@ def make_wheel(
     tmp_path: Path,
     *,
     filename_tag: str = "cp312-abi3-manylinux_2_28_x86_64",
-    internal_tag: str = "cp312-abi3-manylinux_2_28_x86_64",
+    internal_tags: tuple[str, ...] = ("cp312-abi3-manylinux_2_28_x86_64",),
     omitted_module: str | None = None,
     include_metadata: bool = True,
     dependencies: tuple[str, ...] = ("compas<4,>=3.0", "numpy>=1.24", "tessagon"),
@@ -36,7 +36,7 @@ def make_wheel(
             )
         archive.writestr(
             "compas_libigl-0.7.6.dist-info/WHEEL",
-            f"Wheel-Version: 1.0\nRoot-Is-Purelib: false\nTag: {internal_tag}\n",
+            "Wheel-Version: 1.0\nRoot-Is-Purelib: false\n" + "".join(f"Tag: {internal_tag}\n" for internal_tag in internal_tags),
         )
     return wheel
 
@@ -46,8 +46,30 @@ def test_verify_wheel_accepts_complete_abi3_wheel(tmp_path: Path) -> None:
 
 
 def test_verify_wheel_rejects_filename_internal_tag_mismatch(tmp_path: Path) -> None:
-    wheel = make_wheel(tmp_path, internal_tag="cp312-abi3-macosx_11_0_arm64")
-    with pytest.raises(SystemExit, match="is not declared by WHEEL"):
+    wheel = make_wheel(tmp_path, internal_tags=("cp312-abi3-macosx_11_0_arm64",))
+    with pytest.raises(SystemExit, match="do not match WHEEL tags"):
+        verify_native_wheel.verify_wheel(wheel)
+
+
+def test_verify_wheel_accepts_compressed_platform_tags(tmp_path: Path) -> None:
+    wheel = make_wheel(
+        tmp_path,
+        filename_tag="cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64",
+        internal_tags=(
+            "cp312-abi3-manylinux_2_27_x86_64",
+            "cp312-abi3-manylinux_2_28_x86_64",
+        ),
+    )
+    verify_native_wheel.verify_wheel(wheel)
+
+
+def test_verify_wheel_rejects_incomplete_compressed_platform_tags(tmp_path: Path) -> None:
+    wheel = make_wheel(
+        tmp_path,
+        filename_tag="cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64",
+        internal_tags=("cp312-abi3-manylinux_2_28_x86_64",),
+    )
+    with pytest.raises(SystemExit, match="do not match WHEEL tags"):
         verify_native_wheel.verify_wheel(wheel)
 
 

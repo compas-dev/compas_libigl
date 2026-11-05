@@ -32,13 +32,17 @@ REQUIRED_DEPENDENCIES = {
 
 def verify_wheel(wheel: Path) -> None:
     """Verify the stable-ABI tag, native modules, and runtime metadata."""
+    if wheel.suffix != ".whl":
+        raise SystemExit(f"{wheel} does not have a valid wheel filename")
     try:
-        _, python_tag, abi_tag, platform_tag = wheel.name.removesuffix(".whl").rsplit("-", 3)
+        _, python_tags, abi_tags, platform_tags = wheel.name.removesuffix(".whl").rsplit("-", 3)
     except ValueError as error:
         raise SystemExit(f"{wheel} does not have a valid wheel filename") from error
-    if python_tag != "cp312" or abi_tag != "abi3":
+    filename_tags = {
+        f"{python_tag}-{abi_tag}-{platform_tag}" for python_tag in python_tags.split(".") for abi_tag in abi_tags.split(".") for platform_tag in platform_tags.split(".")
+    }
+    if not filename_tags or any(not tag.startswith("cp312-abi3-") for tag in filename_tags):
         raise SystemExit(f"{wheel} is not tagged cp312-abi3")
-    filename_tag = f"{python_tag}-{abi_tag}-{platform_tag}"
 
     with ZipFile(wheel) as archive:
         names = set(archive.namelist())
@@ -51,9 +55,13 @@ def verify_wheel(wheel: Path) -> None:
             raise SystemExit(f"{wheel} has {len(wheel_paths)} WHEEL files")
         wheel_metadata = BytesParser().parsebytes(archive.read(wheel_paths[0]))
 
-    internal_tags = set(wheel_metadata.get_all("Tag", []))
-    if filename_tag not in internal_tags:
-        raise SystemExit(f"{wheel} filename tag {filename_tag!r} is not declared by WHEEL: {sorted(internal_tags)}")
+    internal_tags = set()
+    for value in wheel_metadata.get_all("Tag", []):
+        if len(value.split("-", 2)) != 3:
+            raise SystemExit(f"{wheel} has an invalid internal wheel tag: {value!r}")
+        internal_tags.add(value)
+    if filename_tags != internal_tags:
+        raise SystemExit(f"{wheel} filename tags {sorted(filename_tags)} do not match WHEEL tags {sorted(internal_tags)}")
 
     missing_extensions = []
     for module in NATIVE_MODULES:
