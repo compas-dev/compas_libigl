@@ -3,7 +3,7 @@ name: pull-request-policy
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited, labeled, unlabeled]
-    branches: [main, c3-upgrade]
+    branches: [main, c3-upgrade, initiative/repository-modernisation]
 
 permissions:
   contents: read
