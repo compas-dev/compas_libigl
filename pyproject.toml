@@ -11,7 +11,7 @@ authors = [
     { name = "tom van mele", email = "tom.v.mele@gmail.com" },
     { name = "Petras Vestartas", email = "petrasvestartas@gmail.com" },
 ]
-classifiers = ["License :: OSI Approved :: BSD License"]
+classifiers = ["License :: OSI Approved :: MIT License"]
 
 dynamic = ['version']
 dependencies = [
@@ -38,7 +38,6 @@ compas_libigl_parametrisation = "compas_libigl.parametrisation"
 [dependency-groups]
 dev = [
     "bump-my-version>=1.2",
-    "compas-invocations2>=0.1",
     "invoke>=2.2",
     "line-profiler",
     "pre-commit",
@@ -63,8 +62,11 @@ tests = [
 ]
 docs = [
     "compas-viewer>=2",
-    "sphinx",
-    "sphinx-compas-theme",
+    "mkdocs>=1.6",
+    "mkdocs-autorefs>=1.4",
+    "mkdocs-material>=9.5",
+    "mkdocs-section-index>=0.3",
+    "mkdocstrings[python]>=0.30",
 ]
 
 # ============================================================================
@@ -89,7 +91,6 @@ norecursedirs = [
 addopts = [
     "-ra",
     "--strict-markers",
-    "--doctest-glob=*.rst",
     "--tb=short",
     "--import-mode=importlib",
 ]
@@ -187,3 +188,4 @@ max-doc-length = 179
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+exclude = ["docs/**/*.md"]

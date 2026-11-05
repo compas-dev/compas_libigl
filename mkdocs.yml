@@ -1,0 +1,173 @@
+site_name: COMPAS libigl
+site_url: https://compas.dev/compas_libigl/
+
+repo_name: compas-dev/compas_libigl
+repo_url: https://github.com/compas-dev/compas_libigl/
+
+copyright: Copyright &copy; ETH Zurich - Block Research Group
+
+not_in_nav: |
+  devguide/conda_environment.md
+  devguide/overview.md
+
+extra:
+  homepage: https://compas.dev/compas_libigl/
+  version:
+    provider: mike
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - content.code.copy
+    - content.footnote.tooltips
+    - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow
+
+markdown_extensions:
+  - abbr
+  - attr_list
+  - admonition
+  - footnotes
+  - md_in_html
+  - pymdownx.blocks.caption
+  - pymdownx.caret
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - toc:
+      permalink: "¤"
+
+plugins:
+  - search
+  - section-index
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://compas.dev/compas/latest/objects.inv
+          options:
+            allow_inspection: true
+            backlinks: tree
+            docstring_options:
+              ignore_init_summary: true
+              trim_doctest_flags: true
+            docstring_style: numpy
+            docstring_section_style: table
+            filters: public
+            group_by_category: true
+            heading_level: 1
+            inherited_members: false
+            line_length: 88
+            merge_init_into_class: true
+            modernize_annotations: true
+            parameter_headings: false
+            preload_modules: [mkdocstrings, compas]
+            relative_crossrefs: true
+            scoped_crossrefs: true
+            separate_signature: true
+            show_bases: false
+            show_category_heading: true
+            show_docstring_attributes: true
+            show_docstring_functions: true
+            show_docstring_modules: false
+            show_if_no_docstring: false
+            show_root_heading: true
+            show_root_full_path: true
+            show_signature: true
+            show_signature_annotations: true
+            show_source: false
+            show_submodules: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary:
+              modules: false
+            unwrap_annotated: true
+
+nav:
+  - Introduction: index.md
+  - Installation: installation.md
+  - Tutorial: tutorial.md
+  - Examples:
+      - Overview: examples.md
+      - Boundaries: examples/example_boundaries.md
+      - Curvature: examples/example_curvature.md
+      - Geodesic Distance: examples/example_geodistance.md
+      - Intersections: examples/example_intersections.md
+      - Isolines: examples/example_isolines.md
+      - Mapping: examples/example_mapping.md
+      - Mass Matrix: examples/example_massmatrix.md
+      - Meshing: examples/example_meshing.md
+      - Parametrisation: examples/example_parametrisation.md
+      - Planarization: examples/example_planarize.md
+  - API Reference:
+      - Overview: api.md
+      - Package: api/compas_libigl.md
+      - Boundaries: api/boundaries.md
+      - Cotangent Matrix: api/cotmatrix.md
+      - Curvature: api/curvature.md
+      - Geodesic Distance: api/geodistance.md
+      - Gradient: api/grad.md
+      - Intersections: api/intersections.md
+      - Isolines: api/isolines.md
+      - Mapping: api/mapping.md
+      - Mass Matrix: api/massmatrix.md
+      - Meshing: api/meshing.md
+      - Parametrisation: api/parametrisation.md
+      - Planarization: api/planarize.md
+      - Simplification: api/simplify.md
+  - Developer Guide:
+      - Overview: devguide.md
+      - Environment: devguide/environment.md
+      - Compiler Requirements: devguide/compiler.md
+      - CMake Configuration: devguide/cmake_configuration.md
+      - Contributing: devguide/contribute.md
+      - Style: devguide/style.md
+      - Types: devguide/types.md
+  - Other:
+      - License: license.md
+      - Acknowledgements: acknowledgements.md
