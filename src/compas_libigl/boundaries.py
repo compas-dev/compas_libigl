@@ -1,6 +1,6 @@
 import numpy as np
 
-from compas_libigl import _boundaries
+from compas_libigl import _boundaries  # type: ignore
 
 
 def trimesh_boundaries(M):

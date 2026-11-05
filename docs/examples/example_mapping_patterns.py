@@ -23,12 +23,14 @@ for vertex in mesh.vertices():
 # ==============================================================================
 
 aabb = mesh.aabb
+zmin = aabb.frame.point.z - 0.5 * aabb.zsize
+zmax = aabb.frame.point.z + 0.5 * aabb.zsize
 fixed_vertices = []
 
 
 for vertex in mesh.vertices():
     x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
-    if abs(z - aabb.zmin) < 1e-3 or abs(z - aabb.zmax) < 1e-3:
+    if abs(z - zmin) < 1e-3 or abs(z - zmax) < 1e-3:
         fixed_vertices.append(vertex)
 
 # ==============================================================================

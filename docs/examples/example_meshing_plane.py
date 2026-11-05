@@ -7,7 +7,6 @@ from compas.geometry import FaceTriangulation
 from compas.geometry import Plane
 from compas.geometry import Rotation
 from compas.geometry import Scale
-from compas.geometry import centroid_points
 from compas_viewer import Viewer
 
 from compas_libigl.meshing import trimesh_remesh_along_isoline
@@ -29,7 +28,7 @@ V, F = trimesh_remesh_along_isoline(mesh.triangulated(FaceTriangulation()).to_ve
 below_faces = []
 above_faces = []
 for face in F:
-    centroid = centroid_points([V[index] for index in face])
+    centroid = V[face].mean(axis=0).tolist()
     (below_faces if plane.normal.dot(plane.point - centroid) >= 0 else above_faces).append(face)
 below = Mesh.from_vertices_and_faces(V, below_faces)
 above = Mesh.from_vertices_and_faces(V, above_faces)

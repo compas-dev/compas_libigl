@@ -169,6 +169,9 @@ line-length = 179
 indent-width = 4
 target-version = "py312"
 
+[tool.pyright]
+exclude = ["site"]
+
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 

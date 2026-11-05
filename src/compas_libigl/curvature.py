@@ -1,6 +1,6 @@
 import numpy as np
 
-from compas_libigl import _curvature
+from compas_libigl import _curvature  # type: ignore
 
 
 def trimesh_gaussian_curvature(M):

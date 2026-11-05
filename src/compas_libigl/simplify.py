@@ -1,6 +1,6 @@
 import numpy as np
 
-from compas_libigl import _simplify
+from compas_libigl import _simplify  # type: ignore
 
 
 def ramer_douglas_peucker(points, threshold):

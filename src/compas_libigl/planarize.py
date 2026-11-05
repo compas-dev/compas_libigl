@@ -1,7 +1,7 @@
 import numpy as np
 from compas.plugins import plugin
 
-from compas_libigl import _planarize
+from compas_libigl import _planarize  # type: ignore
 
 
 @plugin(category="quadmesh")

@@ -1,6 +1,6 @@
 import sys
 
-from invoke import task
+from invoke.tasks import task
 
 
 @task

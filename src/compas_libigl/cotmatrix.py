@@ -1,6 +1,6 @@
 import numpy as np
 
-from compas_libigl import _cotmatrix
+from compas_libigl import _cotmatrix  # type: ignore
 
 
 def trimesh_cotmatrix(M):

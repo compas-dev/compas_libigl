@@ -1,6 +1,6 @@
 import numpy as np
 
-from compas_libigl import _grad
+from compas_libigl import _grad  # type: ignore
 
 
 def trimesh_grad(M):

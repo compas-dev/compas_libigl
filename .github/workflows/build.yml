@@ -34,8 +34,7 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run pytest
 
-  # Transitional evidence only. This becomes blocking when the typing branch is integrated.
-  typing-baseline:
+  typing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -46,16 +45,7 @@ jobs:
           python-version: "3.12"
           dependency-groups: dev
           extras: ""
-      - name: Record the Pyright baseline
-        id: pyright
-        continue-on-error: true
-        run: uv run pyright
-      - name: Summarize the advisory Pyright result
-        if: always()
-        env:
-          PYRIGHT_OUTCOME: ${{ steps.pyright.outcome }}
-        run: |
-          echo "Pyright advisory outcome: $PYRIGHT_OUTCOME"
+      - run: uv run pyright
 
   wheels:
     needs: quality

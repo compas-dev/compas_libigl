@@ -1,6 +1,7 @@
 import math
 from pathlib import Path
 
+from compas.colors import Color
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
 from compas.geometry import FaceTriangulation
@@ -60,11 +61,11 @@ for i, group_id in enumerate(sorted(set(G))):
     faces = [F[j] for j in range(len(F)) if G[j] == group_id]
     if faces:
         piece = Mesh.from_vertices_and_faces(V, faces)
-        viewer.scene.add(piece, facecolor=color_map(i / (num_isolines + 1)), show_lines=False, linewidth=1, linecolor=(0.2, 0.2, 0.2))
+        viewer.scene.add(piece, facecolor=color_map(i / (num_isolines + 1)), show_lines=False, linewidth=1, linecolor=Color(0.2, 0.2, 0.2))
 
 # Highlight boundary vertices
 for vertex in boundary_vertices:
     point = Point(*trimesh.vertex_attributes(vertex, "xyz"))
-    viewer.scene.add(point, pointsize=20, pointcolor=(1, 0, 0))
+    viewer.scene.add(point, pointsize=20, pointcolor=Color.red())
 
 viewer.show()

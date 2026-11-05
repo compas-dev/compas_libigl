@@ -6,6 +6,7 @@ import numpy as np
 from compas.plugins import plugin
 
 from compas_libigl import _meshing  # type: ignore
+from compas_libigl._mesh import NativeTriangleMesh
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import as_scalarfield
 from compas_libigl._mesh import validate_native_mesh
@@ -22,7 +23,7 @@ def trimesh_remesh_along_isoline(
     mesh: TriangleMeshInput,
     scalarfield: Sequence[float] | NumericArray,
     scalar: float,
-) -> TriangleMeshInput:
+) -> NativeTriangleMesh:
     """Remesh a triangle mesh along an isoline.
 
     Parameters
