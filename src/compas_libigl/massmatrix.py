@@ -23,6 +23,11 @@ def trimesh_massmatrix(mesh: VerticesFaces) -> list[float]:
     list[float]
         The barycentric mass associated with every vertex.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl does not return one mass value per mesh vertex.
+
     """
     V, F = as_native_mesh(mesh, "mesh")
     matrix = _massmatrix.trimesh_massmatrix(V, F)

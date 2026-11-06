@@ -23,7 +23,7 @@ def make_wheel(
     omitted_stub: str | None = None,
     include_typing_marker: bool = True,
     include_metadata: bool = True,
-    dependencies: tuple[str, ...] = ("compas<4,>=3.0", "numpy>=1.24", "tessagon"),
+    dependencies: tuple[str, ...] = ("compas<4,>=3.0", "numpy>=1.26", "tessagon"),
 ) -> Path:
     wheel = tmp_path / f"compas_libigl-0.7.6-{filename_tag}.whl"
     with ZipFile(wheel, "w") as archive:
@@ -104,6 +104,6 @@ def test_verify_wheel_rejects_missing_metadata(tmp_path: Path) -> None:
 
 
 def test_verify_wheel_rejects_missing_dependency(tmp_path: Path) -> None:
-    wheel = make_wheel(tmp_path, dependencies=("compas<4,>=3.0", "numpy>=1.24"))
+    wheel = make_wheel(tmp_path, dependencies=("compas<4,>=3.0", "numpy>=1.26"))
     with pytest.raises(SystemExit, match="tessagon"):
         verify_native_wheel.verify_wheel(wheel)

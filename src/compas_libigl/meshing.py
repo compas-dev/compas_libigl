@@ -10,6 +10,7 @@ from compas_libigl._mesh import as_native_faces
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import as_scalarfield
 from compas_libigl._mesh import validate_native_mesh
+from compas_libigl._mesh import validate_result_shape
 
 from . import _meshing
 
@@ -42,6 +43,11 @@ def trimesh_remesh_along_isoline(
     tuple[numpy.ndarray, numpy.ndarray]
         Native vertex and triangle arrays of the remeshed geometry.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl returns malformed mesh or face-label arrays.
+
     Notes
     -----
     Input buffers are normalized once at the native boundary. The face labels
@@ -54,8 +60,10 @@ def trimesh_remesh_along_isoline(
     S = as_scalarfield(scalarfield, len(V))
     if not np.isfinite(scalar):
         raise ValueError("scalar should be finite.")
-    V2, F2, _ = _meshing.trimesh_remesh_along_isoline(V, F, S, np.float64(scalar))
-    return validate_native_mesh((V2, F2), "remesh-along-isoline")
+    V2, F2, labels = _meshing.trimesh_remesh_along_isoline(V, F, S, scalar)
+    V2, F2 = validate_native_mesh((V2, F2), "remesh-along-isoline")
+    validate_result_shape(labels, (len(F2),), "remesh-along-isoline face labels")
+    return V2, F2
 
 
 def trimesh_remesh_along_isolines(
@@ -83,6 +91,11 @@ def trimesh_remesh_along_isolines(
         * scalar values for the vertices of the remeshed mesh,
         * labels for the faces of the remeshed mesh.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl returns malformed mesh, scalar, or face-label arrays.
+
     """
     V, F = as_native_mesh(M, "mesh")
     S = as_scalarfield(scalars, len(V))
@@ -93,6 +106,9 @@ def trimesh_remesh_along_isolines(
         raise ValueError("isovalues should contain only finite values.")
     ISO = np.ascontiguousarray(ISO, dtype=np.float64)
     V2, F2, S2, G2 = _meshing.trimesh_remesh_along_isolines(V, F, S, ISO)
+    V2, F2 = validate_native_mesh((V2, F2), "remesh-along-isolines")
+    validate_result_shape(S2, (len(V2),), "remesh-along-isolines scalar values")
+    validate_result_shape(G2, (len(F2),), "remesh-along-isolines face labels")
     return V2.tolist(), F2.tolist(), S2.tolist(), G2.tolist()
 
 
@@ -115,6 +131,11 @@ def trimesh_cut_mesh(M: VerticesFaces, cuts: IndexGroupsLike) -> tuple[list[list
         * the vertices of the cut mesh (with duplicated vertices along cuts),
         * the faces of the cut mesh.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl returns malformed vertex or triangle arrays.
+
     """
     V, F = as_native_mesh(M, "mesh")
     C = np.asarray(cuts, dtype=np.int32)
@@ -122,6 +143,7 @@ def trimesh_cut_mesh(M: VerticesFaces, cuts: IndexGroupsLike) -> tuple[list[list
         raise ValueError("cuts should have shape (M, 3), matching the mesh triangles.")
     C = np.ascontiguousarray(C, dtype=np.int32)
     Vn, Fn = _meshing.trimesh_cut_mesh(V, F, C)
+    Vn, Fn = validate_native_mesh((Vn, Fn), "cut mesh")
     return Vn.tolist(), Fn.tolist()
 
 
@@ -138,8 +160,14 @@ def trimesh_face_components(M: VerticesFaces) -> list[int]:
     list[int]
         Component ID per face. Faces sharing edges belong to the same component.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl does not return one component ID per mesh face.
+
     """
     _, F = M
     F = as_native_faces(F, "mesh faces")
     C = _meshing.trimesh_face_components(F)
+    validate_result_shape(C, (len(F),), "face components")
     return C.tolist()

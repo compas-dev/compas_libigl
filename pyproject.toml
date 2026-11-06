@@ -16,7 +16,7 @@ classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ['version']
 dependencies = [
     "compas>=3.0,<4",
-    "numpy>=1.24",
+    "numpy>=1.26",
     "tessagon",
 ]
 
@@ -119,7 +119,7 @@ input = "src/compas_libigl/__init__.py"
 CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.uv.sources]
-compas = { git = "https://github.com/compas-dev/compas.git", rev = "f626151278b6fbea6c3dd271dcb096923c6073c3" }
+compas = { git = "https://github.com/compas-dev/compas.git", rev = "3c1a2e8e0e5c4c14292ecf4bb38c82e5b977273e" }
 
 # ============================================================================
 # cibuildwheel configuration
@@ -128,8 +128,8 @@ compas = { git = "https://github.com/compas-dev/compas.git", rev = "f626151278b6
 [tool.cibuildwheel]
 build = ["cp312-*"]
 build-verbosity = 3
-before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@f626151278b6fbea6c3dd271dcb096923c6073c3' && pip list"
-test-requires = ["numpy>=1.24", "pytest", "build", "tessagon"]
+before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@3c1a2e8e0e5c4c14292ecf4bb38c82e5b977273e' && pip list"
+test-requires = ["numpy>=1.26", "pytest", "build", "tessagon"]
 test-command = "pytest {project}/tests"
 build-frontend = "pip"
 manylinux-x86_64-image = "manylinux_2_28"

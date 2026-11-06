@@ -70,7 +70,8 @@ bool paths_intersect(const Clipper2Lib::PathsD& paths1, const Clipper2Lib::Paths
  * @param simplify_borders Whether to simplify the border of the pattern mesh.
  * @param fixed_vertices fixed points on the target mesh
  * @param tolerance The tolerance for point comparison, to remove duplicates.
- * @return A tuple of the clipped pattern mesh vertex coordinates and face indices.
+ * @return A tuple containing clipped pattern vertices, polygon faces, one
+ *         boundary-clipping flag per face, and one source-pattern group ID per face.
  */
 std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>, std::vector<std::vector<int>>, std::vector<bool>, std::vector<int>> eigen_to_clipper (
     Eigen::Ref<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> flattned_target_uv,
@@ -97,7 +98,8 @@ std::tuple<Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor
  * @param simplify_borders whether to simplify the border of the pattern mesh
  * @param fixed_vertices fixed points on the target mesh
  * @param tolerance tolerance for point comparison, to remove duplicates
- * @return A tuple containing the mapped pattern vertices, faces, and vertex normal vectors.
+ * @return A tuple containing mapped vertices, polygon faces, per-vertex normals,
+ *         one boundary-clipping flag per face, and one source-pattern group ID per face.
  */
 std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrixXd, std::vector<bool>, std::vector<int>> map_mesh_with_automatic_parameterization(
     Eigen::Ref<const compas::RowMatrixXd> target_v, 

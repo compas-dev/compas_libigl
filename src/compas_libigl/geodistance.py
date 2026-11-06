@@ -8,6 +8,7 @@ from compas.typing import Float64Array
 from compas.typing import IndicesLike
 from compas.typing import VerticesFaces
 
+from compas_libigl._mesh import as_native_index_vector
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import validate_native_vector
 
@@ -43,8 +44,9 @@ def trimesh_geodistance(
 
     Raises
     ------
-    NotImplementedError
-        If method is not one of {'exact', 'heat'}.
+    RuntimeError
+        If `method` is not `"exact"` or `"heat"`, or if libigl returns an
+        invalid distance vector.
 
     """
     V, F = as_native_mesh(mesh, "mesh")
@@ -86,10 +88,26 @@ def trimesh_geodistance_multiple(
 
     Raises
     ------
-    NotImplementedError
-        If method is not one of {'exact', 'heat'}.
+    TypeError
+        If a source is not an integer index, or is a boolean.
+    ValueError
+        If `sources` is not a nonempty one-dimensional collection.
+    IndexError
+        If a source index is outside the mesh vertex range.
+    RuntimeError
+        If `method` is not `"exact"` or `"heat"`, or if libigl returns an
+        invalid distance vector.
 
     """
     V, F = as_native_mesh(M, "mesh")
-    sources = np.asarray(sources, dtype=np.int32)
-    return _geodistance.trimesh_geodistance_multiple(V, F, sources, method)
+    source_values = np.asarray(sources, dtype=object)
+    if source_values.ndim != 1:
+        raise ValueError("sources should be one-dimensional.")
+    source_indices = as_native_index_vector(source_values, "sources")
+    if not source_indices:
+        raise ValueError("sources should not be empty.")
+    if min(source_indices) < 0 or max(source_indices) >= len(V):
+        raise IndexError("source vertex index is out of range.")
+    native_sources = np.ascontiguousarray(source_indices, dtype=np.int32)
+    distances = _geodistance.trimesh_geodistance_multiple(V, F, native_sources, method)
+    return validate_native_vector(distances, len(V), "geodistance-multiple")

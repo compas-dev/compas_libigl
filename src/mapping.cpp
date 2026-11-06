@@ -473,7 +473,6 @@ std::tuple<compas::RowMatrixXd, std::vector<std::vector<int>>, compas::RowMatrix
     std::vector<int>& fixed_vertices,
     double tolerance)
 {
-    // ... (function implementation remains the same)
     // Compute target mesh UV parameterization using LSCM
     Eigen::MatrixXd target_uv;
     

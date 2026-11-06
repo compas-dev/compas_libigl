@@ -29,6 +29,7 @@ from tessagon.types.zig_zag_tessagon import ZigZagTessagon
 from compas_libigl._mesh import as_native_index_groups
 from compas_libigl._mesh import as_native_index_vector
 from compas_libigl._mesh import as_native_mesh
+from compas_libigl._mesh import validate_result_shape
 
 from . import _mapping
 
@@ -107,8 +108,16 @@ def map_mesh(
         * `vertices`: the 3D coordinates of the mapped mesh vertices.
         * `faces`: the faces of the mapped mesh.
         * `normals`: the normal vector at every vertex.
-        * `boundary_flags`: whether every vertex is on the boundary.
-        * `polygon_groups`: grouping indices for polygons that form holes.
+        * `boundary_flags`: one flag per output face, indicating whether that
+          face was produced by clipping against the target boundary.
+        * `polygon_groups`: one source-pattern group ID per output face. Faces
+          split from the same input polygon have the same ID.
+
+    Raises
+    ------
+    RuntimeError
+        If libigl returns malformed vertex, normal, face-flag, or face-group
+        results.
 
     """
     v_numpy, f_numpy = as_native_mesh(target_mesh, "target_mesh")
@@ -120,19 +129,21 @@ def map_mesh(
         raise ValueError("pattern_mesh vertices should be finite.")
     pattern_f_native = as_native_index_groups(pf, "pattern_mesh faces")
 
-    # Handle fixed_vertices - provide empty array if None
-
     if fixed_vertices is None:
         fixed_vertices_native: list[int] = []
     else:
         fixed_vertices_native = as_native_index_vector(fixed_vertices, "fixed_vertices")
 
-    # Perform the mapping
     pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups = _mapping.map_mesh_with_automatic_parameterization(
         v_numpy, f_numpy, pattern_v_numpy, pattern_f_native, clip_boundaries, simplify_borders, fixed_vertices_native, tolerance
     )
 
-    # Return the result as a tuple
+    validate_result_shape(pv_numpy_copy, (None, 3), "mapping vertices")
+    validate_result_shape(p_normals, (len(pv_numpy_copy), 3), "mapping normals")
+    if len(pattern_is_boundary) != len(pf_numpy_cleaned):
+        raise RuntimeError("libigl mapping boundary flags should contain one value per output face.")
+    if len(pattern_groups) != len(pf_numpy_cleaned):
+        raise RuntimeError("libigl mapping polygon groups should contain one value per output face.")
     return pv_numpy_copy, pf_numpy_cleaned, p_normals, pattern_is_boundary, pattern_groups
 
 
@@ -202,6 +213,8 @@ def map_pattern_to_mesh(
     ------
     ValueError
         If the specified pattern name is not supported.
+    RuntimeError
+        If libigl returns malformed mapping results.
 
     """
 

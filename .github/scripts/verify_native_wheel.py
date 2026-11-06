@@ -25,7 +25,7 @@ NATIVE_MODULES = (
 
 REQUIRED_DEPENDENCIES = {
     "compas<4,>=3.0",
-    "numpy>=1.24",
+    "numpy>=1.26",
     "tessagon",
 }
 

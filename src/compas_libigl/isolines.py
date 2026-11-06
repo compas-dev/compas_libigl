@@ -6,6 +6,7 @@ from compas.typing import VerticesFaces
 
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import as_scalarfield
+from compas_libigl._mesh import validate_result_shape
 
 from . import _isolines
 
@@ -33,6 +34,11 @@ def trimesh_isolines(
     tuple[list[list[float]], list[list[int]]]
         The isoline point coordinates and segments.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl returns malformed point, segment, or segment-label arrays.
+
     Notes
     -----
     The input mesh should be triangulated for accurate results.
@@ -51,7 +57,8 @@ def trimesh_isolines(
         segments = np.empty((0, 2), dtype=np.int32)
     else:
         ISO = np.linspace(minimum, maximum, number_of_isolines + 2)[1:-1]
-        points, segments, _ = _isolines.trimesh_isolines(V, F, S, ISO)
+        points, segments, labels = _isolines.trimesh_isolines(V, F, S, ISO)
+        validate_result_shape(labels, (len(segments),), "isolines segment labels")
     if points.ndim != 2 or points.shape[1] != 3:
         raise RuntimeError("libigl isolines result points should have shape (N, 3).")
     if segments.ndim != 2 or segments.shape[1] != 2:

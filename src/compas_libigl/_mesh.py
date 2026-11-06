@@ -13,6 +13,38 @@ from compas.typing import VerticesFaces
 type NativeTriangleMesh = tuple[Float64Array, Int32Array]
 
 
+def validate_result_shape[T](result: T, shape: tuple[int | None, ...], operation: str) -> T:
+    """Check the required shape of a native result.
+
+    Parameters
+    ----------
+    result
+        Native array or sparse matrix result.
+    shape
+        Expected dimensions. Use `None` for an unrestricted dimension.
+    operation
+        Operation name used in error messages.
+
+    Returns
+    -------
+    object
+        The unchanged native result.
+
+    Raises
+    ------
+    RuntimeError
+        If the result does not have the required shape.
+
+    """
+    actual = getattr(result, "shape", None)
+    if actual is None or len(actual) != len(shape) or any(expected is not None and actual[index] != expected for index, expected in enumerate(shape)):
+        formatted = ", ".join("N" if dimension is None else str(dimension) for dimension in shape)
+        if len(shape) == 1:
+            formatted += ","
+        raise RuntimeError(f"libigl {operation} result should have shape ({formatted}).")
+    return result
+
+
 def as_native_index_vector(values: Iterable[SupportsIndex], name: str) -> list[int]:
     """Convert an index vector to exact Python integers."""
     result: list[int] = []
@@ -161,9 +193,7 @@ def validate_native_vector(result: Float64Array, length: int, operation: str) ->
         The unchanged native result array.
 
     """
-    if result.ndim != 1 or len(result) != length:
-        raise RuntimeError(f"libigl {operation} result should have shape ({length},).")
-    return result
+    return validate_result_shape(result, (length,), operation)
 
 
 def validate_native_uv(result: Float64Array, vertex_count: int, operation: str) -> Float64Array:
@@ -184,6 +214,4 @@ def validate_native_uv(result: Float64Array, vertex_count: int, operation: str) 
         The unchanged native UV array.
 
     """
-    if result.ndim != 2 or result.shape != (vertex_count, 2):
-        raise RuntimeError(f"libigl {operation} result should have shape ({vertex_count}, 2).")
-    return result
+    return validate_result_shape(result, (vertex_count, 2), operation)

@@ -48,6 +48,33 @@ jobs:
       - run: uv run pyright
       - run: uv run pyright --verifytypes compas_libigl --ignoreexternal
 
+  numeric-compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dependency-set: lowest
+            numpy: numpy==1.26.0
+            scipy: scipy==1.11.4
+          - dependency-set: current
+            numpy: numpy>=2,<3
+            scipy: scipy>=1.15,<2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: compas-dev/compas-actions/setup-python@5c64e6e2b576a1232d28fed47d9478ca8eb63b2d # v2 candidate
+        with:
+          python-version: "3.12"
+          dependency-groups: dev
+          extras: ""
+      - name: Install ${{ matrix.dependency-set }} numerical dependencies
+        run: uv pip install --upgrade "${{ matrix.numpy }}" "${{ matrix.scipy }}"
+      - run: uv run --no-sync pytest
+      - run: uv run --no-sync pyright
+      - run: uv run --no-sync pyright --verifytypes compas_libigl --ignoreexternal
+
   wheels:
     needs: quality
     runs-on: ${{ matrix.os }}
@@ -75,8 +102,8 @@ jobs:
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_BEFORE_TEST: >-
             python -m pip install
-            "compas @ git+https://github.com/compas-dev/compas.git@f626151278b6fbea6c3dd271dcb096923c6073c3"
-          CIBW_TEST_REQUIRES: numpy>=1.24 pytest build tessagon
+            "compas @ git+https://github.com/compas-dev/compas.git@3c1a2e8e0e5c4c14292ecf4bb38c82e5b977273e"
+          CIBW_TEST_REQUIRES: numpy>=1.26 pytest build tessagon
         with:
           output-dir: wheelhouse
       - name: Verify wheel contents

@@ -23,6 +23,12 @@ def trimesh_harmonic(mesh: VerticesFaces) -> list[list[float]]:
     list[list[float]]
         The u, v parameters per vertex.
 
+    Raises
+    ------
+    RuntimeError
+        If libigl does not return one two-dimensional parameter per mesh
+        vertex.
+
     """
     V, F = as_native_mesh(mesh, "mesh")
     uv = _parametrisation.harmonic(V, F)
@@ -41,6 +47,12 @@ def trimesh_lscm(mesh: VerticesFaces) -> list[list[float]]:
     -------
     list[list[float]]
         The u, v parameters per vertex.
+
+    Raises
+    ------
+    RuntimeError
+        If libigl does not return one two-dimensional parameter per mesh
+        vertex.
 
     """
     V, F = as_native_mesh(mesh, "mesh")

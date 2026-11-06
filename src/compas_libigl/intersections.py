@@ -35,6 +35,14 @@ def intersection_ray_mesh(ray: RayData, mesh: VerticesFaces) -> list[RayMeshHit]
         2. the v coordinate of the intersection in the barycentric coordinates of the face
         3. the distance between the ray origin and the hit
 
+    Raises
+    ------
+    ValueError
+        If the ray point or direction is not finite and three-dimensional, or
+        if the direction is zero.
+    RuntimeError
+        If libigl returns a malformed hit record.
+
     """
     point, vector = ray
     P = np.asarray(point, dtype=np.float64)
@@ -46,7 +54,10 @@ def intersection_ray_mesh(ray: RayData, mesh: VerticesFaces) -> list[RayMeshHit]
     if np.linalg.norm(D) == 0:
         raise ValueError("ray direction should be nonzero.")
     V, F = as_native_mesh(mesh, "mesh")
-    return _intersections.intersection_ray_mesh(P, D, V, F)
+    hits = _intersections.intersection_ray_mesh(P, D, V, F)
+    if any(len(hit) != 4 for hit in hits):
+        raise RuntimeError("libigl ray intersection result should contain four values per hit.")
+    return hits
 
 
 def intersection_rays_mesh(rays: Sequence[RayData] | NumericArray, M: VerticesFaces) -> list[list[RayMeshHit]]:
@@ -71,9 +82,30 @@ def intersection_rays_mesh(rays: Sequence[RayData] | NumericArray, M: VerticesFa
         2. the v coordinate of the intersection in the barycentric coordinates of the face
         3. the distance between the ray origin and the hit
 
+    Raises
+    ------
+    ValueError
+        If `rays` is empty, does not have shape `(N, 2, 3)`, contains a
+        nonfinite value, or contains a zero direction.
+    RuntimeError
+        If libigl does not return one valid hit list per input ray.
+
     """
-    points, vectors = zip(*rays)
-    P = np.asarray(points, dtype=np.float64)
-    D = np.asarray(vectors, dtype=np.float64)
+    native_rays = np.asarray(rays, dtype=np.float64)
+    if not native_rays.size:
+        raise ValueError("rays should not be empty.")
+    if native_rays.ndim != 3 or native_rays.shape[1:] != (2, 3):
+        raise ValueError("rays should have shape (N, 2, 3).")
+    if not np.isfinite(native_rays).all():
+        raise ValueError("rays should contain only finite values.")
+    P = np.ascontiguousarray(native_rays[:, 0, :])
+    D = np.ascontiguousarray(native_rays[:, 1, :])
+    if np.any(np.linalg.norm(D, axis=1) == 0):
+        raise ValueError("ray directions should be nonzero.")
     V, F = as_native_mesh(M, "mesh")
-    return _intersections.intersection_rays_mesh(P, D, V, F)
+    hits_per_ray = _intersections.intersection_rays_mesh(P, D, V, F)
+    if len(hits_per_ray) != len(native_rays):
+        raise RuntimeError("libigl ray intersections result should contain one hit list per input ray.")
+    if any(len(hit) != 4 for hits in hits_per_ray for hit in hits):
+        raise RuntimeError("libigl ray intersections result should contain four values per hit.")
+    return hits_per_ray

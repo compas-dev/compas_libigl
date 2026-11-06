@@ -18,6 +18,8 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 
 ### Changed
 
+* Added explicit source/ray input validation and native result shape checks across numerical wrapper families, with documented `RuntimeError` failures for malformed backend results.
+* Added lowest/current NumPy and SciPy CI coverage and raised the Python 3.12 NumPy baseline to 1.26.
 * Made documentation examples explicit blocking Ruff and Pyright inputs and migrated their coordinate access to the current high-level mesh API.
 * Migrated tests and examples from triangulation strategy objects and in-place setup mutation to the accepted non-mutating `Mesh.triangulated()` conversion.
 * Standardized migrated triangle-mesh operations on structural `(vertices, triangles)` buffers, including NumPy arrays, with shared native buffer normalization at the libigl boundary.

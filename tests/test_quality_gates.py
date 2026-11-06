@@ -18,3 +18,14 @@ def test_executable_documentation_examples_have_no_type_ignores():
 
     for example in examples.rglob("*.py"):
         assert "type:" + " ignore" not in example.read_text(encoding="utf-8")
+
+
+def test_build_checks_lowest_and_current_numeric_dependencies():
+    repository = Path(__file__).parents[1]
+    workflow = (repository / ".github" / "workflows" / "build.yml").read_text(encoding="utf-8")
+
+    assert "numeric-compatibility:" in workflow
+    assert "numpy==1.26.0" in workflow
+    assert "scipy==1.11.4" in workflow
+    assert "numpy>=2,<3" in workflow
+    assert "uv run --no-sync pyright --verifytypes compas_libigl --ignoreexternal" in workflow
