@@ -49,10 +49,10 @@ pf = tessagon_mesh["face_list"]
 # mv - mapped vertices
 # mf - mapped faces
 # mn - mapped normals
-# mg - mapped boundaries (True or False)
-# mb - mapped groups for polygons with holes (list of int)
+# boundary_flags - one flag per mapped face indicating boundary clipping
+# polygon_groups - one source pattern-polygon group per mapped face
 # ==============================================================================
-mv, mf, mn, mb, mg = map_mesh((v, f), (pv, pf))
+mv, mf, mn, boundary_flags, polygon_groups = map_mesh((v, f), (pv, pf))
 mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 
 # ==============================================================================
@@ -67,8 +67,8 @@ for index, vertex in enumerate(mesh_mapped.vertices()):
 # Get Boundary Polylines
 # ==============================================================================
 boundaries = []
-for i in range(len(mb)):
-    if not mb[i]:
+for i in range(len(boundary_flags)):
+    if not boundary_flags[i]:
         continue
     points = []
     for j in range(len(mf[i])):
