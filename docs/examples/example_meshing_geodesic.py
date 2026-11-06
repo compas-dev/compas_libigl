@@ -4,8 +4,6 @@ from pathlib import Path
 from compas.colors import Color
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
-from compas.geometry import Point
 from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas_viewer import Viewer
@@ -23,19 +21,19 @@ R = Rotation.from_axis_and_angle([1, 0, 0], math.radians(90))
 S = Scale.from_factors([10, 10, 10])
 mesh.transform(S * R)
 
-# Convert to triangle mesh
-trimesh = mesh.copy()
-trimesh.triangulate(FaceTriangulation())
+# Create an independent triangle mesh without modifying the source mesh.
+triangle_mesh = mesh.triangulated()
 
 # ==============================================================================
 # Compute geodesic distances from boundary
 # ==============================================================================
 
 # Get boundary vertices
-boundary_vertices = list(trimesh.vertices_on_boundary())
+boundary_vertices = list(mesh.vertices_on_boundary())
 
 # Calculate geodesic distances using multiple source points
-distances = trimesh_geodistance_multiple(trimesh.to_vertices_and_faces(), boundary_vertices, method="exact")
+meshdata = triangle_mesh.to_vertices_and_faces()
+distances = trimesh_geodistance_multiple(meshdata, boundary_vertices, method="exact")
 
 # ==============================================================================
 # Create isolines and remesh
@@ -47,7 +45,7 @@ num_isolines = 5
 isovalues = [min_dist + i * (max_dist - min_dist) / num_isolines for i in range(1, num_isolines + 1)]
 
 # Split mesh along isolines of geodesic distance
-V, F, S, G = trimesh_remesh_along_isolines(trimesh.to_vertices_and_faces(), distances, isovalues)
+V, F, S, G = trimesh_remesh_along_isolines(meshdata, distances, isovalues)
 
 # ==============================================================================
 # Visualization
@@ -65,7 +63,7 @@ for i, group_id in enumerate(sorted(set(G))):
 
 # Highlight boundary vertices
 for vertex in boundary_vertices:
-    point = Point(*trimesh.vertex_attributes(vertex, "xyz"))
+    point = mesh.vertex_point(vertex)
     viewer.scene.add(point, pointsize=20, pointcolor=Color.red())
 
 viewer.show()

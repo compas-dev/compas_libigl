@@ -17,9 +17,9 @@ mesh.transform(S * R)
 
 scalar_values = []
 frequency = 2
-for v in mesh.vertices():
-    x, y, z = mesh.vertex_coordinates(v)
-    val = math.sin(frequency * x) * math.cos(frequency * y) + math.sin(frequency * z)
+for vertex in mesh.vertices():
+    point = mesh.vertex_point(vertex)
+    val = math.sin(frequency * point.x) * math.cos(frequency * point.y) + math.sin(frequency * point.z)
     scalar_values.append(val)
 
 

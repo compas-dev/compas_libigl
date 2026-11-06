@@ -1,7 +1,6 @@
 import compas
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas_viewer import Viewer
 
 from compas_libigl.massmatrix import trimesh_massmatrix
@@ -12,13 +11,13 @@ from compas_libigl.massmatrix import trimesh_massmatrix
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
-tessellation = mesh.triangulated(FaceTriangulation())
+triangle_mesh = mesh.triangulated()
 
 # ==============================================================================
 # Mass matrix
 # ==============================================================================
 
-mass = trimesh_massmatrix(tessellation.to_vertices_and_triangles())
+mass = trimesh_massmatrix(triangle_mesh.to_vertices_and_faces())
 
 # ==============================================================================
 # Visualisation

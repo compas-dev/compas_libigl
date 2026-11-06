@@ -2,8 +2,6 @@ import compas
 from compas.colors import Color
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
-from compas.geometry import Point
 from compas_viewer import Viewer
 
 from compas_libigl.geodistance import trimesh_geodistance
@@ -14,14 +12,14 @@ from compas_libigl.geodistance import trimesh_geodistance
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
 
-tessellation = mesh.triangulated(FaceTriangulation())
+triangle_mesh = mesh.triangulated()
 
 # ==============================================================================
 # Geodesic distance
 # ==============================================================================
 
 source = mesh.vertex_sample(size=1)[0]
-distance = trimesh_geodistance(tessellation.to_vertices_and_triangles(), source, method="exact")
+distance = trimesh_geodistance(triangle_mesh.to_vertices_and_faces(), source, method="exact")
 
 # ==============================================================================
 # Visualize
@@ -34,9 +32,9 @@ viewer = Viewer(width=1600, height=900)
 viewer.scene.add(mesh, show_points=False)
 
 for d, vertex in zip(distance, mesh.vertices()):
-    point = Point(*mesh.vertex_attributes(vertex, "xyz"))
+    point = mesh.vertex_point(vertex)
     viewer.scene.add(point, pointsize=10, pointcolor=cmap(d, min(distance), max(distance)))
 
-viewer.scene.add(Point(*mesh.vertex_attributes(source, "xyz")), pointsize=30, pointcolor=Color.black())
+viewer.scene.add(mesh.vertex_point(source), pointsize=30, pointcolor=Color.black())
 
 viewer.show()

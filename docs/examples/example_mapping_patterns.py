@@ -15,8 +15,8 @@ mesh = Mesh.from_obj(Path(__file__).parent.parent.parent / "data" / "minimal_sur
 
 
 for vertex in mesh.vertices():
-    x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
-    mesh.vertex_attributes(vertex, "xyz", [x, -z, y])
+    point = mesh.vertex_point(vertex)
+    mesh.set_vertex_point(vertex, [point.x, -point.z, point.y])
 
 # ==============================================================================
 # Get Lowest and Highest points
@@ -29,7 +29,7 @@ fixed_vertices = []
 
 
 for vertex in mesh.vertices():
-    x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
+    z = mesh.vertex_point(vertex).z
     if abs(z - zmin) < 1e-3 or abs(z - zmax) < 1e-3:
         fixed_vertices.append(vertex)
 

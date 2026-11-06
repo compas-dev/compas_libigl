@@ -2,9 +2,7 @@ import compas
 from compas.colors import Color
 from compas.colors.colormap import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.geometry import Line
-from compas.geometry import Point
 from compas_viewer import Viewer
 
 from compas_libigl.curvature import trimesh_gaussian_curvature
@@ -14,14 +12,13 @@ from compas_libigl.curvature import trimesh_gaussian_curvature
 # ==============================================================================
 
 mesh = Mesh.from_obj(compas.get("tubemesh.obj"))
-trimesh = mesh.copy()
-trimesh.triangulate(FaceTriangulation())
+triangle_mesh = mesh.triangulated()
 
 # ==============================================================================
 # Gaussian Curvature
 # ==============================================================================
 
-vertices, faces = trimesh.to_vertices_and_faces()
+vertices, faces = triangle_mesh.to_vertices_and_faces()
 gaussian_curvature = trimesh_gaussian_curvature((vertices, faces))
 
 # Get non-boundary vertex indices
@@ -61,13 +58,10 @@ viewer.scene.add(mesh, use_vertexcolors=True, pointcolor=vertex_colors)
 normal_scale = -10
 for vertex in mesh.vertices():
     if not mesh.is_vertex_on_boundary(vertex):
-        xyz = mesh.vertex_coordinates(vertex)
-        point = Point(xyz[0], xyz[1], xyz[2])
+        point = mesh.vertex_point(vertex)
         normal = mesh.vertex_normal(vertex)
         k = gaussian_curvature[vertex]
-
-        scaled_normal = [n * normal_scale * k for n in normal]
-        end_point = Point(*(p + n for p, n in zip(point, scaled_normal)))
+        end_point = point + normal.scaled(normal_scale * k)
 
         viewer.scene.add(Line(point, end_point), linecolor=Color.black(), linewidth=2)
 

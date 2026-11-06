@@ -6,17 +6,16 @@ from compas_libigl.meshing import (
     trimesh_face_components,
 )
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.geometry import PolygonalSurface
 from compas.geometry import Tessellation
 
 
 def test_trimesh_remesh_along_isoline():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    tessellation = mesh.triangulated(FaceTriangulation())
+    triangle_mesh = mesh.triangulated()
     scalars = mesh.vertices_attribute("z")
     mean_z = sum(scalars) / len(scalars)
-    vertices, triangles = trimesh_remesh_along_isoline(tessellation.to_vertices_and_triangles(), scalars, mean_z)
+    vertices, triangles = trimesh_remesh_along_isoline(triangle_mesh.to_vertices_and_faces(), scalars, mean_z)
     assert len(vertices) > 0
     assert len(triangles) > 0
     assert Mesh.from_vertices_and_faces(vertices, triangles).number_of_faces() == len(triangles)
@@ -26,8 +25,8 @@ def test_trimesh_remesh_along_isoline():
 
 def test_trimesh_remesh_along_isolines():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.triangulate(FaceTriangulation())
-    M = mesh.to_vertices_and_faces()
+    triangle_mesh = mesh.triangulated()
+    M = triangle_mesh.to_vertices_and_faces()
     scalars = mesh.vertices_attribute("z")
     z_min, z_max = min(scalars), max(scalars)
     # Create 5 evenly spaced isolines
@@ -41,8 +40,8 @@ def test_trimesh_remesh_along_isolines():
 
 def test_trimesh_cut_mesh():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.triangulate(FaceTriangulation())
-    M = mesh.to_vertices_and_faces()
+    triangle_mesh = mesh.triangulated()
+    M = triangle_mesh.to_vertices_and_faces()
     V, F = M
     # Create cut flags: all ones means cut all edges
     cuts = [[1, 1, 1] for _ in F]
@@ -54,10 +53,10 @@ def test_trimesh_cut_mesh():
 
 def test_trimesh_face_components():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.triangulate(FaceTriangulation())
-    M = mesh.to_vertices_and_faces()
+    triangle_mesh = mesh.triangulated()
+    M = triangle_mesh.to_vertices_and_faces()
     C = trimesh_face_components(M=M)
     # Component IDs, one per face
-    assert len(C) == mesh.number_of_faces()
+    assert len(C) == len(M[1])
     # Connected mesh should have single component (component 0)
     assert max(C) == 0

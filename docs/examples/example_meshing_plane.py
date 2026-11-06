@@ -3,7 +3,6 @@ from pathlib import Path
 
 from compas.colors import Color
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.geometry import Plane
 from compas.geometry import Rotation
 from compas.geometry import Scale
@@ -19,10 +18,11 @@ mesh.transform(S * R)
 
 # Calculate signed distances to plane
 plane = Plane([0, 0, 0], [0, 1, 1])
-distances = [plane.normal.dot(plane.point - mesh.vertex_coordinates(v)) for v in mesh.vertices()]
+distances = [plane.normal.dot(plane.point - mesh.vertex_point(vertex)) for vertex in mesh.vertices()]
 
 # Split the triangle mesh along the plane
-V, F = trimesh_remesh_along_isoline(mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles(), distances, 0)
+triangle_mesh = mesh.triangulated()
+V, F = trimesh_remesh_along_isoline(triangle_mesh.to_vertices_and_faces(), distances, 0)
 
 # Create meshes for parts below and above plane
 below_faces = []

@@ -119,7 +119,7 @@ input = "src/compas_libigl/__init__.py"
 CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.uv.sources]
-compas = { git = "https://github.com/compas-dev/compas.git", rev = "21fdcaa5e7bf1a642030005a636164f63446d122" }
+compas = { git = "https://github.com/compas-dev/compas.git", rev = "f626151278b6fbea6c3dd271dcb096923c6073c3" }
 
 # ============================================================================
 # cibuildwheel configuration
@@ -128,7 +128,7 @@ compas = { git = "https://github.com/compas-dev/compas.git", rev = "21fdcaa5e7bf
 [tool.cibuildwheel]
 build = ["cp312-*"]
 build-verbosity = 3
-before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@21fdcaa5e7bf1a642030005a636164f63446d122' && pip list"
+before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@f626151278b6fbea6c3dd271dcb096923c6073c3' && pip list"
 test-requires = ["numpy>=1.24", "pytest", "build", "tessagon"]
 test-command = "pytest {project}/tests"
 build-frontend = "pip"
@@ -165,9 +165,12 @@ replace = "[{new_version}] {now:%Y-%m-%d}"
 line-length = 179
 indent-width = 4
 target-version = "py312"
+extend-include = ["docs/examples/**/*.py"]
 
 [tool.pyright]
+include = [".github/scripts", "docs/examples", "recipe", "src/compas_libigl", "tasks.py", "tests"]
 exclude = ["site"]
+pythonVersion = "3.12"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
@@ -179,7 +182,6 @@ force-single-line = true
 "__init__.py" = ["I001"]
 "tests/*" = ["I001"]
 "tasks.py" = ["I001"]
-"docs/examples/*.py" = []
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

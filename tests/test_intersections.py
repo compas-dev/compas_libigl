@@ -1,7 +1,6 @@
 import compas
 import numpy as np
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.linalg import add_vectors
 from compas.linalg import scale_vector
 from compas_libigl.intersections import intersection_ray_mesh
@@ -10,10 +9,10 @@ from compas_libigl.intersections import intersection_rays_mesh
 
 def test_intersection_ray_mesh():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    tessellation = mesh.triangulated(FaceTriangulation())
+    triangle_mesh = mesh.triangulated()
     centroid = mesh.centroid()
     ray = [centroid[0], centroid[1], 0], [0, 0, 1.0]
-    hits = intersection_ray_mesh(ray, tessellation.to_vertices_and_triangles())
+    hits = intersection_ray_mesh(ray, triangle_mesh.to_vertices_and_faces())
     assert len(hits) == 1
     # Test computing intersection point
     point = add_vectors(ray[0], scale_vector(ray[1], hits[0][3]))
@@ -22,8 +21,8 @@ def test_intersection_ray_mesh():
 
 def test_intersection_rays_mesh():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.triangulate(FaceTriangulation())
-    M = mesh.to_vertices_and_faces()
+    triangle_mesh = mesh.triangulated()
+    M = triangle_mesh.to_vertices_and_faces()
     centroid = mesh.centroid()
     rays = [([centroid[0], centroid[1], 0], [0, 0, 1.0]), ([centroid[0], centroid[1], 1], [0, 0, -1.0])]
     hits = intersection_rays_mesh(rays=rays, M=M)
@@ -32,8 +31,8 @@ def test_intersection_rays_mesh():
 
 def test_intersection_rays_mesh_accepts_numpy_rays():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
-    mesh.triangulate(FaceTriangulation())
-    M = mesh.to_vertices_and_faces()
+    triangle_mesh = mesh.triangulated()
+    M = triangle_mesh.to_vertices_and_faces()
     centroid = mesh.centroid()
     rays = np.asarray(
         [

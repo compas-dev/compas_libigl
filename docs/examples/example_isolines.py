@@ -3,7 +3,6 @@ from pathlib import Path
 
 from compas.colors import ColorMap
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.geometry import Line
 from compas.geometry import Rotation
 from compas.geometry import Scale
@@ -30,8 +29,9 @@ mesh.transform(S * Rz * Rx)
 scalars = mesh.vertices_attribute("z")
 
 num_isolines = 100
+triangle_mesh = mesh.triangulated()
 vertices, edges = trimesh_isolines(
-    mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles(),
+    triangle_mesh.to_vertices_and_faces(),
     scalars,
     num_isolines,
 )

@@ -18,8 +18,8 @@ from compas_libigl.parametrisation import trimesh_lscm
 mesh = Mesh.from_off(Path(__file__).parent.parent.parent / "data" / "beetle.off")
 
 for vertex in mesh.vertices():
-    x, y, z = mesh.vertex_attributes(vertex, "xyz")  # type: ignore
-    mesh.vertex_attributes(vertex, "xyz", [x, -z, y])
+    point = mesh.vertex_point(vertex)
+    mesh.set_vertex_point(vertex, [point.x, -point.z, point.y])
 
 mesh.translate([2, 2, 0.5])
 
@@ -59,8 +59,9 @@ mesh_mapped = Mesh.from_vertices_and_faces(mv, mf)
 # Offset mesh by normals, normals are interpolated from the original mesh.
 # ==============================================================================
 mesh_mapped_offset = mesh_mapped.copy()
-for i in range(mesh_mapped.number_of_vertices()):
-    mesh_mapped_offset.vertex_attributes(i, "xyz", mesh_mapped.vertex_attributes(i, "xyz") - mn[i] * 0.001)
+for index, vertex in enumerate(mesh_mapped.vertices()):
+    offset = mn[index] * 0.001
+    mesh_mapped_offset.set_vertex_point(vertex, mesh_mapped.vertex_point(vertex) + -offset)
 
 # ==============================================================================
 # Get Boundary Polylines
@@ -71,8 +72,8 @@ for i in range(len(mb)):
         continue
     points = []
     for j in range(len(mf[i])):
-        id = mf[i][j]
-        points.append(mesh_mapped.vertex_attributes(id, "xyz") + mn[id] * 0.002)
+        vertex = mf[i][j]
+        points.append(mesh_mapped.vertex_point(vertex) + mn[vertex] * 0.002)
     points.append(points[0])
     polyline = Polyline(points)
     boundaries.append(polyline)
@@ -97,8 +98,8 @@ for boundary in boundaries:
 # To see where the pattern is mapped:
 uv = trimesh_lscm((v, f))
 mesh_flattened = mesh.copy()
-for i in range(mesh.number_of_vertices()):
-    mesh_flattened.vertex_attributes(i, "xyz", [uv[i][0], uv[i][1], 0])
+for index, vertex in enumerate(mesh.vertices()):
+    mesh_flattened.set_vertex_point(vertex, [uv[index][0], uv[index][1], 0])
 
 viewer.scene.add(mesh_flattened, name="mesh_flattened")
 viewer.show()

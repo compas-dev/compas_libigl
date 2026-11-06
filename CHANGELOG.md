@@ -18,6 +18,8 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 
 ### Changed
 
+* Made documentation examples explicit blocking Ruff and Pyright inputs and migrated their coordinate access to the current high-level mesh API.
+* Migrated tests and examples from triangulation strategy objects and in-place setup mutation to the accepted non-mutating `Mesh.triangulated()` conversion.
 * Standardized migrated triangle-mesh operations on structural `(vertices, triangles)` buffers, including NumPy arrays, with shared native buffer normalization at the libigl boundary.
 * Defined constant scalar fields as producing an empty isoline result instead of degenerate unused points.
 * Kept curvature as a package-owned direct API because its conventions do not match the core COMPAS plugin contract.

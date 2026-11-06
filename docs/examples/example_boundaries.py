@@ -37,7 +37,7 @@ viewer = Viewer(width=1600, height=900)
 for vertices in boundaries:
     vertices = list(vertices)
     vertices.append(vertices[0])
-    points = mesh.vertices_attributes("xyz", keys=vertices)
+    points = mesh.vertices_points(vertices)
     polyline = Polyline(points)
     viewer.scene.add(polyline, linecolor=Color.red(), linewidth=3)
 

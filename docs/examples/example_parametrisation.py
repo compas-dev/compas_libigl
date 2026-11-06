@@ -2,7 +2,6 @@ import math
 from pathlib import Path
 
 from compas.datastructures import Mesh
-from compas.geometry import FaceTriangulation
 from compas.geometry import Rotation
 from compas.geometry import Scale
 from compas.geometry import Translation
@@ -27,10 +26,11 @@ mesh_lscm.vertices_attribute("z", 0)
 # Least-squares conformal map
 # ==============================================================================
 
-lscm_uv = trimesh_lscm(mesh.triangulated(FaceTriangulation()).to_vertices_and_triangles())
+triangle_mesh = mesh.triangulated()
+lscm_uv = trimesh_lscm(triangle_mesh.to_vertices_and_faces())
 
 for index, key in enumerate(mesh.vertices()):
-    mesh_lscm.vertex_attributes(key, "xy", lscm_uv[index])
+    mesh_lscm.set_vertex_point(key, [lscm_uv[index][0], lscm_uv[index][1], 0])
 
 # ==============================================================================
 # Visualization
