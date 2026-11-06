@@ -1,9 +1,11 @@
 import compas
-from compas_libigl.intersections import intersection_ray_mesh, intersection_rays_mesh
+import numpy as np
 from compas.datastructures import Mesh
 from compas.geometry import FaceTriangulation
 from compas.linalg import add_vectors
 from compas.linalg import scale_vector
+from compas_libigl.intersections import intersection_ray_mesh
+from compas_libigl.intersections import intersection_rays_mesh
 
 
 def test_intersection_ray_mesh():
@@ -24,5 +26,23 @@ def test_intersection_rays_mesh():
     M = mesh.to_vertices_and_faces()
     centroid = mesh.centroid()
     rays = [([centroid[0], centroid[1], 0], [0, 0, 1.0]), ([centroid[0], centroid[1], 1], [0, 0, -1.0])]
-    hits = intersection_rays_mesh(rays, M)
+    hits = intersection_rays_mesh(rays=rays, M=M)
+    assert len(hits) == 2
+
+
+def test_intersection_rays_mesh_accepts_numpy_rays():
+    mesh = Mesh.from_off(compas.get("tubemesh.off"))
+    mesh.triangulate(FaceTriangulation())
+    M = mesh.to_vertices_and_faces()
+    centroid = mesh.centroid()
+    rays = np.asarray(
+        [
+            [[centroid[0], centroid[1], 0.0], [0.0, 0.0, 1.0]],
+            [[centroid[0], centroid[1], 1.0], [0.0, 0.0, -1.0]],
+        ],
+        dtype=np.float64,
+    )
+
+    hits = intersection_rays_mesh(rays=rays, M=M)
+
     assert len(hits) == 2

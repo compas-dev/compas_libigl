@@ -8,8 +8,9 @@ def test_trimesh_cotmatrix():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
     mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
-    L = trimesh_cotmatrix(M)
+    L = trimesh_cotmatrix(M=M)
     # Cotmatrix is V x V sparse matrix
+    assert L.shape is not None
     assert L.shape[0] == mesh.number_of_vertices()
     assert L.shape[1] == mesh.number_of_vertices()
 
@@ -18,7 +19,7 @@ def test_trimesh_cotmatrix_entries():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
     mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
-    C = trimesh_cotmatrix_entries(M)
+    C = trimesh_cotmatrix_entries(M=M)
     # Cotmatrix entries is F x 3 (one cotan per edge per face)
     assert C.shape[0] == mesh.number_of_faces()
     assert C.shape[1] == 3

@@ -119,7 +119,7 @@ input = "src/compas_libigl/__init__.py"
 CMAKE_POLICY_DEFAULT_CMP0135 = "NEW"
 
 [tool.uv.sources]
-compas = { git = "https://github.com/compas-dev/compas.git", rev = "9b1518f74fe7d0315626954d8b893756f8dae06d" }
+compas = { git = "https://github.com/compas-dev/compas.git", rev = "21fdcaa5e7bf1a642030005a636164f63446d122" }
 
 # ============================================================================
 # cibuildwheel configuration
@@ -128,7 +128,7 @@ compas = { git = "https://github.com/compas-dev/compas.git", rev = "9b1518f74fe7
 [tool.cibuildwheel]
 build = ["cp312-*"]
 build-verbosity = 3
-before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@9b1518f74fe7d0315626954d8b893756f8dae06d' && pip list"
+before-test = "pip install 'compas @ git+https://github.com/compas-dev/compas.git@21fdcaa5e7bf1a642030005a636164f63446d122' && pip list"
 test-requires = ["numpy>=1.24", "pytest", "build", "tessagon"]
 test-command = "pytest {project}/tests"
 build-frontend = "pip"

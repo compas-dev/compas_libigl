@@ -1,10 +1,7 @@
 from copy import deepcopy
-from typing import cast
-
 import compas
 import numpy as np
 import pytest
-from compas._typing import MeshType
 from compas.datastructures import Mesh
 import compas_libigl.planarize as planarize_module
 from compas_libigl.planarize import quadmesh_planarize
@@ -37,7 +34,7 @@ def test_quadmesh_planarize():
 def test_quadmesh_planarize_accepts_sequences_without_mutation(mesh):
     mesh_before = deepcopy(mesh)
 
-    result = quadmesh_planarize(cast(MeshType, mesh), kmax=1)
+    result = quadmesh_planarize(mesh, kmax=1)
 
     assert isinstance(result, list)
     np.testing.assert_array_equal(mesh[0], mesh_before[0])
@@ -66,7 +63,7 @@ def test_quadmesh_planarize_normalizes_native_arrays(monkeypatch):
     vertices = np.asfortranarray([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [1.0, 1.0, 0.0], [0.0, 1.0, 0.0]])
     faces = np.asarray([[0, 1, 2, 3, 99]], dtype=np.int64)[:, :4]
 
-    result = quadmesh_planarize(cast(MeshType, (vertices, faces)), kmax=2, maxdev=0.01)
+    result = quadmesh_planarize((vertices, faces), kmax=2, maxdev=0.01)
 
     assert captured["vertices"].dtype == np.float64
     assert captured["faces"].dtype == np.int32

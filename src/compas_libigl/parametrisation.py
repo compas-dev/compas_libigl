@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from compas.typing import VerticesFaces
 
-from compas_libigl import _parametrisation  # type: ignore
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import validate_native_uv
 
-if TYPE_CHECKING:
-    from compas._typing import TriangleMeshInput
+from . import _parametrisation
+
+__all__ = ["trimesh_harmonic", "trimesh_lscm"]
 
 
-def trimesh_harmonic(mesh: TriangleMeshInput) -> list[list[float]]:
+def trimesh_harmonic(mesh: VerticesFaces) -> list[list[float]]:
     """Compute the harmonic parametrisation of a triangle mesh within a fixed circular boundary.
 
     Parameters
@@ -29,7 +29,7 @@ def trimesh_harmonic(mesh: TriangleMeshInput) -> list[list[float]]:
     return validate_native_uv(uv, len(V), "harmonic parametrisation").tolist()
 
 
-def trimesh_lscm(mesh: TriangleMeshInput) -> list[list[float]]:
+def trimesh_lscm(mesh: VerticesFaces) -> list[list[float]]:
     """Compute the least squares conformal map of a triangle mesh.
 
     Parameters

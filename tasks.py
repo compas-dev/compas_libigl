@@ -27,6 +27,7 @@ def format_code(ctx):
 def typecheck(ctx):
     """Run static type checking."""
     ctx.run(f'pyright --pythonpath "{sys.executable}"')
+    ctx.run(f'pyright --pythonpath "{sys.executable}" --verifytypes compas_libigl --ignoreexternal')
 
 
 @task

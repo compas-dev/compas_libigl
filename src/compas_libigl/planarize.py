@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import numpy as np
+from compas.typing import VerticesFaces
 
-from compas_libigl import _planarize  # type: ignore
+from . import _planarize
 
-if TYPE_CHECKING:
-    from compas._typing import MeshType
+__all__ = ["quadmesh_planarize"]
 
 
-def quadmesh_planarize(M: MeshType, kmax: int = 500, maxdev: float = 0.005) -> list[list[float]]:
+def quadmesh_planarize(M: VerticesFaces, kmax: int = 500, maxdev: float = 0.005) -> list[list[float]]:
     """Planarize the faces of a quad mesh.
 
     Iteratively modify vertex positions to make all quad faces as planar as possible

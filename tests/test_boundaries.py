@@ -8,5 +8,5 @@ def test_trimesh_boundaries():
     mesh = Mesh.from_off(compas.get("tubemesh.off"))
     mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
-    boundaries = trimesh_boundaries(M)
+    boundaries = trimesh_boundaries(M=M)
     assert len(boundaries) == 1

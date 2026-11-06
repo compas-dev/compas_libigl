@@ -21,7 +21,7 @@ def test_trimesh_geodistance_multiple():
     mesh.triangulate(FaceTriangulation())
     M = mesh.to_vertices_and_faces()
     sources = [0, 1]
-    distances = trimesh_geodistance_multiple(M, sources, method="exact")
+    distances = trimesh_geodistance_multiple(M=M, sources=sources, method="exact")
     assert len(distances) == mesh.number_of_vertices()
-    distances = trimesh_geodistance_multiple(M, sources, method="heat")
+    distances = trimesh_geodistance_multiple(M=M, sources=sources, method="heat")
     assert len(distances) == mesh.number_of_vertices()

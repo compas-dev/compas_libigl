@@ -11,8 +11,8 @@ namespace compas_libigl {
  *
  * @param V The vertex matrix of the triangle mesh (n x 3).
  * @param F The face matrix of the triangle mesh (m x 3).
- * @param isovalues The scalar values per vertex (n x 1).
- * @param vals The isovalues at which to compute isolines.
+ * @param scalarfield The scalar values per vertex (n x 1).
+ * @param isovalues The values at which to compute isolines.
  * @return Tuple of (vertices, edges, indices) defining the isolines.
  */
 std::tuple<compas::RowMatrixXd, 
@@ -20,8 +20,8 @@ std::tuple<compas::RowMatrixXd,
          Eigen::VectorXi> trimesh_isolines(
     Eigen::Ref<const compas::RowMatrixXd> V,
     Eigen::Ref<const compas::RowMatrixXi> F,
-    Eigen::Ref<const Eigen::VectorXd> isovalues,
-    Eigen::Ref<const Eigen::VectorXd> vals
+    Eigen::Ref<const Eigen::VectorXd> scalarfield,
+    Eigen::Ref<const Eigen::VectorXd> isovalues
 );
 
 } // namespace compas_libigl

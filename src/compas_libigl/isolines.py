@@ -1,23 +1,20 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import numpy as np
+from compas.typing import FloatSequenceLike
+from compas.typing import VerticesFaces
 
-from compas_libigl import _isolines  # type: ignore
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import as_scalarfield
 
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from . import _isolines
 
-    from compas._typing import NumericArray
-    from compas._typing import TriangleMeshInput
+__all__ = ["trimesh_isolines"]
 
 
 def trimesh_isolines(
-    mesh: TriangleMeshInput,
-    scalarfield: Sequence[float] | NumericArray,
+    mesh: VerticesFaces,
+    scalarfield: FloatSequenceLike,
     number_of_isolines: int = 50,
 ) -> tuple[list[list[float]], list[list[int]]]:
     """Compute isolines on a triangle mesh.
@@ -39,16 +36,22 @@ def trimesh_isolines(
     Notes
     -----
     The input mesh should be triangulated for accurate results.
+    A constant scalar field has no interior isolines and returns two empty
+    lists without invoking libigl.
 
     """
     if number_of_isolines < 1:
         raise ValueError("number_of_isolines should be positive.")
     V, F = as_native_mesh(mesh, "mesh")
     S = as_scalarfield(scalarfield, len(V))
-    ISO = np.linspace(float(S.min()), float(S.max()), number_of_isolines + 2)[1:-1]
-
-    # Note: C++ function expects (V, F, isovalues, scalars)
-    points, segments, _ = _isolines.trimesh_isolines(V, F, ISO, S)
+    minimum = float(S.min())
+    maximum = float(S.max())
+    if minimum == maximum:
+        points = np.empty((0, 3), dtype=np.float64)
+        segments = np.empty((0, 2), dtype=np.int32)
+    else:
+        ISO = np.linspace(minimum, maximum, number_of_isolines + 2)[1:-1]
+        points, segments, _ = _isolines.trimesh_isolines(V, F, S, ISO)
     if points.ndim != 2 or points.shape[1] != 3:
         raise RuntimeError("libigl isolines result points should have shape (N, 3).")
     if segments.ndim != 2 or segments.shape[1] != 2:

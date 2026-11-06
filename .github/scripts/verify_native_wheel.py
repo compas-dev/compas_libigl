@@ -30,6 +30,7 @@ REQUIRED_DEPENDENCIES = {
 }
 
 TYPING_MARKER = "compas_libigl/py.typed"
+NATIVE_STUBS = tuple(f"compas_libigl/{module}.pyi" for module in NATIVE_MODULES)
 
 
 def verify_wheel(wheel: Path) -> None:
@@ -50,6 +51,9 @@ def verify_wheel(wheel: Path) -> None:
         names = set(archive.namelist())
         if TYPING_MARKER not in names:
             raise SystemExit(f"{wheel} is missing the PEP 561 marker: {TYPING_MARKER}")
+        missing_stubs = sorted(set(NATIVE_STUBS).difference(names))
+        if missing_stubs:
+            raise SystemExit(f"{wheel} is missing native stubs: {missing_stubs}")
         metadata_paths = [name for name in names if name.endswith(".dist-info/METADATA")]
         if len(metadata_paths) != 1:
             raise SystemExit(f"{wheel} has {len(metadata_paths)} METADATA files")

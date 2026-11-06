@@ -1,9 +1,14 @@
-import numpy as np
+from compas.typing import Float64Array
+from compas.typing import VerticesFaces
 
-from compas_libigl import _curvature  # type: ignore
+from compas_libigl._mesh import as_native_mesh
+
+from . import _curvature
+
+__all__ = ["trimesh_gaussian_curvature", "trimesh_principal_curvature"]
 
 
-def trimesh_gaussian_curvature(M):
+def trimesh_gaussian_curvature(M: VerticesFaces) -> Float64Array:
     """Compute the discrete gaussian curvature of a triangle mesh.
 
     Calculates the Gaussian curvature at each vertex of a triangle mesh
@@ -11,12 +16,12 @@ def trimesh_gaussian_curvature(M):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by vertices and triangle faces.
+    M
+        Structural vertex and triangle buffers.
 
     Returns
     -------
-    list[float]
+    numpy.ndarray
         The gaussian curvature values per vertex.
         Positive values indicate elliptic points, negative values indicate hyperbolic points,
         and zero values indicate parabolic or flat points.
@@ -26,14 +31,13 @@ def trimesh_gaussian_curvature(M):
     This is a direct libigl operation, not the COMPAS Gaussian-curvature
     plugin. Libigl's angle-defect boundary convention does not match the core
     contract, so the operation is intentionally not registered.
+
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
+    V, F = as_native_mesh(M, "mesh")
     return _curvature.trimesh_gaussian_curvature(V, F)
 
 
-def trimesh_principal_curvature(M):
+def trimesh_principal_curvature(M: VerticesFaces) -> tuple[list[list[float]], list[list[float]], list[float], list[float]]:
     """Compute the principal curvatures and directions of a triangle mesh.
 
     Calculates both the principal curvature values and their corresponding
@@ -41,9 +45,8 @@ def trimesh_principal_curvature(M):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
+    M
+        Structural vertex and triangle buffers.
 
     Returns
     -------
@@ -53,9 +56,8 @@ def trimesh_principal_curvature(M):
         * PD2: Principal direction 2 per vertex (normalized vectors)
         * PV1: Principal curvature value 1 per vertex (maximum curvature)
         * PV2: Principal curvature value 2 per vertex (minimum curvature)
+
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
+    V, F = as_native_mesh(M, "mesh")
     PD1, PD2, PV1, PV2 = _curvature.trimesh_principal_curvature(V, F)
     return PD1.tolist(), PD2.tolist(), PV1.tolist(), PV2.tolist()

@@ -19,9 +19,11 @@ Add missing igl functions to enable compas_slicer to drop the `libigl` dependenc
 ### Changed
 
 * Standardized migrated triangle-mesh operations on structural `(vertices, triangles)` buffers, including NumPy arrays, with shared native buffer normalization at the libigl boundary.
+* Defined constant scalar fields as producing an empty isoline result instead of degenerate unused points.
 * Kept curvature as a package-owned direct API because its conventions do not match the core COMPAS plugin contract.
 * Aligned annotations and made Pyright a blocking continuous-integration check.
 * Marked built distributions as PEP 561 typed packages and added installed-wheel consumer verification.
+* Added reviewed stubs for all 13 native extension modules, completed annotations for every public wrapper and plugin implementation, and aligned structural inputs with `compas.typing`.
 * Updated the runtime and wheel-test dependency baseline to COMPAS 3.
 * Modernized dependency locking, documentation, native build provenance, continuous integration, and release workflows.
 * Registered lightweight category plugin modules through the current `compas.plugins` entry-point discovery mechanism, kept native implementations lazily imported, added non-mutating planarization normalization and result-shape checks, and removed the obsolete `__all_plugins__` list.

@@ -42,7 +42,7 @@ def test_consumer_branch_builds_strict_pyright_command(monkeypatch, tmp_path: Pa
 
     environment = tmp_path / "environment"
     python = smoke_test_wheel.environment_python(environment)
-    assert calls[0][0][-2:] == [str(wheel), "pyright==1.1.414"]
+    assert calls[0][0][-3:] == [str(wheel), "pyright==1.1.414", "scipy-stubs==1.18.1.1"]
     assert calls[2] == (
         [
             str(python),
@@ -56,9 +56,27 @@ def test_consumer_branch_builds_strict_pyright_command(monkeypatch, tmp_path: Pa
         ],
         {"check": True, "cwd": environment},
     )
+    verify_command, verify_kwargs = calls[3]
+    assert verify_command == [
+        str(python),
+        "-m",
+        "pyright",
+        "--pythonpath",
+        str(python),
+        "--project",
+        str(environment / "pyrightconfig.json"),
+        "--verifytypes",
+        "compas_libigl",
+        "--ignoreexternal",
+    ]
+    assert verify_kwargs["check"] is True
+    assert verify_kwargs["cwd"] == environment
+    assert verify_kwargs["env"]["PYTHONPATH"] == str(smoke_test_wheel.environment_site_packages(environment))
     assert json.loads((environment / "pyrightconfig.json").read_text(encoding="utf-8")) == {
         "typeCheckingMode": "strict",
         "pythonVersion": "3.12",
+        "venvPath": str(tmp_path),
+        "venv": "environment",
     }
 
 

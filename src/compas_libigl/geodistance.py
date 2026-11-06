@@ -1,21 +1,23 @@
 from __future__ import annotations
 
 from numbers import Integral
-from typing import TYPE_CHECKING
 from typing import Literal
 
 import numpy as np
+from compas.typing import Float64Array
+from compas.typing import IndicesLike
+from compas.typing import VerticesFaces
 
-from compas_libigl import _geodistance  # type: ignore
 from compas_libigl._mesh import as_native_mesh
 from compas_libigl._mesh import validate_native_vector
 
-if TYPE_CHECKING:
-    from compas._typing import TriangleMeshInput
+from . import _geodistance
+
+__all__ = ["trimesh_geodistance", "trimesh_geodistance_multiple"]
 
 
 def trimesh_geodistance(
-    mesh: TriangleMeshInput,
+    mesh: VerticesFaces,
     source: int,
     method: Literal["exact", "heat"] = "exact",
 ) -> list[float]:
@@ -54,7 +56,11 @@ def trimesh_geodistance(
     return validate_native_vector(distances, len(V), "geodistance").tolist()
 
 
-def trimesh_geodistance_multiple(M, sources, method="exact"):
+def trimesh_geodistance_multiple(
+    M: VerticesFaces,
+    sources: IndicesLike,
+    method: Literal["exact", "heat"] = "exact",
+) -> Float64Array:
     """Compute the geodesic distance from multiple source points.
 
     Calculates the minimum geodesic distance from any of the source vertices
@@ -62,12 +68,11 @@ def trimesh_geodistance_multiple(M, sources, method="exact"):
 
     Parameters
     ----------
-    M : tuple[list[list[float]], list[list[int]]]
-        A mesh represented by a tuple of (vertices, faces)
-        where vertices are 3D points and faces are triangles
-    sources : list[int]
+    M
+        Structural vertex and triangle buffers.
+    sources
         The indices of the source vertices.
-    method : str, optional
+    method
         The method to use for geodesic distance computation.
         Options:
         * 'exact': Use exact geodesic algorithm
@@ -76,16 +81,15 @@ def trimesh_geodistance_multiple(M, sources, method="exact"):
 
     Returns
     -------
-    list[float]
+    numpy.ndarray
         The minimum geodesic distances from any source to all vertices.
 
     Raises
     ------
     NotImplementedError
         If method is not one of {'exact', 'heat'}.
+
     """
-    V, F = M
-    V = np.asarray(V, dtype=np.float64)
-    F = np.asarray(F, dtype=np.int32)
+    V, F = as_native_mesh(M, "mesh")
     sources = np.asarray(sources, dtype=np.int32)
     return _geodistance.trimesh_geodistance_multiple(V, F, sources, method)

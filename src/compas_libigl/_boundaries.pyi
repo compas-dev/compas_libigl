@@ -1,0 +1,3 @@
+from compas.typing import Int32Array
+
+def trimesh_boundaries(F: Int32Array) -> list[list[int]]: ...

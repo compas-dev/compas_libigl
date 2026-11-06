@@ -1,16 +1,24 @@
+from typing import SupportsFloat
+
 import numpy as np
+from compas.typing import PointsLike
 
-from compas_libigl import _simplify  # type: ignore
+from . import _simplify
+
+__all__ = ["ramer_douglas_peucker"]
 
 
-def ramer_douglas_peucker(points, threshold):
+def ramer_douglas_peucker(
+    points: PointsLike,
+    threshold: SupportsFloat,
+) -> tuple[list[list[float]], list[int], list[list[float]]]:
     """Simplify a polyline using Ramer-Douglas-Peucker algorithm.
 
     Parameters
     ----------
-    points : list[list[float]]
+    points
         A list of 3D points representing the polyline.
-    threshold : float
+    threshold
         Maximum distance threshold for simplification.
         Points that deviate less than this from the simplified line are removed.
 
@@ -21,6 +29,7 @@ def ramer_douglas_peucker(points, threshold):
         * the simplified polyline points (S),
         * indices in original polyline that were kept (J),
         * for each original point, the corresponding point on the simplified curve (Q).
+
     """
     P = np.asarray(points, dtype=np.float64)
     S, J, Q = _simplify.ramer_douglas_peucker(P, float(threshold))

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -35,6 +36,14 @@ def environment_python(environment: Path) -> Path:
     return environment / "bin" / "python"
 
 
+def environment_site_packages(environment: Path) -> Path:
+    """Return the site-packages directory inside a virtual environment."""
+    if sys.platform == "win32":
+        return environment / "Lib" / "site-packages"
+    version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    return environment / "lib" / version / "site-packages"
+
+
 def smoke_test(wheel: Path, constraint: Path, consumer: Path | None = None) -> None:
     """Install ``wheel`` with ``constraint`` and verify its public surface."""
     if consumer:
@@ -54,17 +63,46 @@ def smoke_test(wheel: Path, constraint: Path, consumer: Path | None = None) -> N
             str(wheel),
         ]
         if consumer:
-            install.append("pyright==1.1.414")
+            install.extend(("pyright==1.1.414", "scipy-stubs==1.18.1.1"))
         subprocess.run(install, check=True)
         imports = "; ".join(f"import {module}" for module in IMPORT_MODULES)
         subprocess.run([str(python), "-c", imports], check=True)
         if consumer:
             config = environment / "pyrightconfig.json"
-            config.write_text(json.dumps({"typeCheckingMode": "strict", "pythonVersion": "3.12"}), encoding="utf-8")
+            config.write_text(
+                json.dumps(
+                    {
+                        "typeCheckingMode": "strict",
+                        "pythonVersion": "3.12",
+                        "venvPath": str(environment.parent),
+                        "venv": environment.name,
+                    }
+                ),
+                encoding="utf-8",
+            )
             subprocess.run(
                 [str(python), "-m", "pyright", "--pythonpath", str(python), "--project", str(config), str(consumer)],
                 check=True,
                 cwd=environment,
+            )
+            verify_environment = os.environ.copy()
+            verify_environment["PYTHONPATH"] = str(environment_site_packages(environment))
+            subprocess.run(
+                [
+                    str(python),
+                    "-m",
+                    "pyright",
+                    "--pythonpath",
+                    str(python),
+                    "--project",
+                    str(config),
+                    "--verifytypes",
+                    "compas_libigl",
+                    "--ignoreexternal",
+                ],
+                check=True,
+                cwd=environment,
+                env=verify_environment,
             )
 
 

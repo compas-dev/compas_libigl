@@ -42,8 +42,10 @@ for vertex_idx, point in enumerate(vertices):
         point = Point(point[0], point[1], point[2])
 
         # Scale lines by curvature magnitude
-        pd1 = Vector(*PD1[vertex_idx]).scaled(principal_scale * abs(PV1[vertex_idx]))
-        pd2 = Vector(*PD2[vertex_idx]).scaled(principal_scale * abs(PV2[vertex_idx]))
+        pd1x, pd1y, pd1z = PD1[vertex_idx]
+        pd2x, pd2y, pd2z = PD2[vertex_idx]
+        pd1 = Vector(pd1x, pd1y, pd1z).scaled(principal_scale * abs(PV1[vertex_idx]))
+        pd2 = Vector(pd2x, pd2y, pd2z).scaled(principal_scale * abs(PV2[vertex_idx]))
 
         # Maximum principal direction (black)
         viewer.scene.add(Line(point - pd1, point + pd1), linecolor=Color.black(), linewidth=20)
